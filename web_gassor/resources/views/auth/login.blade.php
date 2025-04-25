@@ -29,7 +29,9 @@
                 <p style="font-size: 0.875rem; line-height: 1.25rem; color: #9ca3af; position: relative; padding: 0 8px">OR</p>
                 <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
             </div>
-            <button type="button" style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 9999px; background-color: transparent">
+            <button type="button"
+                onclick="window.location.href='{{ route('google.login') }}'"
+                style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 9999px; background-color: transparent">
                 <img src="{{ asset('assets/images/icons/google.svg') }}" style="width: 20px; height: 20px" alt="google icon" />
                 Login with Google
             </button>
