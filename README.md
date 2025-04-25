@@ -1,6 +1,17 @@
 # SISTEM RESERVASI ONLINE UNTUK PENYEWAAN MOTOR DI SEKITAR TELKOM UNIVERSITY BERBASIS WEB MOBILE FIRST DESAIN - (GASSOR : GAS SEWA MOTOR)
 
-Ganti paragraf ini dengan penjelasan singkat mengenai aplikasi. Beri tahu pembaca, repository ini isinya aplikasi apa, siapa target penggunanya, dan apa saja fitur utamanya. Penjelasan dibuat **minimal** 250 karakter. Setelah penjelasan, beri screenshot **maksimal 3** buah. Jika aplikasi belum jadi, screenshot boleh diambil dari Bab 3 (perancangan antarmuka aplikasi).
+Aplikasi web ini dibuat berdasarkan keresahan pribadi karena ga punya motor sebagai anak rantau. Ketika kita mau pinjem motor atau sewa, kita harus datang ke tempat penyewaan motor nya dulu, mengambil motornya, baru bisa kita pakai. Untuk mengatasi keresahan tersebut, dibuatlah aplikasi berbasis web ini.
+
+**Target pengguna** : Mahasiswa Telkom University
+
+**Beberapa Fitur** :
+
+1. Sewa Motor
+2. Orang yang punya motor pribadi juga bisa sewain motor nya melalui aplikasi ini.
+
+Pada fitur nomor 2, konsepnya adalah ketika pemilik motor, orang A memiliki motor yang tidak terpakai saat ia pulang ke rumah selama akhir pekan atau untuk jangka waktu tertentu. Daripada motornya tidak digunakan di tempat tinggalnya (kos), pemilik dapat menyewakan motor tersebut melalui aplikasi ini. Dengan demikian, motor yang sebelumnya tidak terpakai dapat dimanfaatkan, sekaligus memberikan tambahan penghasilan bagi pemilik melalui penyewaan.
+
+Secara keseluruhan, konsepnya adalah memaksimalkan penggunaan motor yang tidak aktif dengan menyewakannya, sehingga memberikan keuntungan bagi pemilik.
 
 | Tampilan Utama | Tampilan Kata | Tampilan Praktik |
 | -------------- | ------------- | ---------------- |
