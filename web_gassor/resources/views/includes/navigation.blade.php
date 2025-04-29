@@ -13,9 +13,9 @@
                 <img src="assets/images/icons/search-status{{ request()->routeIs('find-motor') ? '-green' : '' }}.svg" class="w-8 h-8 flex shrink-0" alt="icon">
                 <span class="font-semibold text-sm text-white">Cari</span>
             </a>
-            <a href="#" class="flex flex-col items-center text-center gap-2">
-                <img src="assets/images/icons/24-support{{ request()->routeIs('help') ? '-green' : '' }}.svg" class="w-8 h-8 flex shrink-0" alt="icon">
-                <span class="font-semibold text-sm text-white">Bantuan</span>
+            <a href="{{ route('informasi') }}" class="flex flex-col items-center text-center gap-2">
+                <img src="assets/images/icons/24-support{{ request()->routeIs('informasi') ? '-green' : '' }}.svg" class="w-8 h-8 flex shrink-0" alt="icon">
+                <span class="font-semibold text-sm text-white">Informasi</span>
             </a>
         </div>
     </nav>

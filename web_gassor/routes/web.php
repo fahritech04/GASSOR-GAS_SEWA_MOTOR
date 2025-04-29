@@ -6,10 +6,15 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfilePenyewaController;
+use App\Http\Controllers\InformasiController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+Route::post('/login/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 // Auth routes
@@ -30,6 +35,8 @@ Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->
 
 // Route khusus penyewa
 Route::middleware(['auth', 'role:penyewa'])->group(function () {
+    Route::get('/profile/penyewa', [ProfilePenyewaController::class, 'index'])->name('profile.penyewa')->middleware('auth');
+    Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi')->middleware('auth');
     Route::get('/motor/booking/{slug}', [BookingController::class, 'booking'])->name('booking');
     Route::get('/motor/booking/{slug}/information', [BookingController::class, 'information'])->name('booking.information');
     Route::post('/motor/booking/{slug}/information/save', [BookingController::class, 'saveInformation'])->name('booking.information.save');

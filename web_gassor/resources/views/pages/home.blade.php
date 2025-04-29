@@ -26,16 +26,11 @@
             {{ Auth::user()->name }}
         </h1>
     </div>
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit" class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white">
-            <img src="{{ asset('assets/images/icons/logout.svg') }}" class="w-[28px] h-[28px]" alt="icon">
-        </button>
-    </form>
-    {{-- <a href="#"
+
+    <a href="{{ route('profile.penyewa') }}"
         class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white">
         <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon">
-    </a> --}}
+    </a>
 </div>
 <div id="Categories" class="swiper w-full overflow-x-hidden mt-[30px]">
     <div class="swiper-wrapper">
