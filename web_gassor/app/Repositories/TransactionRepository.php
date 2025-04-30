@@ -54,7 +54,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         $data['transaction_date'] = now();
         $data['motorbike_rental_id'] = $motorcycle->motorbike_rental_id;
 
-        $total = $this->calculateTotalAmount($motorcycle->price_per_month, $data['duration']);
+        $total = $this->calculateTotalAmount($motorcycle->price_per_day, $data['duration']);
         $data['total_amount'] = $this->calculatePaymentAmount($total, $data['payment_method']);
 
         return $data;

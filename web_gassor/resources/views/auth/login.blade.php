@@ -4,32 +4,41 @@
     <div id="Background" style="position: absolute; top: 0; width: 100%; height: 100%; background: linear-gradient(180deg, #e6a43b 0%, #f5f5f5 100%)"></div>
     <div class="relative px-5" style="margin-top: 50px">
         <div class="flex flex-col items-center">
-            <h1 class="text-3xl font-bold text-center">Welcome Back</h1>
-            <p class="mt-2 text-center text-gassor-grey">Please enter your account details</p>
+            <h1 class="text-3xl font-bold text-center">Masuk Gassor</h1>
+            <p class="mt-2 text-center text-gassor-grey">Nggak pakai ribet sewa motor di Gassor langsung gas</p>
         </div>
-        <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5 mt-8">
+        <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5 mt-6">
             @csrf
             <div class="flex flex-col gap-1">
                 <label for="email" class="text-sm font-medium">Email</label>
-                <input type="email" name="email" id="email" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" required />
+                <input type="email" name="email" id="email" placeholder="Masukkan email anda"
+                    class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
+                    style="border-radius: 12px;"
+                    required />
             </div>
             <div class="flex flex-col gap-1">
-                <label for="password" class="text-sm font-medium">Password</label>
-                <input type="password" name="password" id="password" placeholder="Enter your password" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" required />
+                <label for="password" class="text-sm font-medium">Kata Sandi</label>
+                <input type="password" name="password" id="password" placeholder="Masukkan kata sandi anda"
+                    class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
+                    style="border-radius: 12px;"
+                    required />
             </div>
             <div class="flex flex-col gap-1">
-                <label for="role" class="text-sm font-medium">Login Sebagai</label>
-                <select name="role" id="role" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" required>
+                <label for="role" class="text-sm font-medium">Masuk Sebagai</label>
+                <select name="role" id="role"
+                    class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
+                    style="border-radius: 12px;"
+                    required>
                     <option value="penyewa">Penyewa</option>
                     <option value="pemilik">Pemilik</option>
                 </select>
             </div>
             {{-- Alert placeholder --}}
             <div id="alert-placeholder"></div>
-            <button type="submit" class="w-full p-4 mt-4 font-bold text-white rounded-full" style="background-color: #ff801a;">Login</button>
+            <button type="submit" class="w-full p-4 mt-4 font-bold text-white" style="background-color: #ff801a; border-radius: 12px;">Masuk</button>
             <div class="flex items-center my-4" style="gap: 12px">
                 <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
-                <p style="font-size: 0.875rem; line-height: 1.25rem; color: #9ca3af; position: relative; padding: 0 8px">OR</p>
+                <p style="font-size: 0.875rem; line-height: 1.25rem; color: #9ca3af; position: relative; padding: 0 8px">atau</p>
                 <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
             </div>
         </form>
@@ -39,14 +48,14 @@
             <input type="hidden" name="role" id="google-role-input" />
             <button type="button"
                 onclick="submitGoogleLogin()"
-                style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 9999px; background-color: transparent">
+                style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 12px; background-color: transparent">
                 <img src="{{ asset('assets/images/icons/google.svg') }}" style="width: 20px; height: 20px" alt="google icon" />
-                Login with Google
+                Masuk Dengan Google
             </button>
         </form>
         <p class="mt-5 text-sm text-center">
-            Don't have an account?
-            <a href="{{ route('register') }}" style="font-medium; color: #f97316">Register</a>
+            Belum punya akun?
+            <a href="{{ route('register') }}" style="font-medium; color: #f97316">Daftar</a>
         </p>
     </div>
 @endsection

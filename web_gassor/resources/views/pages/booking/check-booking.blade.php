@@ -28,7 +28,7 @@
                 @enderror
             </div>
             <div class="flex flex-col w-full gap-2">
-                <p class="font-semibold">Email Address</p>
+                <p class="font-semibold">Alamat Email</p>
                 <label
                     class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#91BF77] transition-all duration-300 @error('code') border-red-500 @enderror">
                     <img src="assets/images/icons/sms.svg" class="w-5 h-5 flex shrink-0" alt="icon">
@@ -41,7 +41,7 @@
                 @enderror
             </div>
             <div class="flex flex-col w-full gap-2">
-                <p class="font-semibold">Phone No</p>
+                <p class="font-semibold">Nomor Telepon</p>
                 <label
                     class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#91BF77] transition-all duration-300 @error('code') border-red-500 @enderror">
                     <img src="assets/images/icons/call.svg" class="w-5 h-5 flex shrink-0" alt="icon">

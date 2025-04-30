@@ -56,8 +56,8 @@
                 </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
-                    {{ number_format($motorcycle->price_per_month, 0, ',', '.') }}<span
-                        class="text-sm text-gassor-grey font-normal">/bulan</span>
+                    {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
+                        class="text-sm text-gassor-grey font-normal">/hari</span>
                 </p>
             </div>
         </div>
@@ -116,7 +116,7 @@
             @enderror
         </div>
         <div class="flex items-center justify-between px-5">
-            <p class="font-semibold">Durasi dalam Jam</p>
+            <p class="font-semibold">Durasi dalam Hari</p>
             <div class="relative flex items-center gap-[10px] w-fit">
                 <button type="button" id="Minus" class="w-12 h-12 flex-shrink-0">
                     <img src="{{ asset('assets/images/icons/minus.svg') }}" alt="icon">
@@ -156,7 +156,7 @@
 
 @section('scripts')
 <script>
-    const defaultPrice = parseFloat('{{ $motorcycle -> price_per_month }}');
+    const defaultPrice = parseFloat('{{ $motorcycle -> price_per_day }}');
 </script>
 
 <script src="{{ asset('assets/js/cust-info.js') }}"></script>

@@ -152,7 +152,7 @@
                 <p class="font-bold text-xl leading-[30px] text-white">
                     Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}
                     <br>
-                    <span class="text-sm font-normal">/bulan</span>
+                    <span class="text-sm font-normal">/hari</span>
                 </p>
                 <a href="{{ route('motor.motorcycles', $motorbikeRental->slug ) }}"
                     class="flex shrink-0 rounded-full py-[14px] px-5 bg-gassor-orange font-bold text-white">Pesan Sekarang</a>

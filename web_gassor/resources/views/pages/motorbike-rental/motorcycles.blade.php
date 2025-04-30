@@ -58,8 +58,8 @@
                         <p class="text-sm text-gassor-grey">{{ $motorcycle->square_feet }} sqft flat</p>
                     </div>
                     <hr class="border-[#F1F2F6]">
-                    <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_month, 0, ',', '.') }}<span
-                            class="text-sm text-gassor-grey font-normal">/bulan</span></p>
+                    <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
+                            class="text-sm text-gassor-grey font-normal">/hari</span></p>
                 </div>
             </div>
         </label>

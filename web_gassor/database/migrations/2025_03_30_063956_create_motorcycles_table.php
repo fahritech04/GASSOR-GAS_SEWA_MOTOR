@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('motorcycle_type');
             $table->integer('square_feet');
             $table->integer('capacity');
-            $table->integer('price_per_month');
+            $table->integer('price_per_day');
             $table->boolean('is_available');
             $table->softDeletes();
             $table->timestamps();

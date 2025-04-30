@@ -58,12 +58,12 @@
 <section id="Popular" class="flex flex-col gap-4">
     <div class="flex items-center justify-between px-5">
         <h2 class="font-bold">Motor Populer</h2>
-        <a href="#">
+        {{-- <a href="#">
             <div class="flex items-center gap-2">
                 <span>Semua</span>
                 <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
             </div>
-        </a>
+        </a> --}}
     </div>
     <div class="swiper w-full overflow-x-hidden">
         <div class="swiper-wrapper">
@@ -96,7 +96,7 @@
                             </div>
                             <hr class="border-[#F1F2F6]">
                             <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}<span
-                                    class="text-sm text-gassor-grey font-normal">/bulan</span></p>
+                                    class="text-sm text-gassor-grey font-normal">/hari</span></p>
                         </div>
                     </div>
                 </a>
@@ -108,12 +108,12 @@
 <section id="Cities" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
     <div class="flex items-center justify-between">
         <h2 class="font-bold">Sesuai Wilayah</h2>
-        <a href="#">
+        {{-- <a href="#">
             <div class="flex items-center gap-2">
                 <span>Semua</span>
                 <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
             </div>
-        </a>
+        </a> --}}
     </div>
     <div class="grid grid-cols-2 gap-4">
         @foreach ($cities as $city)
@@ -137,12 +137,12 @@
 <section id="Best" class="flex flex-col gap-4 px-5 mt-[30px]">
     <div class="flex items-center justify-between">
         <h2 class="font-bold">Semua Jenis Motor</h2>
-        <a href="#">
+        {{-- <a href="#">
             <div class="flex items-center gap-2">
                 <span>Semua</span>
                 <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
             </div>
-        </a>
+        </a> --}}
     </div>
     <div class="flex flex-col gap-4">
         @foreach ($motorbikeRentals as $motorbikeRental)
@@ -166,7 +166,7 @@
                     </div>
                     <hr class="border-[#F1F2F6]">
                     <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}<span
-                            class="text-sm text-gassor-grey font-normal">/bulan</span></p>
+                            class="text-sm text-gassor-grey font-normal">/hari</span></p>
                 </div>
             </div>
         </a>

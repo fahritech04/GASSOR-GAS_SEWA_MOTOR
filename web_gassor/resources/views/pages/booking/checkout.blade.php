@@ -57,8 +57,8 @@
                 </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
-                    {{ number_format($motorcycle->price_per_month, 0, ',', '.') }}<span
-                        class="text-sm text-gassor-grey font-normal">/bulan</span>
+                    {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
+                        class="text-sm text-gassor-grey font-normal">/hari</span>
                 </p>
             </div>
         </div>
@@ -177,7 +177,7 @@
         </div>
         <div id="TabContent-Container">
             @php
-            $subtotal = $motorcycle->price_per_month * $transaction['duration'];
+            $subtotal = $motorcycle->price_per_day * $transaction['duration'];
             $tax = $subtotal * 0.11;
             $insurance = $subtotal * 0.01;
             $total = $subtotal + $tax + $insurance;

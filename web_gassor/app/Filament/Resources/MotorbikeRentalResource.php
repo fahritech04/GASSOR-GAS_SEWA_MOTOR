@@ -86,7 +86,7 @@ class MotorbikeRentalResource extends Resource
                                         Forms\Components\TextInput::make('capacity')
                                             ->numeric()
                                             ->required(),
-                                        Forms\Components\TextInput::make('price_per_month')
+                                        Forms\Components\TextInput::make('price_per_day')
                                             ->numeric()
                                             ->prefix('IDR')
                                             ->required(),

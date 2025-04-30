@@ -44,7 +44,7 @@
                 </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}<span
-                        class="text-sm text-gassor-grey font-normal">/bulan</span></p>
+                        class="text-sm text-gassor-grey font-normal">/hari</span></p>
             </div>
         </div>
     </a>

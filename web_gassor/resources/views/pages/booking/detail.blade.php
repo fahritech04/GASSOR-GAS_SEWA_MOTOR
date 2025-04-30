@@ -54,8 +54,8 @@
                 </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
-                    {{ number_format($transaction->motorcycle->price_per_month, 0, ',', '.') }}<span
-                        class="text-sm text-gassor-grey font-normal">/bulan</span>
+                    {{ number_format($transaction->motorcycle->price_per_day, 0, ',', '.') }}<span
+                        class="text-sm text-gassor-grey font-normal">/hari</span>
                 </p>
             </div>
         </div>
@@ -135,7 +135,7 @@
         <input type="checkbox" class="absolute hidden">
     </label>
     @php
-    $subtotal = $transaction->motorcycle->price_per_month * $transaction->duration;
+    $subtotal = $transaction->motorcycle->price_per_day * $transaction->duration;
     $tax = $subtotal * 0.11;
     $insurance = $subtotal * 0.01;
     $total = $subtotal + $tax + $insurance;
@@ -160,7 +160,7 @@
                 <img src="assets/images/icons/receipt-2.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Harga Motor</p>
             </div>
-            <p class="font-semibold">Rp {{ number_format($transaction->motorcycle->price_per_month, 0, ',', '.') }}</p>
+            <p class="font-semibold">Rp {{ number_format($transaction->motorcycle->price_per_day, 0, ',', '.') }}</p>
         </div>
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
