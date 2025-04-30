@@ -9,8 +9,6 @@ Aplikasi web ini dibuat berdasarkan keresahan pribadi karena ga punya motor seba
 1. Sewa Motor
 2. Orang yang punya motor pribadi juga bisa sewain motor nya melalui aplikasi ini.
 
-Pada fitur nomor 2, konsepnya adalah ketika pemilik motor, orang A memiliki motor yang tidak terpakai saat ia pulang ke rumah selama akhir pekan atau untuk jangka waktu tertentu. Daripada motornya tidak digunakan di tempat tinggalnya (kos), pemilik dapat menyewakan motor tersebut melalui aplikasi ini. Dengan demikian, motor yang sebelumnya tidak terpakai dapat dimanfaatkan, sekaligus memberikan tambahan penghasilan bagi pemilik melalui penyewaan.
-
 Secara keseluruhan, konsepnya adalah memaksimalkan penggunaan motor yang tidak aktif dengan menyewakannya, sehingga memberikan keuntungan bagi pemilik.
 
 | Tampilan Utama | Tampilan Kata | Tampilan Praktik |
