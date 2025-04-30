@@ -15,8 +15,19 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !in_array($user->role, $roles)) {
-            abort(403, 'Unauthorized');
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        if (!in_array($user->role, $roles)) {
+            // Redirect ke dashboard sesuai role
+            if ($user->role === 'pemilik') {
+                return redirect()->route('pemilik.dashboard');
+            } elseif ($user->role === 'penyewa') {
+                return redirect()->route('home');
+            } else {
+                return redirect('/login');
+            }
         }
 
         return $next($request);
