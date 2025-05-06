@@ -50,7 +50,7 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                <div class="flex flex-col gap-4 pt-[22px]">
+                {{-- <div class="flex flex-col gap-4 pt-[22px]">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
@@ -72,14 +72,14 @@
                         </div>
                         <p class="font-semibold">628123982138</p>
                     </div>
-                    {{-- <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <img src="{{ asset('assets/images/icons/location.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                         <p class="text-gassor-grey">Alamat</p>
                     </div>
                     <p class="font-semibold text-right"></p>
-                    </div> --}}
-                </div>
+                    </div>
+                </div> --}}
             </div>
 
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
@@ -88,7 +88,7 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                <div class="flex flex-col gap-4 pt-[22px]">
+                {{-- <div class="flex flex-col gap-4 pt-[22px]">
                     <a href="#" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
@@ -103,7 +103,7 @@
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
-                </div>
+                </div> --}}
             </div>
 
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
@@ -112,7 +112,7 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                <div class="flex flex-col gap-4 pt-[22px]">
+                {{-- <div class="flex flex-col gap-4 pt-[22px]">
                     <a href="#" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
@@ -127,7 +127,7 @@
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
-                </div>
+                </div> --}}
             </div>
         </div>
 

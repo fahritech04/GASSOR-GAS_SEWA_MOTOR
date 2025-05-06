@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfilePenyewaController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PemilikController;
+use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,8 @@ Route::middleware(['auth', 'role:penyewa'])->group(function () {
 // Route khusus pemilik
 Route::middleware(['auth', 'role:pemilik'])->group(function () {
     Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])->name('pemilik.dashboard');
+    Route::get('/map', [MapController::class, 'showMap'])->name('map');
+    Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
 });
 
 

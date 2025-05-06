@@ -17,10 +17,10 @@
         <h1 class="font-bold text-[32px] leading-[48px]">Motor {{ $category->name }}</h1>
         <p class="text-gassor-grey">Tersedia {{ $category->motorbikeRentals->count() }} Motor</p>
     </div>
-    <button class="flex flex-col items-center text-center shrink-0 rounded-[22px] p-[10px_20px] gap-2 bg-white">
+    {{-- <button class="flex flex-col items-center text-center shrink-0 rounded-[22px] p-[10px_20px] gap-2 bg-white">
         <img src="{{ asset('assets/images/icons/star.svg') }}" class="w-6 h-6" alt="icon">
         <p class="font-bold text-sm">4/5</p>
-    </button>
+    </button> --}}
 </div>
 <section id="Result" class=" relative flex flex-col gap-4 px-5 mt-5 mb-9">
     @foreach ($motorbikeRentals as $motorbikeRental)
@@ -37,11 +37,11 @@
                     <img src="{{ asset('assets/images/icons/location.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                     <p class="text-sm text-gassor-grey">{{ $motorbikeRental->city->name }}</p>
                 </div>
-                <div class="flex items-center gap-[6px]">
+                {{-- <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">4 Orang</p>
-                </div>
+                </div> --}}
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}<span
                         class="text-sm text-gassor-grey font-normal">/hari</span></p>

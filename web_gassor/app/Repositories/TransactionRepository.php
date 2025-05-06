@@ -67,9 +67,10 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function calculateTotalAmount($pricePerMonth, $duration)
     {
         $subtotal = $pricePerMonth * $duration;
-        $tax = $subtotal * 0.11;
-        $insurance = $subtotal * 0.01;
-        return $subtotal + $tax + $insurance;
+        // $tax = $subtotal * 0.11;
+        // $insurance = $subtotal * 0.01;
+        // return $subtotal + $tax + $insurance;
+        return $subtotal;
     }
     public function calculatePaymentAmount($total, $paymentMethod)
     {

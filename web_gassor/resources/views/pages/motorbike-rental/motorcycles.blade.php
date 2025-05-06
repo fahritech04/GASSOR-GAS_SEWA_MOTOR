@@ -48,7 +48,7 @@
                 <div class="flex flex-col gap-3 w-full">
                     <h3 class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</h3>
                     <hr class="border-[#F1F2F6]">
-                    <div class="flex items-center gap-[6px]">
+                    {{-- <div class="flex items-center gap-[6px]">
                         <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                             alt="icon">
                         <p class="text-sm text-gassor-grey">{{ $motorcycle->capacity }} Orang</p>
@@ -56,7 +56,7 @@
                     <div class="flex items-center gap-[6px]">
                         <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                         <p class="text-sm text-gassor-grey">{{ $motorcycle->square_feet }} sqft flat</p>
-                    </div>
+                    </div> --}}
                     <hr class="border-[#F1F2F6]">
                     <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
                             class="text-sm text-gassor-grey font-normal">/hari</span></p>

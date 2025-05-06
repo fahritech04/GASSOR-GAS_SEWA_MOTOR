@@ -13,8 +13,9 @@
         </a>
         <p class="font-semibold text-white">Detail Motor</p>
         <button
-            class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm">
-            <img src="{{ asset('assets/images/icons/like.svg') }}" class="w-[26px] h-[26px]" alt="">
+            {{-- class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm"> --}}
+            class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden">
+            {{-- <img src="{{ asset('assets/images/icons/like.svg') }}" class="w-[26px] h-[26px]" alt=""> --}}
         </button>
     </div>
     <div id="Gallery" class="swiper-gallery w-full overflow-x-hidden -mb-[38px]">
@@ -34,11 +35,11 @@
     <main id="Details" class="relative flex flex-col rounded-t-[40px] py-5 pb-[10px] gap-4 bg-white z-10">
         <div id="Title" class="flex items-center justify-between gap-2 px-5">
             <h1 class="font-bold text-[22px] leading-[33px]">{{ $motorbikeRental->name }}</h1>
-            <div
+            {{-- <div
                 class="flex flex-col items-center text-center shrink-0 rounded-[22px] border border-[#F1F2F6] p-[10px_20px] gap-2 bg-white">
                 <img src="{{ asset('assets/images/icons/star.svg') }}" class="w-6 h-6" alt="icon">
                 <p class="font-bold text-sm">4/5</p>
-            </div>
+            </div> --}}
         </div>
         <hr class="border-[#F1F2F6] mx-5">
         <div id="Features" class="grid grid-cols-2 gap-x-[10px] gap-y-4 px-5">

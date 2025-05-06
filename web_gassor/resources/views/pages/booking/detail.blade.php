@@ -42,7 +42,7 @@
             <div class="flex flex-col gap-3 w-full">
                 <p class="font-semibold text-lg leading-[27px]">{{ $transaction->motorcycle->name }}</p>
                 <hr class="border-[#F1F2F6]">
-                <div class="flex items-center gap-[6px]">
+                {{-- <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->capacity }} Orang</p>
@@ -51,7 +51,7 @@
                     <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->square_feet }} sqft flat</p>
-                </div>
+                </div> --}}
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
                     {{ number_format($transaction->motorcycle->price_per_day, 0, ',', '.') }}<span
@@ -110,7 +110,7 @@
                 <img src="assets/images/icons/clock.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Durasi</p>
             </div>
-            <p class="font-semibold">{{ $transaction->duration }} Months</p>
+            <p class="font-semibold">{{ $transaction->duration }} Hari</p>
         </div>
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -124,7 +124,10 @@
                 <img src="assets/images/icons/calendar.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Berakhir pada</p>
             </div>
-            <p class="font-semibold">{{ \Carbon\Carbon::parse($transaction->start_date)->addMonths(intval($transaction->duration))->isoFormat('D MMMM YYYY') }}</p>
+            {{-- <p class="font-semibold">{{ \Carbon\Carbon::parse($transaction->start_date)->addMonths(intval($transaction->duration))->isoFormat('D MMMM YYYY') }}</p> --}}
+            <p class="font-semibold">
+                {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }}
+            </p>
         </div>
     </div>
 </div>
@@ -136,9 +139,10 @@
     </label>
     @php
     $subtotal = $transaction->motorcycle->price_per_day * $transaction->duration;
-    $tax = $subtotal * 0.11;
-    $insurance = $subtotal * 0.01;
-    $total = $subtotal + $tax + $insurance;
+    // $tax = $subtotal * 0.11;
+    // $insurance = $subtotal * 0.01;
+    // $total = $subtotal + $tax + $insurance;
+    $total = $subtotal;
     $downPayment = $total * 0.3;
     @endphp
     <div class="flex flex-col gap-4 pt-[22px]">
@@ -169,7 +173,7 @@
             </div>
             <p class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
         </div>
-        <div class="flex items-center justify-between">
+        {{-- <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="assets/images/icons/receipt-disscount.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">PPN 11%</p>
@@ -182,7 +186,7 @@
                 <p class="text-gassor-grey">Asuransi</p>
             </div>
             <p class="font-semibold">Rp {{ number_format($insurance, 0, ',', '.') }}</p>
-        </div>
+        </div> --}}
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="assets/images/icons/receipt-text.svg" class="w-6 h-6 flex shrink-0" alt="icon">

@@ -44,16 +44,11 @@
             <div class="flex flex-col gap-3 w-full">
                 <p class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</p>
                 <hr class="border-[#F1F2F6]">
-                <div class="flex items-center gap-[6px]">
+                {{-- <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">{{ $motorcycle->capacity }} Orang</p>
-                </div>
-                <div class="flex items-center gap-[6px]">
-                    <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
-                        alt="icon">
-                    <p class="text-sm text-gassor-grey">{{ $motorcycle->square_feet }} sqft flat</p>
-                </div>
+                </div> --}}
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
                     {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
@@ -81,7 +76,6 @@
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
                     placeholder="Ketik nama kamu" value="{{ old('name') }}">
             </label>
-
             @error('name')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
@@ -95,7 +89,6 @@
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
                     placeholder="Ketik email kamu" value="{{ old('email') }}">
             </label>
-
             @error('email')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
@@ -109,8 +102,6 @@
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
                     placeholder="Ketik nomor telepon kamu" value="{{ old('phone') }}">
             </label>
-
-
             @error('phone')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
@@ -123,7 +114,7 @@
                 </button>
                 <input id="Duration" type="text" value="1" name="duration"
                     class="appearance-none outline-none !bg-transparent w-[42px] text-center font-semibold text-[22px] leading-[33px]"
-                    inputmode="numeric" pattern="[0-9]*">
+                    inputmode="numeric" pattern="[0-9]*" autocomplete="off">
                 <button type="button" id="Plus" class="w-12 h-12 flex-shrink-0">
                     <img src="{{ asset('assets/images/icons/plus.svg') }}" alt="icon">
                 </button>
@@ -156,8 +147,7 @@
 
 @section('scripts')
 <script>
-    const defaultPrice = parseFloat('{{ $motorcycle -> price_per_day }}');
+    const defaultPrice = parseFloat('{{ $motorcycle->price_per_day }}');
 </script>
-
 <script src="{{ asset('assets/js/cust-info.js') }}"></script>
 @endsection

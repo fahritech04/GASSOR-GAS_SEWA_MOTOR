@@ -8,7 +8,7 @@
             <p>Selamat datang kembali</p>
             <h1 class="font-bold text-xl leading-[30px]">{{ auth()->user()->name }}</h1>
             </div>
-            <a href="#" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
+            <a href="{{ route('map') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
             <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
             </a>
         </div>
@@ -40,12 +40,12 @@
         <section id="Popular" class="flex flex-col gap-4 mt-[30px]">
             <div class="flex items-center justify-between px-5">
             <h2 class="font-bold">Daftar Motor Anda</h2>
-            <a href="#">
+            {{-- <a href="#">
                 <div class="flex items-center gap-2">
                 <span>See all</span>
                 <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                 </div>
-            </a>
+            </a> --}}
             </div>
             <div class="w-full overflow-x-hidden swiper">
             <div id="TabsContent" class="px-5">
@@ -56,7 +56,7 @@
                         <img src="{{ asset('assets/images/thumbnails/bonus-1.png') }}" class="object-cover w-full h-full" alt="thumbnails" />
                     </div>
                     <div>
-                        <p class="font-semibold">Clean Laundry</p>
+                        <p class="font-semibold">Honda Beat</p>
                         <div class="flex items-center gap-2 text-sm text-gassor-grey">
                         <img src="{{ asset('assets/images/icons/status.svg') }}" class="w-4 h-4" alt="status" />
                         <span>Tersedia</span>
@@ -73,18 +73,18 @@
         <section id="Cities" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
             <div class="flex items-center justify-between">
             <h2 class="font-bold">Pesanan Terbaru</h2>
-            <a href="#">
+            {{-- <a href="#">
                 <div class="flex items-center gap-2">
                 <span>See all</span>
                 <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                 </div>
-            </a>
+            </a> --}}
             </div>
             <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
             <div class="flex flex-col gap-4">
                 <div class="bonus-card flex items-center justify-between rounded-[22px] border border-[#000000] p-[10px] gap-3">
                 <div>
-                    <p class="font-semibold">Clean Laundry</p>
+                    <p class="font-semibold">Honda Beat</p>
                     <p class="text-sm text-gassor-grey">Disewa Oleh: <span class="font-semibold">Fahri</span></p>
                     <p class="text-sm text-gassor-grey">Tanggal: 29 April 2025</p>
                 </div>
