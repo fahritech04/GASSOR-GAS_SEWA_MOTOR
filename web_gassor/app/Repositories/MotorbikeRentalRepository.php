@@ -51,13 +51,44 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
         })->get();
     }
 
+    // public function getMotorbikeRentalBySlug($slug)
+    // {
+    //     return MotorbikeRental::where('slug', $slug)->first();
+    // }
+
+    // public function getMotorbikeRentalBySlug($slug)
+    // {
+    //     return MotorbikeRental::where('slug', $slug)
+    //         ->with(['motorcycles' => function ($query) {
+    //             $query->where('is_available', true);
+    //         }])
+    //         ->first();
+    // }
+
     public function getMotorbikeRentalBySlug($slug)
     {
-        return MotorbikeRental::where('slug', $slug)->first();
+        return MotorbikeRental::with([
+            'motorcycles.images', // tanpa filter is_available
+            'city', 'category', 'bonuses', 'testimonials'
+        ])
+        ->where('slug', $slug)
+        ->firstOrFail();
     }
 
     public function getMotorbikeRentalMotorcycleById($id)
     {
         return Motorcycle::find($id);
+    }
+
+    public function getMotorbikeRentalAvailableBySlug($slug)
+    {
+        return MotorbikeRental::with([
+            'motorcycles' => function($q) {
+                $q->where('is_available', true);
+            },
+            'motorcycles.images', 'city', 'category'
+        ])
+        ->where('slug', $slug)
+        ->firstOrFail();
     }
 }
