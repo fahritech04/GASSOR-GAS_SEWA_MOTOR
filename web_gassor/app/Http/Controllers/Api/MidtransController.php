@@ -40,19 +40,55 @@ class MidtransController extends Controller
             "Kami tunggu kedatangan Anda.";
 
         switch ($transactionStatus) {
+            // case 'capture':
+            //     if ($request->payment_type == 'credit_card') {
+            //         if ($request->fraud_status == 'challange') {
+            //             $transaction->update(['payment_status' => 'pending']);
+            //         } else {
+            //             $transaction->update(['payment_status' => 'success']);
+            //         }
+            //     } else {
+            //         $transaction->update(['payment_status' => 'success']);
+            //     }
+            //     break;
+            // case 'settlement':
+            //     $transaction->update(['payment_status' => 'success']);
+
+            //     $twilio->messages
+            //         ->create(
+            //             "whatsapp:+" . $transaction->phone_number, // to
+            //             array(
+            //                 "from" => "whatsapp:+14155238886",
+            //                 "body" => $messages
+            //             )
+            //         );
+
+            //     break;
             case 'capture':
                 if ($request->payment_type == 'credit_card') {
                     if ($request->fraud_status == 'challange') {
                         $transaction->update(['payment_status' => 'pending']);
                     } else {
                         $transaction->update(['payment_status' => 'success']);
+                        // Set motor tidak tersedia
+                        if ($transaction->motorcycle) {
+                            $transaction->motorcycle->update(['is_available' => false]);
+                        }
                     }
                 } else {
                     $transaction->update(['payment_status' => 'success']);
+                    // Set motor tidak tersedia
+                    if ($transaction->motorcycle) {
+                        $transaction->motorcycle->update(['is_available' => false]);
+                    }
                 }
                 break;
             case 'settlement':
                 $transaction->update(['payment_status' => 'success']);
+                // Set motor tidak tersedia
+                if ($transaction->motorcycle) {
+                    $transaction->motorcycle->update(['is_available' => false]);
+                }
 
                 $twilio->messages
                     ->create(
