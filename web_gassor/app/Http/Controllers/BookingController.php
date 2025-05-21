@@ -22,10 +22,20 @@ class BookingController extends Controller
         $this->transactionRepository = $transactionRepository;
     }
 
+    // public function booking(Request $request, $slug)
+    // {
+    //     $this->transactionRepository->saveTransactionDataToSession($request->all());
+
+    //     return redirect()->route('booking.information', $slug);
+    // }
+
     public function booking(Request $request, $slug)
     {
+        $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
+        if (!$motorcycle || !$motorcycle->is_available) {
+            return redirect()->back()->with('error', 'Motor sudah tidak tersedia.');
+        }
         $this->transactionRepository->saveTransactionDataToSession($request->all());
-
         return redirect()->route('booking.information', $slug);
     }
 
