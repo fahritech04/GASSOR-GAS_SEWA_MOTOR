@@ -30,9 +30,16 @@ class MotorbikeRentalController extends Controller
         return view('pages.motorbike-rental.show', compact('motorbikeRental'));
     }
 
+    // public function motorcycles($slug)
+    // {
+    //     $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
+
+    //     return view('pages.motorbike-rental.motorcycles', compact('motorbikeRental'));
+    // }
+
     public function motorcycles($slug)
     {
-        $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
+        $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalAvailableBySlug($slug);
 
         return view('pages.motorbike-rental.motorcycles', compact('motorbikeRental'));
     }
