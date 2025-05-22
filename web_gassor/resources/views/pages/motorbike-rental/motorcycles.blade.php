@@ -35,35 +35,39 @@
     <input type="hidden" name="motorbike_rental_id" value="{{ $motorbikeRental->id }}">
     <h2 class="font-bold px-5">Motor yang Tersedia</h2>
     <div id="MotorcyclesContainer" class="flex flex-col gap-4 px-5">
-        @foreach ($motorbikeRental->motorcycles as $motorcycle)
-        <label class="relative group">
-            <input type="radio" name="motorcycle_id" class="absolute top-1/2 left-1/2 -z-10 opacity-0" value="{{ $motorcycle->id }}" required>
-            <div
-                class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#91BF77] group-has-[:checked]:ring-2 group-has-[:checked]:ring-[#91BF77] transition-all duration-300">
-                <div class="flex w-[120px] h-[156px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
-                    {{-- @dd($motorcycle->images) --}}
+        @if($motorbikeRental->motorcycles->isEmpty())
+            <p class="text-center text-gassor-grey">Semua motor sudah dipinjam, silakan cek kembali nanti.</p>
+        @else
+            @foreach ($motorbikeRental->motorcycles as $motorcycle)
+            <label class="relative group">
+                <input type="radio" name="motorcycle_id" class="absolute top-1/2 left-1/2 -z-10 opacity-0" value="{{ $motorcycle->id }}" required>
+                <div
+                    class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#91BF77] group-has-[:checked]:ring-2 group-has-[:checked]:ring-[#91BF77] transition-all duration-300">
+                    <div class="flex w-[120px] h-[156px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
+                        {{-- @dd($motorcycle->images) --}}
 
-                    <img src="{{ asset('storage/' . $motorcycle->images->first()->image) }}" class="w-full h-full object-cover" alt="icon">
-                </div>
-                <div class="flex flex-col gap-3 w-full">
-                    <h3 class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</h3>
-                    <hr class="border-[#F1F2F6]">
-                    {{-- <div class="flex items-center gap-[6px]">
-                        <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
-                            alt="icon">
-                        <p class="text-sm text-gassor-grey">{{ $motorcycle->capacity }} Orang</p>
+                        <img src="{{ asset('storage/' . $motorcycle->images->first()->image) }}" class="w-full h-full object-cover" alt="icon">
                     </div>
-                    <div class="flex items-center gap-[6px]">
-                        <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
-                        <p class="text-sm text-gassor-grey">{{ $motorcycle->square_feet }} sqft flat</p>
-                    </div> --}}
-                    <hr class="border-[#F1F2F6]">
-                    <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
-                            class="text-sm text-gassor-grey font-normal">/hari</span></p>
+                    <div class="flex flex-col gap-3 w-full">
+                        <h3 class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</h3>
+                        <hr class="border-[#F1F2F6]">
+                        {{-- <div class="flex items-center gap-[6px]">
+                            <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
+                                alt="icon">
+                            <p class="text-sm text-gassor-grey">{{ $motorcycle->capacity }} Orang</p>
+                        </div>
+                        <div class="flex items-center gap-[6px]">
+                            <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                            <p class="text-sm text-gassor-grey">{{ $motorcycle->square_feet }} sqft flat</p>
+                        </div> --}}
+                        <hr class="border-[#F1F2F6]">
+                        <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
+                                class="text-sm text-gassor-grey font-normal">/hari</span></p>
+                    </div>
                 </div>
-            </div>
-        </label>
-        @endforeach
+            </label>
+            @endforeach
+        @endif
     </div>
     <div id="BottomButton" class="relative flex w-full h-[98px] shrink-0">
         <div class="fixed bottom-[30px] w-full max-w-[640px] px-5 z-10">
