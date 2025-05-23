@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('motorbike_rental_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('motorcycle_type');
-            $table->integer('square_feet');
+            $table->string('vehicle_number_plate');
             $table->integer('capacity');
             $table->integer('price_per_day');
             $table->boolean('is_available');

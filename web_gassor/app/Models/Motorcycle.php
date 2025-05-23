@@ -14,7 +14,7 @@ class Motorcycle extends Model
         'motorbike_rental_id',
         'name',
         'motorcycle_type',
-        'square_feet',
+        'vehicle_number_plate',
         'capacity',
         'price_per_day',
         'is_available',

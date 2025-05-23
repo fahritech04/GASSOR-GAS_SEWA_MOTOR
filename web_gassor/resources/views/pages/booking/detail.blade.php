@@ -46,12 +46,12 @@
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->capacity }} Orang</p>
-                </div>
+                </div> --}}
                 <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
-                    <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->square_feet }} sqft flat</p>
-                </div> --}}
+                    <p class="text-sm text-gassor-grey">Nomor Polisi : {{ $transaction->motorcycle->vehicle_number_plate }}</p>
+                </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
                     {{ number_format($transaction->motorcycle->price_per_day, 0, ',', '.') }}<span
