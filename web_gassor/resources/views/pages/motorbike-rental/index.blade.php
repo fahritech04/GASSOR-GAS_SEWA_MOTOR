@@ -36,14 +36,11 @@
                     <p class="text-sm text-gassor-grey">Wilayah {{ $motorbikeRental->city->name }}</p>
                 </div>
                 <div class="flex items-center gap-[6px]">
-                    <img src="assets/images/icons/profile-2user.svg" class="w-5 h-5 flex shrink-0" alt="icon">
-                    <p class="text-sm text-gassor-grey">4 Orang</p>
+                    <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
+                        alt="icon">
+                    <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
                 </div>
                 <hr class="border-[#F1F2F6]">
-                <p class="font-semibold text-lg text-gassor-orange">Rp
-                    {{ number_format($motorbikeRental->price, 0, ',', '.') }}<span
-                        class="text-sm text-gassor-grey font-normal">/hari</span>
-                </p>
             </div>
         </div>
     </a>
