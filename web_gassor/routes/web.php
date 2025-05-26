@@ -7,6 +7,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfilePenyewaController;
+use App\Http\Controllers\ProfilePemilikController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\MapController;
@@ -34,6 +35,7 @@ Route::middleware(['auth', 'role:penyewa'])->group(function () {
     Route::get('/find-motor', [MotorbikeRentalController::class, 'find'])->name('find-motor');
     Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->name('find-motor.results');
     Route::get('/profile/penyewa', [ProfilePenyewaController::class, 'index'])->name('profile.penyewa');
+    Route::get('/editprofile/penyewa', [ProfilePenyewaController::class, 'edit'])->name('editprofile.penyewa');
     Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
     Route::get('/motor/booking/{slug}', [BookingController::class, 'booking'])->name('booking');
     Route::get('/motor/booking/{slug}/information', [BookingController::class, 'information'])->name('booking.information');
@@ -47,7 +49,13 @@ Route::middleware(['auth', 'role:penyewa'])->group(function () {
 
 // Route khusus pemilik
 Route::middleware(['auth', 'role:pemilik'])->group(function () {
-    Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])->name('pemilik.dashboard');
+    Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])
+    ->middleware(['auth', 'role:pemilik'])
+    ->name('pemilik.dashboard');
+    Route::get('/profile/pemilik', [ProfilePemilikController::class, 'index'])->name('profile.pemilik');
+    Route::get('/editprofile/pemilik', [ProfilePemilikController::class, 'edit'])->name('editprofile.pemilik');
+    Route::get('/pemilik/daftar-motor', [PemilikController::class, 'showDaftarMotor'])->name('pemilik.daftar-motor');
+    Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
     Route::get('/map', [MapController::class, 'showMap'])->name('map');
     Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
 });
