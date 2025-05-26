@@ -24,16 +24,8 @@
       <form method="POST" action="{{ route('register') }}" class="relative flex flex-col gap-5 px-5 mt-8">
         @csrf
         <div class="form-col">
-            <label for="fullname" class="text-sm font-medium">Nama Lengkap</label>
-            <input type="text" id="fullname" name="fullname" placeholder="Masukkan nama lengkap anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" style="border-radius: 12px;" required />
-        </div>
-        <div class="form-col">
             <label for="email" class="text-sm font-medium">Email</label>
             <input type="email" id="email" name="email" placeholder="Masukkan email anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" style="border-radius: 12px;" required />
-        </div>
-        <div class="form-col">
-            <label for="no_telepon" class="text-sm font-medium">No Telepon</label>
-            <input type="number" id="no_telepon" name="no_telepon" placeholder="Masukkan nomor telepon anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" style="border-radius: 12px;" required />
         </div>
         <div class="form-col">
             <label for="password" class="text-sm font-medium">Kata Sandi</label>
