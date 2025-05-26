@@ -68,17 +68,17 @@
                     <input type="checkbox" class="absolute hidden" />
                 </label>
                 <div class="flex flex-col gap-4 pt-[22px]">
-                    <a href="#" class="flex items-center justify-between">
+                    <a href="{{ route('editprofile.penyewa') }}" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Change Password</p>
+                            <p class="text-gassor-grey">Edit Account</p>
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
                     <a href="#" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/notification.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Notification Settings</p>
+                            <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                            <p class="text-gassor-grey">Change Password</p>
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
