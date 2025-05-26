@@ -14,12 +14,24 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'name' => 'pemilik',
-            'email' => 'pemilik@gmail.com',
-            'password' => Hash::make('pemilik'),
-            'role' => "pemilik",
+        // DB::table('users')->insert([
+        //     'name' => 'pemilik',
+        //     'email' => 'pemilik@gmail.com',
+        //     'password' => Hash::make('pemilik'),
+        //     'role' => "pemilik",
 
-        ]);
+        // ]);
+
+        $owners = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $owners[] = [
+                'name' => 'Pemilik ' . $i,
+                'email' => 'pemilik' . $i . '@gmail.com',
+                'password' => Hash::make('pemilik' . $i),
+                'role' => 'pemilik',
+            ];
+        }
+
+        DB::table('users')->insert($owners);
     }
 }

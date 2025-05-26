@@ -76,4 +76,14 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         return $paymentMethod === 'full_payment' ? $total : $total * 0.3;
     }
+    public function getLatestTransactionsByOwner($ownerId, $limit = 10)
+    {
+        return Transaction::with(['motorcycle', 'motorcycle.owner'])
+            ->whereHas('motorcycle', function ($query) use ($ownerId) {
+                $query->where('owner_id', $ownerId);
+            })
+            ->latest()
+            ->take($limit)
+            ->get();
+    }
 }

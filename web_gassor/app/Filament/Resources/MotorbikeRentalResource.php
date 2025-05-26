@@ -49,10 +49,6 @@ class MotorbikeRentalResource extends Resource
                                     ->required(),
                                 Forms\Components\RichEditor::make('description')
                                     ->required(),
-                                Forms\Components\TextInput::make('price')
-                                    ->numeric()
-                                    ->prefix('IDR')
-                                    ->required(),
                                 Forms\Components\Textarea::make('address')
                                     ->required(),
                             ]),
@@ -76,12 +72,18 @@ class MotorbikeRentalResource extends Resource
                                 Forms\Components\Repeater::make('motorcycles')
                                     ->relationship('motorcycles')
                                     ->schema([
+                                        Forms\Components\Select::make('owner_id')
+                                            ->label('Pemilik')
+                                            ->options(
+                                                \App\Models\User::where('role', 'pemilik')->pluck('name', 'id')
+                                            )
+                                            ->searchable()
+                                            ->required(),
                                         Forms\Components\TextInput::make('name')
                                             ->required(),
                                         Forms\Components\TextInput::make('motorcycle_type')
                                             ->required(),
-                                        Forms\Components\TextInput::make('square_feet')
-                                            ->numeric()
+                                        Forms\Components\TextInput::make('vehicle_number_plate')
                                             ->required(),
                                         Forms\Components\TextInput::make('capacity')
                                             ->numeric()
@@ -113,7 +115,6 @@ class MotorbikeRentalResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('city.name'),
                 Tables\Columns\TextColumn::make('category.name'),
-                Tables\Columns\TextColumn::make('price'),
                 Tables\Columns\ImageColumn::make('thumbnail')
             ])
             ->filters([

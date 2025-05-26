@@ -10,4 +10,8 @@ class ProfilePenyewaController extends Controller
     {
         return view ('pages.profile.profile-penyewa');
     }
+    public function edit ()
+    {
+        return view ('pages.profile.editprofile-penyewa');
+    }
 }

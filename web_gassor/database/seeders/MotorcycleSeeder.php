@@ -16,6 +16,7 @@ class MotorcycleSeeder extends Seeder
         $motorcycles = [
             [
                 'motorbike_rental_id' => 1,
+                'owner_id' => 1,
                 'name' => 'Scoopy 125cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'B 1234 KZT',
@@ -27,6 +28,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 1,
+                'owner_id' => 1,
                 'name' => 'Scoopy 50cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'D 6789 MUI',
@@ -38,6 +40,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 1,
+                'owner_id' => 1,
                 'name' => 'Scoopy 200cc',
                 'motorcycle_type' => 'sport',
                 'vehicle_number_plate' => 'L 4321 ZPA',
@@ -49,6 +52,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 2,
+                'owner_id' => 2,
                 'name' => 'Vario 125cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'AB 9090 TKX',
@@ -60,6 +64,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 2,
+                'owner_id' => 2,
                 'name' => 'Vario 50cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'F 1122 VGB',
@@ -71,6 +76,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 2,
+                'owner_id' => 2,
                 'name' => 'Vario 200cc',
                 'motorcycle_type' => 'sport',
                 'vehicle_number_plate' => 'H 3344 LWN',
@@ -82,6 +88,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 3,
+                'owner_id' => 3,
                 'name' => 'Beat 125cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'DA 5566 QRP',
@@ -93,6 +100,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 3,
+                'owner_id' => 3,
                 'name' => 'Beat 50cc',
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'BK 7788 YUE',
@@ -104,6 +112,7 @@ class MotorcycleSeeder extends Seeder
             ],
             [
                 'motorbike_rental_id' => 3,
+                'owner_id' => 3,
                 'name' => 'Beat 200cc',
                 'motorcycle_type' => 'sport',
                 'vehicle_number_plate' => 'KT 9900 HDS',

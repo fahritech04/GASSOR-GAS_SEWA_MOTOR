@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('motorcycles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('owner_id')->constrained('users');
             $table->foreignId('motorbike_rental_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('motorcycle_type');
