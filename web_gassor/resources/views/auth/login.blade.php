@@ -18,10 +18,15 @@
             </div>
             <div class="flex flex-col gap-1">
                 <label for="password" class="text-sm font-medium">Kata Sandi</label>
-                <input type="password" name="password" id="password" placeholder="Masukkan kata sandi anda"
-                    class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
-                    style="border-radius: 12px;"
-                    required />
+                <div style="position: relative;">
+                    <input type="password" name="password" id="password" placeholder="Masukkan kata sandi anda"
+                        class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
+                        style="border-radius: 12px;"
+                        required />
+                    <span onclick="togglePassword()" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                        <img id="eye-icon" src="{{ asset('assets/images/icons/eye.svg') }}" alt="Show Password" style="width: 22px; height: 22px;">
+                    </span>
+                </div>
             </div>
             <div class="flex flex-col gap-1">
                 <label for="role" class="text-sm font-medium">Masuk Sebagai</label>
@@ -62,6 +67,18 @@
 
 @section('scripts')
     <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.src = "{{ asset('assets/images/icons/eye-off.svg') }}";
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.src = "{{ asset('assets/images/icons/eye.svg') }}";
+            }
+        }
+
         function submitGoogleLogin() {
             var roleSelect = document.getElementById('role');
             var googleRoleInput = document.getElementById('google-role-input');
