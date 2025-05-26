@@ -11,7 +11,7 @@
             class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm">
             <img src="{{ asset('assets/images/icons/arrow-left-transparent.svg') }}" class="w-8 h-8" alt="icon">
         </a>
-        <p class="font-semibold text-white">Detail Motor</p>
+        <p class="font-semibold text-white px-6 py-2 rounded-full backdrop-blur-sm" style="background: rgba(0, 0, 0, 0.100);">Detail Motor</p>
         <button
             {{-- class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm"> --}}
             class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden">
@@ -19,7 +19,7 @@
         </button>
     </div>
     <div id="Gallery" class="swiper-gallery w-full overflow-x-hidden -mb-[38px]">
-        <div class="swiper-wrapper">
+        {{-- <div class="swiper-wrapper">
             @foreach ($motorbikeRental->motorcycles as $motorcycle)
             @foreach ($motorcycle->images as $image)
             <div class="swiper-slide !w-fit">
@@ -29,6 +29,18 @@
                 </div>
             </div>
             @endforeach
+            @endforeach
+        </div> --}}
+        <div class="swiper-wrapper">
+            @foreach ($motorbikeRental->motorcycles as $motorcycle)
+                @foreach ($motorcycle->images as $image)
+                    <div class="swiper-slide !w-fit">
+                        <div class="flex shrink-0 w-[320px] h-[430px] overflow-hidden">
+                            <img src="{{ asset('storage/' . $image->image) }}" class="w-full h-full object-cover"
+                                alt="gallery thumbnails">
+                        </div>
+                    </div>
+                @endforeach
             @endforeach
         </div>
     </div>
@@ -51,14 +63,14 @@
                 <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
             </div>
-            <div class="flex items-center gap-[6px]">
+            {{-- <div class="flex items-center gap-[6px]">
                 <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">4 Orang</p>
             </div>
             <div class="flex items-center gap-[6px]">
                 <img src="{{ asset('assets/images/icons/shield-tick.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Privacy 100%</p>
-            </div>
+            </div> --}}
         </div>
         <hr class="border-[#F1F2F6] mx-5">
         <div id="About" class="flex flex-col gap-[6px] px-5">
@@ -149,15 +161,15 @@
     </main>
     <div id="BottomNav" class="relative flex w-full h-[138px] shrink-0">
         <div class="fixed bottom-5 w-full max-w-[640px] px-5 z-10">
-            <div class="flex items-center justify-between rounded-[40px] py-4 px-6 bg-gassor-black">
+            {{-- <div class="flex items-center justify-between rounded-[40px] py-4 px-6 bg-gassor-black">
                 <p class="font-bold text-xl leading-[30px] text-white">
                     Rp {{ number_format($motorbikeRental->price, 0, ',', '.') }}
                     <br>
                     <span class="text-sm font-normal">/hari</span>
                 </p>
-                <a href="{{ route('motor.motorcycles', $motorbikeRental->slug ) }}"
-                    class="flex shrink-0 rounded-full py-[14px] px-5 bg-gassor-orange font-bold text-white">Pesan Sekarang</a>
-            </div>
+            </div> --}}
+            <a href="{{ route('motor.motorcycles', $motorbikeRental->slug ) }}"
+                class="flex shrink-0 rounded-full py-[14px] px-5 bg-gassor-orange font-bold text-white">Pesan Sekarang</a>
         </div>
     </div>
 </div>
