@@ -55,7 +55,7 @@
                 onclick="submitGoogleLogin()"
                 style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 12px; background-color: transparent">
                 <img src="{{ asset('assets/images/icons/google.svg') }}" style="width: 20px; height: 20px" alt="google icon" />
-                Masuk Dengan Google
+                Masuk / Daftar
             </button>
         </form>
         <p class="mt-5 text-sm text-center">

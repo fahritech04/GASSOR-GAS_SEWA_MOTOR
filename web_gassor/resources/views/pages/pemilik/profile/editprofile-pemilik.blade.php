@@ -15,23 +15,23 @@
         <a href="{{ route('profile.pemilik') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
             <img src="assets/images/icons/arrow-left.svg" class="w-[28px] h-[28px]" alt="icon" />
         </a>
-        <p class="font-semibold">Create Account</p>
+        <p class="font-semibold">Edit Akun</p>
         <div class="w-12 dummy-btn"></div>
         </div>
 
         <div style="position: relative; display: flex; flex-direction: column; padding-left: 1.25rem; padding-right: 1.25rem; margin-top: 2rem">
-        <h1 style="font-size: 1.5rem; line-height: 2rem; font-weight: 700">Sign Up</h1>
-        <p style="margin-top: 0.5rem; color: #6b7280">Fill in the form below to create an account</p>
+        <h1 style="font-size: 1.5rem; line-height: 2rem; font-weight: 700"></h1>
+        <p style="margin-top: 0.5rem; color: #6b7280">Isi formulir di bawah ini untuk membuat akun</p>
         </div>
 
         <div class="relative flex flex-col gap-5 px-5 mt-8">
         <!-- Full Name (single column) -->
         <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="fullname" class="text-sm font-medium">Full Name</label>
+            <label for="fullname" class="text-sm font-medium">Nama Lengkap</label>
             <input type="text" id="fullname" placeholder="Enter your full name" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="fullname" class="text-sm font-medium">Username</label>
+            <label for="fullname" class="text-sm font-medium">Nama Pengguna</label>
             <input type="text" id="fullname" placeholder="Enter your full name" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
         </div>
 
@@ -54,12 +54,12 @@
             <input type="email" id="email" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
             </div>
             <div class="form-col">
-            <label for="phone" class="text-sm font-medium">Phone Number</label>
+            <label for="phone" class="text-sm font-medium">Nomor Telepon</label>
             <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
             </div>
         </div>
 
-        <button class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Create Account</button>
+        <button class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Simpan Akun</button>
         </div>
     </div>
 @endsection

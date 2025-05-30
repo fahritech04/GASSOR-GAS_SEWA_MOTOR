@@ -74,7 +74,7 @@
         </div>
         <hr class="border-[#F1F2F6] mx-5">
         <div id="About" class="flex flex-col gap-[6px] px-5">
-            <h2 class="font-bold">About</h2>
+            <h2 class="font-bold">Tentang</h2>
             <p class="leading-[30px]">{!! $motorbikeRental->description !!}</p>
         </div>
         <div id="Tabs" class="swiper-tab w-full overflow-x-hidden">
@@ -97,7 +97,7 @@
                 <div class="swiper-slide !w-fit">
                     <button
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
-                        data-target-tab="#Contact-Tab">Contact</button>
+                        data-target-tab="#Contact-Tab">kontak</button>
                 </div>
                 {{-- <div class="swiper-slide !w-fit">
                     <button

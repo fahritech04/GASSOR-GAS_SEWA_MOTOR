@@ -106,7 +106,7 @@
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
         </div>
-        <div class="flex items-center justify-between px-5">
+        {{-- <div class="flex items-center justify-between px-5">
             <p class="font-semibold">Durasi dalam Hari</p>
             <div class="relative flex items-center gap-[10px] w-fit">
                 <button type="button" id="Minus" class="w-12 h-12 flex-shrink-0">
@@ -115,9 +115,22 @@
                 <input id="Duration" type="text" value="1" name="duration"
                     class="appearance-none outline-none !bg-transparent w-[42px] text-center font-semibold text-[22px] leading-[33px]"
                     inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+                    <div class="relative flex items-center gap-[10px] w-fit">
+                        <input id="Duration" type="hidden" value="1" name="duration">
+                        <span class="font-semibold text-[22px] leading-[33px]">1</span>
+                        <span class="ml-1">hari</span>
+                    </div>
                 <button type="button" id="Plus" class="w-12 h-12 flex-shrink-0">
                     <img src="{{ asset('assets/images/icons/plus.svg') }}" alt="icon">
                 </button>
+            </div>
+        </div> --}}
+        <div class="flex items-center px-5">
+            <p class="font-semibold">Durasi sewa hanya bisa dalam : </p>
+            <div class="flex items-center gap-2">
+                <input id="Duration" type="hidden" value="1" name="duration">
+                <span class="font-semibold text-[22px] leading-[33px]"> 1</span>
+                <span class="ml-1">hari</span>
             </div>
         </div>
         <div class="flex flex-col gap-2">

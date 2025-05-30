@@ -37,21 +37,26 @@ for (let i = today.getDate(); i <= lastDayOfMonth; i++) {
         </div>`;
 }
 
-const minusButton = document.getElementById("Minus");
-const plusButton = document.getElementById("Plus");
+// const minusButton = document.getElementById("Minus");
+// const plusButton = document.getElementById("Plus");
 const durationInput = document.getElementById("Duration");
 const priceElement = document.getElementById("price");
-const maxDuration = 999; // Maksimal 999 hari
+// const maxDuration = 999; // Maksimal 999 hari
+
+// function updatePrice() {
+//     let duration = parseInt(durationInput.value, 10);
+
+//     if (!isNaN(duration) && duration >= 1 && duration <= maxDuration) {
+//         const totalPrice = defaultPrice * duration;
+//         priceElement.innerHTML = `Rp ${totalPrice.toLocaleString("id-ID")}`;
+//     } else {
+//         priceElement.innerHTML = "Rp 0";
+//     }
+// }
 
 function updatePrice() {
-    let duration = parseInt(durationInput.value, 10);
-
-    if (!isNaN(duration) && duration >= 1 && duration <= maxDuration) {
-        const totalPrice = defaultPrice * duration;
-        priceElement.innerHTML = `Rp ${totalPrice.toLocaleString("id-ID")}`;
-    } else {
-        priceElement.innerHTML = "Rp 0";
-    }
+    const totalPrice = defaultPrice * 1;
+    priceElement.innerHTML = `Rp ${totalPrice.toLocaleString("id-ID")}`;
 }
 
 function validateInput(value) {
@@ -82,29 +87,31 @@ durationInput.addEventListener("blur", () => {
     }
 });
 
-minusButton.addEventListener("click", () => {
-    let value = parseInt(durationInput.value, 10);
-    if (isNaN(value) || value <= 1) {
-        value = 1;
-    } else {
-        value--;
-    }
-    durationInput.value = value;
-    updatePrice();
-});
+updatePrice();
 
-plusButton.addEventListener("click", () => {
-    let value = parseInt(durationInput.value, 10);
-    if (isNaN(value)) {
-        value = 1;
-    } else if (value < maxDuration) {
-        value++;
-    } else {
-        value = maxDuration;
-    }
-    durationInput.value = value;
-    updatePrice();
-});
+// minusButton.addEventListener("click", () => {
+//     let value = parseInt(durationInput.value, 10);
+//     if (isNaN(value) || value <= 1) {
+//         value = 1;
+//     } else {
+//         value--;
+//     }
+//     durationInput.value = value;
+//     updatePrice();
+// });
+
+// plusButton.addEventListener("click", () => {
+//     let value = parseInt(durationInput.value, 10);
+//     if (isNaN(value)) {
+//         value = 1;
+//     } else if (value < maxDuration) {
+//         value++;
+//     } else {
+//         value = maxDuration;
+//     }
+//     durationInput.value = value;
+//     updatePrice();
+// });
 
 // Inisialisasi harga awal
 updatePrice();
