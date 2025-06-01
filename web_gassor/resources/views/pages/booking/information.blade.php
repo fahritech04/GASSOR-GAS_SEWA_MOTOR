@@ -74,7 +74,7 @@
                     alt="icon">
                 <input type="text" name="name" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik nama kamu" value="{{ old('name') }}">
+                    placeholder="Ketik nama kamu" value="{{ old('name', Auth::user() ? Auth::user()->name : '') }}">
             </label>
             @error('name')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
@@ -87,7 +87,7 @@
                 <img src="{{ asset('assets/images/icons/sms.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <input type="email" name="email" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik email kamu" value="{{ old('email') }}">
+                    placeholder="Ketik email kamu" value="{{ old('email', Auth::user() ? Auth::user()->email : '') }}">
             </label>
             @error('email')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
@@ -100,7 +100,7 @@
                 <img src="{{ asset('assets/images/icons/call.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <input type="tel" name="phone_number" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik nomor telepon kamu" value="{{ old('phone') }}">
+                    placeholder="Ketik nomor telepon kamu" value="{{ old('phone_number', Auth::user() ? Auth::user()->phone : '') }}">
             </label>
             @error('phone_number')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
