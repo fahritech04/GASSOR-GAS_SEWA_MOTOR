@@ -125,8 +125,8 @@
     @csrf
     <div id="PaymentOptions" class="flex flex-col rounded-[30px] border border-[#F1F2F6] p-5 gap-4 mx-5">
         <div id="TabButton-Container"
-            class="flex items-center justify-between border-b border-[#F1F2F6] gap-[18px]">
-            <label class="tab-link group relative flex flex-col justify-between gap-4"
+            class="flex items-center border-b border-[#F1F2F6] gap-[18px]">
+            {{-- <label class="tab-link group relative flex flex-col justify-between gap-4"
                 data-target-tab="#DownPayment-Tab">
                 <input type="radio" name="payment_method" value="down_payment"
                     class="absolute -z-10 top-1/2 left-1/2 opacity-0" checked>
@@ -144,8 +144,8 @@
                 <div
                     class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#91BF77] group-has-[:checked]:w-[90%] transition-all duration-300">
                 </div>
-            </label>
-            <div class="flex h-6 w-[1px] border border-[#F1F2F6] mb-auto"></div>
+            </label> --}}
+            {{-- <div class="flex h-6 w-[1px] border border-[#F1F2F6] mb-auto"></div> --}}
             <label class="tab-link group relative flex flex-col justify-between gap-4"
                 data-target-tab="#FullPayment-Tab">
                 <input type="radio" name="payment_method" value="full_payment"

@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
+// Select Role page
+Route::get('/select-role', function () {
+    return view('select-role');
+})->name('select-role')->middleware('guest');
+
 // Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

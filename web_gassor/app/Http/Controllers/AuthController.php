@@ -11,9 +11,14 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function showLogin(Request $request)
     {
+        // Jika tidak ada role di query, redirect ke select-role
+        if (!$request->has('role') || !in_array($request->role, ['penyewa', 'pemilik'])) {
+            return redirect()->route('select-role');
+        }
         return view('auth.login');
+        // return view('select-role');
     }
 
     public function showRegister()

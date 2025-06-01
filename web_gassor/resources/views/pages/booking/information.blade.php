@@ -102,7 +102,7 @@
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
                     placeholder="Ketik nomor telepon kamu" value="{{ old('phone') }}">
             </label>
-            @error('phone')
+            @error('phone_number')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
         </div>

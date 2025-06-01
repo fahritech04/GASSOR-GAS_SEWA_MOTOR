@@ -126,7 +126,7 @@
 
     </div>
 
-@include('includes.navigation_pemilik')
+{{-- @include('includes.navigation_pemilik') --}}
 @endsection
 
 @section('script')
