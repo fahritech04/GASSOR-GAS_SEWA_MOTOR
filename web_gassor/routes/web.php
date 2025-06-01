@@ -41,6 +41,7 @@ Route::middleware(['auth', 'role:penyewa'])->group(function () {
     Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->name('find-motor.results');
     Route::get('/profile/penyewa', [ProfilePenyewaController::class, 'index'])->name('profile.penyewa');
     Route::get('/editprofile/penyewa', [ProfilePenyewaController::class, 'edit'])->name('editprofile.penyewa');
+    Route::post('/editprofile/penyewa', [ProfilePenyewaController::class, 'update'])->name('editprofile.penyewa.update');
     Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
     Route::get('/motor/booking/{slug}', [BookingController::class, 'booking'])->name('booking');
     Route::get('/motor/booking/{slug}/information', [BookingController::class, 'information'])->name('booking.information');
@@ -59,6 +60,7 @@ Route::middleware(['auth', 'role:pemilik'])->group(function () {
     ->name('pemilik.dashboard');
     Route::get('/profile/pemilik', [ProfilePemilikController::class, 'index'])->name('profile.pemilik');
     Route::get('/editprofile/pemilik', [ProfilePemilikController::class, 'edit'])->name('editprofile.pemilik');
+    Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');
     Route::get('/pemilik/daftar-motor', [PemilikController::class, 'showDaftarMotor'])->name('pemilik.daftar-motor');
     Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
     Route::get('/map', [MapController::class, 'showMap'])->name('map');

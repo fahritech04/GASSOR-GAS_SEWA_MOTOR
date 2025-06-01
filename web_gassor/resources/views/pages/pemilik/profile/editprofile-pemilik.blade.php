@@ -19,82 +19,86 @@
         <div class="w-12 dummy-btn"></div>
         </div>
 
-        <div style="position: relative; display: flex; flex-direction: column; padding-left: 1.25rem; padding-right: 1.25rem; margin-top: 2rem">
-        <h1 style="font-size: 1.5rem; line-height: 2rem; font-weight: 700"></h1>
-        </div>
+        @if(session('success'))
+            <div class="alert alert-success" style="background:#d1fae5;color:#065f46;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger" style="background:#fee2e2;color:#991b1b;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if($errors->any())
+            <div class="alert alert-danger" style="background:#fee2e2;color:#991b1b;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
+                {{ $errors->first() }}
+            </div>
+        @endif
 
-        <div class="relative flex flex-col gap-5 px-5 mt-8">
-        <!-- Profile Image Upload with Preview & Edit/Delete -->
-        <div style="display: flex; flex-direction: column; gap: 0.75rem">
-            <label for="profile_image" class="text-sm font-medium">Foto Profil</label>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div id="profile-image-preview-container" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #F5F6F8; display: flex; align-items: center; justify-content: center; border: 2px solid #e6a43b; margin-right: 2rem;">
-                    <img id="profile-image-preview"
-                        src="{{ old('profile_image_url', Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg')) }}"
-                        alt="Preview"
-                        style="object-fit: cover; border-radius: 50%; width: {{ (!Auth::user()->profile_image_url && !old('profile_image_url')) ? '50%' : '100%' }}; height: {{ (!Auth::user()->profile_image_url && !old('profile_image_url')) ? '50%' : '100%' }}; transition: width 0.2s, height 0.2s; background: #fff;" />
+        <form method="POST" action="{{ route('editprofile.pemilik.update') }}" enctype="multipart/form-data" class="relative flex flex-col gap-5 px-5 mt-8">
+            @csrf
+            <!-- Profile Image Upload with Preview & Edit/Delete -->
+            <div style="display: flex; flex-direction: column; gap: 0.75rem">
+                <label for="profile_image" class="text-sm font-medium">Foto Profil</label>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div id="profile-image-preview-container" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #F5F6F8; display: flex; align-items: center; justify-content: center; border: 2px solid #e6a43b; margin-right: 2rem;">
+                        <img id="profile-image-preview"
+                            src="{{ old('profile_image_url', isset($user) && $user->profile_image_url ? (Str::startsWith($user->profile_image_url, 'http') ? $user->profile_image_url : asset('storage/' . $user->profile_image_url)) : asset('assets/images/icons/profile-2user.svg')) }}"
+                            alt="Preview"
+                            style="object-fit: cover; border-radius: 50%; width: {{ (!isset($user) || !$user->profile_image_url) ? '70px' : '100%' }}; height: {{ (!isset($user) || !$user->profile_image_url) ? '70px' : '100%' }}; transition: width 0.2s, height 0.2s; background: #fff;" />
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <input type="file" id="profile_image" name="profile_image" accept="image/*" style="display: none;" onchange="previewProfileImage(event)" />
+                        <button type="button" onclick="document.getElementById('profile_image').click()" class="px-4 py-2 rounded-full bg-gassor-orange text-white font-semibold">Ganti Foto</button>
+                        <button type="button" onclick="removeProfileImage()" class="px-4 py-2 rounded-full bg-red-400 text-white font-semibold">Hapus Foto</button>
+                        <input type="hidden" name="remove_profile_image" id="remove_profile_image" value="0" />
+                    </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <input type="file" id="profile_image" name="profile_image" accept="image/*" style="display: none;" onchange="previewProfileImage(event)" />
-                    <button type="button" onclick="document.getElementById('profile_image').click()" class="px-4 py-2 rounded-full bg-gassor-orange text-white font-semibold">Ganti Foto</button>
-                    <button type="button" onclick="removeProfileImage()" class="px-4 py-2 rounded-full bg-red-400 text-white font-semibold">Hapus Foto</button>
-                    <input type="hidden" name="remove_profile_image" id="remove_profile_image" value="0" />
+            </div>
+            <!-- End Profile Image Upload with Preview & Edit/Delete -->
+
+            <!-- Full Name (single column) -->
+            <div style="display: flex; flex-direction: column; gap: 0.25rem">
+                <label for="fullname" class="text-sm font-medium">Nama Lengkap <span style="color: #dc3545;">*</span></label>
+                <input type="text" id="fullname" name="name" value="{{ old('name', isset($user) ? $user->name : '') }}" placeholder="Masukan nama lengkap" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.25rem">
+                <label for="username" class="text-sm font-medium">Nama Pengguna <span style="color: #dc3545;">*</span></label>
+                <input type="text" id="username" name="username" value="{{ old('username', isset($user) ? $user->username : '') }}" placeholder="Masukan nama pengguna" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
+            </div>
+
+            <!-- Tempat & Tanggal Lahir (two columns) -->
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="tempat_lahir" class="text-sm font-medium text-gray-700 mb-1">Tempat Lahir <span style="color: #dc3545;">*</span></label>
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir', isset($user) ? $user->tempat_lahir : '') }}" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
+                </div>
+                <div class="form-col">
+                    <label for="tanggal_lahir" class="text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span style="color: #dc3545;">*</span></label>
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user) && $user->tanggal_lahir ? $user->tanggal_lahir->format('Y-m-d') : '') }}" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
                 </div>
             </div>
-        </div>
-        <!-- End Profile Image Upload with Preview & Edit/Delete -->
 
-        <!-- Full Name (single column) -->
-        <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="fullname" class="text-sm font-medium">Nama Lengkap <span style="color: #dc3545;">*</span></label>
-            <input type="text" id="fullname" placeholder="Masukan nama lengkap" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="username" class="text-sm font-medium">Nama Pengguna <span style="color: #dc3545;">*</span></label>
-            <input type="text" id="username" placeholder="Masukan nama pengguna" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
-        </div>
+            <!-- Email and Phone Number (two columns) -->
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="email" class="text-sm font-medium">Email <span style="color: #dc3545;">*</span></label>
+                    <input type="email" id="email" name="email" value="{{ old('email', isset($user) ? $user->email : '') }}" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
+                </div>
+                <div class="form-col">
+                    <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
+                    <input type="tel" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
+                </div>
+            </div>
 
-        <!-- Email and Phone Number (two columns) -->
-        <div class="form-row">
-            <div class="form-col">
-            <label for="tempat_lahir" class="text-sm font-medium text-gray-700 mb-1">Tempat Lahir <span style="color: #dc3545;">*</span></label>
-            <input type="text" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" />
-            </div>
-            <div class="form-col">
-            <label for="tanggal_lahir" class="text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span style="color: #dc3545;">*</span></label>
-            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" />
-            </div>
-        </div>
-
-        <!-- Email and Phone Number (two columns) -->
-        <div class="form-row">
-            <div class="form-col">
-            <label for="email" class="text-sm font-medium">Email <span style="color: #dc3545;">*</span></label>
-            <input type="email" id="email" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
-            </div>
-            <div class="form-col">
-            <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
-            <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
-            </div>
-        </div>
-
-        <button class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Simpan Akun</button>
-        </div>
+            <button type="submit" class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Simpan Akun</button>
+        </form>
     </div>
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function submitGoogleRegister() {
-        var roleSelect = document.getElementById('role');
-        var googleRoleInput = document.getElementById('google-register-role-input');
-        if (roleSelect && googleRoleInput) {
-            googleRoleInput.value = roleSelect.value;
-            document.getElementById('google-register-form').submit();
-        }
-    }
-
-    // Preview, edit, and remove profile image
     function previewProfileImage(event) {
         const input = event.target;
         const preview = document.getElementById('profile-image-preview');
@@ -120,63 +124,34 @@
         fileInput.value = '';
         removeInput.value = '1';
     }
-
-    @if ($errors->any())
-        Swal.fire({
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: true,
-            width: 630,
-            heightAuto: false,
-            position: 'center',
-            background: '#fff',
-            html: `
-                <div style="display: flex; align-items: center; height: 100px;">
-                    <div>
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="24" fill="#F87171"/>
-                            <path d="M16 16L32 32M32 16L16 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div style="margin-left: 24px; text-align: left;">
-                        <div style="font-weight: bold; font-size: 1.25rem; color: #111827;">Oops...</div>
-                        <div style="font-size: 1rem; color: #374151; margin-top: 2px;">{{ $errors->first() }}</div>
-                    </div>
-                </div>
-            `,
-            didOpen: () => {
-                document.querySelector('.swal2-popup').style.height = '150px';
-            }
-        });
-    @endif
-
-    @if (session('success'))
-        Swal.fire({
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: true,
-            width: 630,
-            heightAuto: false,
-            position: 'center',
-            background: '#fff',
-            html: `
-                <div style="display: flex; align-items: center; height: 100px;">
-                    <div>
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="24" fill="#34D399"/>
-                            <path d="M16 24L22 30L32 18" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div style="margin-left: 24px; text-align: left;">
-                        <div style="font-weight: bold; font-size: 1.25rem; color: #111827;">Success</div>
-                        <div style="font-size: 1rem; color: #374151; margin-top: 2px;">{{ session('success') }}</div>
-                    </div>
-                </div>
-            `,
-            didOpen: () => {
-                document.querySelector('.swal2-popup').style.height = '150px';
-            }
-        });
-    @endif
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: "{{ session('success') }}",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        @endif
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: "{{ session('error') }}",
+                timer: 2500,
+                showConfirmButton: false
+            });
+        @endif
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ $errors->first() }}",
+                timer: 2500,
+                showConfirmButton: false
+            });
+        @endif
+    });
 </script>
 @endsection
