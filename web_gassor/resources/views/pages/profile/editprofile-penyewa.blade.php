@@ -13,7 +13,7 @@
 
         <div class="relative flex items-center justify-between px-5 mt-[60px]">
         <a href="{{ route('profile.penyewa') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
-            <img src="assets/images/icons/arrow-left.svg" class="w-[28px] h-[28px]" alt="icon" />
+            <img src="{{ asset('assets/images/icons/arrow-left.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
         </a>
         <p class="font-semibold">Edit Akun</p>
         <div class="w-12 dummy-btn"></div>
@@ -21,41 +21,57 @@
 
         <div style="position: relative; display: flex; flex-direction: column; padding-left: 1.25rem; padding-right: 1.25rem; margin-top: 2rem">
         <h1 style="font-size: 1.5rem; line-height: 2rem; font-weight: 700"></h1>
-        <p style="margin-top: 0.5rem; color: #6b7280">Isi formulir di bawah ini untuk membuat akun</p>
         </div>
 
         <div class="relative flex flex-col gap-5 px-5 mt-8">
+        <!-- Profile Image Upload with Preview & Edit/Delete -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem">
+            <label for="profile_image" class="text-sm font-medium">Foto Profil</label>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div id="profile-image-preview-container" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #F5F6F8; display: flex; align-items: center; justify-content: center; border: 2px solid #e6a43b; margin-right: 2rem;">
+                    <img id="profile-image-preview" src="{{ old('profile_image_url', $user->profile_image_url ?? asset('assets/images/icons/profile-2user.svg')) }}" alt="Preview" style="object-fit: cover; border-radius: 50%; width: 70px; height: 70px;" />
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <input type="file" id="profile_image" name="profile_image" accept="image/*" style="display: none;" onchange="previewProfileImage(event)" />
+                    <button type="button" onclick="document.getElementById('profile_image').click()" class="px-4 py-2 rounded-full bg-gassor-orange text-white font-semibold">Ganti Foto</button>
+                    <button type="button" onclick="removeProfileImage()" class="px-4 py-2 rounded-full bg-red-400 text-white font-semibold">Hapus Foto</button>
+                    <input type="hidden" name="remove_profile_image" id="remove_profile_image" value="0" />
+                </div>
+            </div>
+        </div>
+        <!-- End Profile Image Upload with Preview & Edit/Delete -->
+
         <!-- Full Name (single column) -->
         <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="fullname" class="text-sm font-medium">Nama Lengkap</label>
-            <input type="text" id="fullname" placeholder="Masukan nama lengkap" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
+            <label for="fullname" class="text-sm font-medium">Nama Lengkap <span style="color: #dc3545;">*</span></label>
+            <input type="text" id="fullname" placeholder="Masukan nama lengkap" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.25rem">
-            <label for="fullname" class="text-sm font-medium">Nama Pengguna</label>
-            <input type="text" id="fullname" placeholder="Masukan nama pengguna" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
+            <label for="username" class="text-sm font-medium">Nama Pengguna <span style="color: #dc3545;">*</span></label>
+            <input type="text" id="username" placeholder="Masukan nama pengguna" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
         </div>
 
         <!-- Email and Phone Number (two columns) -->
         <div class="form-row">
             <div class="form-col">
-            <label for="tempat_lahir" class="text-sm font-semibold text-gray-700 mb-1">Tempat Lahir</label>
-            <input type="text" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" />
+            <label for="tempat_lahir" class="text-sm font-medium text-gray-700 mb-1">Tempat Lahir <span style="color: #dc3545;">*</span></label>
+            <input type="text" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" />
             </div>
             <div class="form-col">
-            <label for="tanggal_lahir" class="text-sm font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
-            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" />
+            <label for="tanggal_lahir" class="text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span style="color: #dc3545;">*</span></label>
+            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" />
             </div>
         </div>
 
         <!-- Email and Phone Number (two columns) -->
         <div class="form-row">
             <div class="form-col">
-            <label for="email" class="text-sm font-medium">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
+            <label for="email" class="text-sm font-medium">Email <span style="color: #dc3545;">*</span></label>
+            <input type="email" id="email" placeholder="Enter your email" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
             </div>
             <div class="form-col">
-            <label for="phone" class="text-sm font-medium">Nomor Telepon</label>
-            <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" />
+            <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
+            <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" />
             </div>
         </div>
 
@@ -73,6 +89,33 @@
             googleRoleInput.value = roleSelect.value;
             document.getElementById('google-register-form').submit();
         }
+    }
+
+    // Preview, edit, and remove profile image
+    function previewProfileImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('profile-image-preview');
+        const removeInput = document.getElementById('remove_profile_image');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.width = '100%';
+                preview.style.height = '100%';
+                removeInput.value = '0';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function removeProfileImage() {
+        const preview = document.getElementById('profile-image-preview');
+        const fileInput = document.getElementById('profile_image');
+        const removeInput = document.getElementById('remove_profile_image');
+        preview.src = "{{ asset('assets/images/icons/profile-2user.svg') }}";
+        preview.style.width = '70px';
+        preview.style.height = '70px';
+        fileInput.value = '';
+        removeInput.value = '1';
     }
 
     @if ($errors->any())
