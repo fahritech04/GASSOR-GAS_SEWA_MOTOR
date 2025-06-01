@@ -14,7 +14,7 @@
 
         <div class="relative flex flex-row items-center justify-center gap-4 px-5 mt-8">
             <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
-                <img src="{{ asset('assets/images/photos/sami.png') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
+                <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
             </div>
             <div class="text">
                 <p class="text-xl font-semibold">{{ Auth::user()->name }}</p>
@@ -25,7 +25,7 @@
         <div class="flex flex-col gap-5 px-5 pb-40" style="margin-top: 50px">
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
                 <label class="relative flex items-center justify-between">
-                    <p class="text-lg font-semibold">Personal Information</p>
+                    <p class="text-lg font-semibold">Informasi Pribadi</p>
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>

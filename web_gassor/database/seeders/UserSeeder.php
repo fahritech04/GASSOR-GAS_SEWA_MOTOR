@@ -26,9 +26,14 @@ class UserSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             $owners[] = [
                 'name' => 'Pemilik ' . $i,
+                'username' => 'pemilik' . $i,
                 'email' => 'pemilik' . $i . '@gmail.com',
                 'password' => Hash::make('pemilik' . $i),
                 'role' => 'pemilik',
+                'profile_image_url' => null,
+                'tempat_lahir' => 'Kota ' . $i,
+                'tanggal_lahir' => '1990-01-0' . $i,
+                'phone' => '0812345678' . $i,
             ];
         }
 

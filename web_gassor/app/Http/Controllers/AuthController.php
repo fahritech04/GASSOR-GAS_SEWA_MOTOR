@@ -118,7 +118,9 @@ class AuthController extends Controller
         if (!$user) {
             $user = User::create([
                 'name' => $googleUser->getName() ?? $googleUser->getNickname(),
+                'username' => $googleUser->getNickname() ?? null,
                 'email' => $googleUser->getEmail(),
+                'profile_image_url' => $googleUser->getAvatar(),
                 'password' => bcrypt(Str::random(16)),
                 'role' => $role,
             ]);

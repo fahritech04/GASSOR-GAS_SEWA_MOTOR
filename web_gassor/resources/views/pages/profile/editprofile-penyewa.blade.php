@@ -29,7 +29,10 @@
             <label for="profile_image" class="text-sm font-medium">Foto Profil</label>
             <div style="display: flex; align-items: center; gap: 1rem;">
                 <div id="profile-image-preview-container" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #F5F6F8; display: flex; align-items: center; justify-content: center; border: 2px solid #e6a43b; margin-right: 2rem;">
-                    <img id="profile-image-preview" src="{{ old('profile_image_url', $user->profile_image_url ?? asset('assets/images/icons/profile-2user.svg')) }}" alt="Preview" style="object-fit: cover; border-radius: 50%; width: 70px; height: 70px;" />
+                    <img id="profile-image-preview"
+                        src="{{ old('profile_image_url', Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg')) }}"
+                        alt="Preview"
+                        style="object-fit: cover; border-radius: 50%; width: {{ (!Auth::user()->profile_image_url && !old('profile_image_url')) ? '50%' : '100%' }}; height: {{ (!Auth::user()->profile_image_url && !old('profile_image_url')) ? '50%' : '100%' }}; transition: width 0.2s, height 0.2s; background: #fff;" />
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 0.5rem;">
                     <input type="file" id="profile_image" name="profile_image" accept="image/*" style="display: none;" onchange="previewProfileImage(event)" />

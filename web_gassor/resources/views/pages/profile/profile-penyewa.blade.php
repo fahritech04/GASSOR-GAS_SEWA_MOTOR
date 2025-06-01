@@ -14,7 +14,7 @@
 
         <div class="relative flex flex-row items-center justify-center gap-4 px-5 mt-8">
             <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
-                <img src="{{ asset('assets/images/photos/sami.png') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
+                <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
             </div>
             <div class="text">
                 <p class="text-xl font-semibold">{{ Auth::user()->name }}</p>

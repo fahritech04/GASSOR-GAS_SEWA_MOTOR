@@ -20,6 +20,11 @@ return new class extends Migration
             $table->enum('role', ['pemilik', 'penyewa']);
             $table->rememberToken();
             $table->timestamps();
+            $table->string('username')->unique()->nullable();
+            $table->string('profile_image_url')->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('phone')->nullable();
         });
     }
 
