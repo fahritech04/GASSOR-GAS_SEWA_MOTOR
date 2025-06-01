@@ -17,7 +17,7 @@
                 <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
             </div>
             <div class="text">
-                <p class="text-xl font-semibold">{{ Auth::user()->name }}</p>
+                <p class="text-xl font-semibold">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->name }}</p>
                 <p class="text-sm text-gassor-grey">{{ Auth::user()->email }}</p>
             </div>
         </div>
@@ -49,7 +49,7 @@
                             <img src="{{ asset('assets/images/icons/call.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                             <p class="text-gassor-grey">Nomor Telepon</p>
                         </div>
-                        <p class="font-semibold">628123982138</p>
+                        <p class="font-semibold">{{ Auth::user()->phone }}</p>
                     </div>
                     {{-- <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
