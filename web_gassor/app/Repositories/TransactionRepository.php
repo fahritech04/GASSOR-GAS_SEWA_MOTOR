@@ -86,4 +86,13 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->take($limit)
             ->get();
     }
+    public function getTransactionsByUser($userId)
+    {
+        // Ambil transaksi berdasarkan nama/email user (penyewa)
+        return Transaction::with(['motorcycle'])
+            ->where('email', auth()->user()->email)
+            ->orWhere('name', auth()->user()->name)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }

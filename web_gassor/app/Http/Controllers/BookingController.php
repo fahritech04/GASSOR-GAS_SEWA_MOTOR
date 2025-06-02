@@ -111,7 +111,12 @@ class BookingController extends Controller
 
     public function check()
     {
-        return view('pages.booking.check-booking');
+        // Ambil transaksi milik user yang sedang login (atau tampilkan kosong jika guest)
+        $transactions = [];
+        if (auth()->check()) {
+            $transactions = $this->transactionRepository->getTransactionsByUser(auth()->user()->id);
+        }
+        return view('pages.booking.check-booking', compact('transactions'));
     }
 
     public function show(BookingShowRequest $request)
