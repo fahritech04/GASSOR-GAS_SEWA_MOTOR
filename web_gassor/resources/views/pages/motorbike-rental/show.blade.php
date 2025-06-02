@@ -88,22 +88,12 @@
                     <button
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
                         data-target-tab="#Testimonials-Tab">Testimonials</button>
-                </div>
-                <div class="swiper-slide !w-fit">
-                    <button
-                        class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
-                        data-target-tab="#Rules-Tab">Rules</button>
                 </div> --}}
                 <div class="swiper-slide !w-fit">
                     <button
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
                         data-target-tab="#Contact-Tab">kontak</button>
                 </div>
-                {{-- <div class="swiper-slide !w-fit">
-                    <button
-                        class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
-                        data-target-tab="#Rewards-Tab">Rewards</button>
-                </div> --}}
             </div>
         </div>
         <div id="TabsContent" class="px-5">
@@ -124,7 +114,7 @@
                     @endforeach
                 </div>
             </div>
-            <div id="Testimonials-Tab" class="tab-content flex-col gap-5 hidden">
+            {{-- <div id="Testimonials-Tab" class="tab-content flex-col gap-5 hidden">
                 <div class="flex flex-col gap-4">
                     @foreach ($motorbikeRental->testimonials as $testimonial)
                     <div
@@ -150,13 +140,34 @@
                     </div>
                     @endforeach
                 </div>
+            </div> --}}
+            <div id="Contact-Tab" class="tab-content flex flex-col gap-5 hidden">
+                <div class="flex flex-col gap-4">
+                    @foreach ($motorbikeRental->contacts ?? [$motorbikeRental] as $contact)
+                    <div
+                        onclick="window.open('https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}', '_blank')"
+                        class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#25D366] transition-all duration-300 cursor-pointer"
+                        style="cursor:pointer;"
+                    >
+                        <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#ffffff] overflow-hidden items-center justify-center">
+                            <img src="{{ asset('assets/images/icons/whatsapp.svg') }}" class="w-12 h-12" alt="WhatsApp">
+                        </div>
+                        <div>
+                            <p class="font-semibold">WhatsApp -
+                                @php
+                                    $owners = $motorbikeRental->owners;
+                                    $ownerNames = $owners->pluck('name')->unique()->implode(', ');
+                                @endphp
+                                {{ $ownerNames }}
+                            </p>
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-green-600 font-bold hover:underline flex items-center gap-1">
+                                {{ $contact->contact }}
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
             </div>
-            <div id="Rules-Tab" class="tab-content flex-col gap-5 hidden">Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Porro, vitae.</div>
-            <div id="Contact-Tab" class="tab-content flex-col gap-5 hidden">Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Porro, vitae.</div>
-            <div id="Rewards-Tab" class="tab-content flex-col gap-5 hidden">Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Porro, vitae.</div>
         </div>
     </main>
     <div id="BottomNav" class="relative flex w-full h-[138px] shrink-0">

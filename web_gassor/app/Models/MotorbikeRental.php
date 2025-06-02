@@ -19,6 +19,7 @@ class MotorbikeRental extends Model
         'description',
         'price',
         'address',
+        'contact',
     ];
 
     public function city()
@@ -49,5 +50,17 @@ class MotorbikeRental extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function owners()
+    {
+        return $this->hasManyThrough(
+            \App\Models\User::class,
+            \App\Models\Motorcycle::class,
+            'motorbike_rental_id', // Foreign key motorcycles
+            'id', // Foreign key users
+            'id', // Local key rentals
+            'owner_id' // Local key motorcycles
+        )->distinct();
     }
 }

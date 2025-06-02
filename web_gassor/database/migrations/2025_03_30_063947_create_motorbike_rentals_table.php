@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->text('description');
             $table->text('address');
+            $table->string('contact'); // add contact column for WhatsApp number
             $table->softDeletes();
             $table->timestamps();
         });
