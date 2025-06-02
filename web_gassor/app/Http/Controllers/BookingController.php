@@ -51,7 +51,12 @@ class BookingController extends Controller
     public function saveInformation(CustomerInformationStoreRequest $request, $slug)
     {
         $data = $request->validated();
-
+        // Pastikan end_time otomatis 24 jam setelah start_time
+        if (isset($data['start_time'])) {
+            $start = \Carbon\Carbon::createFromFormat('H:i', $data['start_time']);
+            $end = $start->copy()->addDay();
+            $data['end_time'] = $end->format('H:i');
+        }
         $this->transactionRepository->saveTransactionDataToSession($data);
 
         return redirect()->route('booking.checkout', $slug);

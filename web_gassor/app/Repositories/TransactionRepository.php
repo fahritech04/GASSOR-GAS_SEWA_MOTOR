@@ -58,6 +58,9 @@ class TransactionRepository implements TransactionRepositoryInterface
         $data['total_amount'] = $total;
         $data['payment_method'] = 'full_payment';
 
+        $data['start_time'] = $data['start_time'] ?? null;
+        $data['end_time'] = $data['end_time'] ?? null;
+
         return $data;
     }
 

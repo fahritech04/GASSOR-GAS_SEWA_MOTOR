@@ -20,9 +20,11 @@ class Transaction extends Model
         'payment_method',
         'payment_status',
         'start_date',
+        'start_time',
         'duration',
         'total_amount',
         'transaction_date',
+        'end_time',
     ];
 
     public function motorbikeRental()

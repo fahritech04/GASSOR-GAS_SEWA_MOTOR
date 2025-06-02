@@ -87,8 +87,6 @@ durationInput.addEventListener("blur", () => {
     }
 });
 
-updatePrice();
-
 // minusButton.addEventListener("click", () => {
 //     let value = parseInt(durationInput.value, 10);
 //     if (isNaN(value) || value <= 1) {
@@ -115,3 +113,25 @@ updatePrice();
 
 // Inisialisasi harga awal
 updatePrice();
+
+// Set end_time otomatis 24 jam setelah start_time
+const startTimeInput = document.getElementById("start_time");
+const endTimeInput = document.getElementById("end_time");
+
+if (startTimeInput && endTimeInput) {
+    startTimeInput.addEventListener("input", function () {
+        if (this.value) {
+            // Parse jam mulai
+            const [hours, minutes] = this.value.split(":").map(Number);
+            // Tambah 24 jam
+            const endDate = new Date();
+            endDate.setHours(hours + 24, minutes, 0, 0);
+            // Format kembali ke HH:MM
+            const endHours = String(endDate.getHours()).padStart(2, "0");
+            const endMinutes = String(endDate.getMinutes()).padStart(2, "0");
+            endTimeInput.value = `${endHours}:${endMinutes}`;
+        } else {
+            endTimeInput.value = "";
+        }
+    });
+}

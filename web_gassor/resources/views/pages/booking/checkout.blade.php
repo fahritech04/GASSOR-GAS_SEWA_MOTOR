@@ -108,7 +108,9 @@
                 <img src="{{ asset('assets/images/icons/calendar.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Dimulai pada</p>
             </div>
-            <p class="font-semibold">{{ \Carbon\Carbon::parse($transaction['start_date'])->isoFormat('D MMMM YYYY') }}</p>
+            <p class="font-semibold">
+                {{ \Carbon\Carbon::parse($transaction['start_date'])->isoFormat('D MMMM YYYY') }} - {{ isset($transaction['start_time']) ? (strlen($transaction['start_time']) === 5 ? $transaction['start_time'] : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction['start_time'])->format('H:i'))) : '-' }} WIB
+            </p>
         </div>
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -116,7 +118,7 @@
                 <p class="text-gassor-grey">Berakhir pada</p>
             </div>
             <p class="font-semibold">
-                {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }}
+                {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }} - {{ isset($transaction['end_time']) ? (strlen($transaction['end_time']) === 5 ? $transaction['end_time'] : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction['end_time'])->format('H:i'))) : '-' }} WIB
             </p>
         </div>
     </div>

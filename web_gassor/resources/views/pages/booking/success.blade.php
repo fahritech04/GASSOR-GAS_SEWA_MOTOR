@@ -42,7 +42,9 @@
                     <div class="flex items-center gap-[6px]">
                         <img src="assets/images/icons/calendar.svg" class="w-5 h-5 flex shrink-0" alt="icon">
                         <p class="text-sm text-gassor-grey">
-                            {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }} - {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }}
+                            {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i') }} WIB
+                            &nbsp;|&nbsp;
+                            {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $transaction->end_time)->format('H:i') }} WIB
                         </p>
                     </div>
                 </div>

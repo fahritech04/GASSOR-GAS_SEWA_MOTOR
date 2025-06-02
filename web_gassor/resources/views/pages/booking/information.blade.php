@@ -134,9 +134,19 @@
             </div>
         </div>
         <div class="flex flex-col gap-2">
-            <p class="font-semibold px-5">Pilih Tanggal Sewa</p>
+            <p class="font-semibold px-5">Pilih Tanggal & Jam Sewa</p>
             <div class="swiper w-full overflow-x-hidden">
                 <div class="swiper-wrapper select-dates">
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row gap-2 px-5 mt-2">
+                <div class="flex flex-col w-full md:w-1/2">
+                    <label class="font-semibold mb-1">Jam Mulai</label>
+                    <input type="time" name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" required>
+                </div>
+                <div class="flex flex-col w-full md:w-1/2">
+                    <label class="font-semibold mb-1">Jam Selesai (Otomatis 24 Jam)</label>
+                    <input type="time" name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" readonly>
                 </div>
             </div>
         </div>

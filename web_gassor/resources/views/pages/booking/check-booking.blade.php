@@ -20,7 +20,12 @@
                             Disewa Oleh: <span class="font-semibold" style="text-align:left">{{ $transaction->name }}</span>
                         </p>
                         <p class="text-sm text-gassor-grey" style="text-align:left">
-                            Tanggal: {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }}
+                            Pemilik motor : <span class="font-semibold" style="text-align:left">{{ $transaction->motorcycle->owner->name ?? '-' }}</span>
+                        </p>
+                        <p class="text-sm text-gassor-grey" style="text-align:left">
+                            Mulai: {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') . ($transaction->start_time ? ' - ' . (strlen($transaction->start_time) === 5 ? $transaction->start_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
+                            <br>
+                            Selesai: {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->addDays(1)->isoFormat('D MMMM YYYY') . ($transaction->end_time ? ' - ' . (strlen($transaction->end_time) === 5 ? $transaction->end_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->end_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
                         </p>
                     </div>
                     <div class="flex flex-col items-end gap-2">
