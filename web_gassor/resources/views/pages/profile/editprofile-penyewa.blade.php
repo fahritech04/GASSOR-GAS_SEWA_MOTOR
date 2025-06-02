@@ -87,7 +87,7 @@
                 </div>
                 <div class="form-col">
                     <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
-                    <input type="tel" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
+                    <input type="tel" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required oninput="formatPhoneInput(this)" />
                 </div>
             </div>
 
@@ -99,6 +99,18 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function formatPhoneInput(input) {
+        let val = input.value;
+        // Jika dimulai dengan 0, ganti dengan 62
+        if (val.startsWith('0')) {
+            val = '62' + val.substring(1);
+        }
+        // Jika tidak dimulai dengan 62, tambahkan 62 di depan
+        if (!val.startsWith('62')) {
+            val = '62' + val.replace(/^\D+/, '').replace(/^62+/, '');
+        }
+        input.value = val;
+    }
     function previewProfileImage(event) {
         const input = event.target;
         const preview = document.getElementById('profile-image-preview');
