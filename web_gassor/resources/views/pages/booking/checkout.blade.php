@@ -124,83 +124,26 @@
 <form action="{{ route('booking.payment', $motorbikeRental->slug) }}" class="relative flex flex-col gap-6 mt-5 pt-5" method="POST">
     @csrf
     <div id="PaymentOptions" class="flex flex-col rounded-[30px] border border-[#F1F2F6] p-5 gap-4 mx-5">
-        <div id="TabButton-Container"
-            class="flex items-center border-b border-[#F1F2F6] gap-[18px]">
-            {{-- <label class="tab-link group relative flex flex-col justify-between gap-4"
-                data-target-tab="#DownPayment-Tab">
-                <input type="radio" name="payment_method" value="down_payment"
-                    class="absolute -z-10 top-1/2 left-1/2 opacity-0" checked>
+        <div id="TabButton-Container" class="flex items-center border-b border-[#F1F2F6] gap-[18px]">
+            <label class="tab-link group relative flex flex-col justify-between gap-4" data-target-tab="#FullPayment-Tab">
+                <input type="radio" name="payment_method" value="full_payment" class="absolute -z-10 top-1/2 left-1/2 opacity-0" checked>
                 <div class="flex items-center gap-3 mx-auto">
                     <div class="relative w-6 h-6">
-                        <img src="{{ asset('assets/images/icons/status-orange.svg') }}"
-                            class="absolute w-6 h-6 flex shrink-0 opacity-0 group-has-[:checked]:opacity-100 transition-all duration-300"
-                            alt="icon">
-                        <img src="{{ asset('assets/images/icons/status.svg') }}"
-                            class="absolute w-6 h-6 flex shrink-0 opacity-100 group-has-[:checked]:opacity-0 transition-all duration-300"
-                            alt="icon">
-                    </div>
-                    <p class="font-semibold">Uang Muka</p>
-                </div>
-                <div
-                    class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#91BF77] group-has-[:checked]:w-[90%] transition-all duration-300">
-                </div>
-            </label> --}}
-            {{-- <div class="flex h-6 w-[1px] border border-[#F1F2F6] mb-auto"></div> --}}
-            <label class="tab-link group relative flex flex-col justify-between gap-4"
-                data-target-tab="#FullPayment-Tab">
-                <input type="radio" name="payment_method" value="full_payment"
-                    class="absolute -z-10 top-1/2 left-1/2 opacity-0">
-                <div class="flex items-center gap-3 mx-auto">
-                    <div class="relative w-6 h-6">
-                        <img src="{{ asset('assets/images/icons/diamonds-orange.svg') }}"
-                            class="absolute w-6 h-6 flex shrink-0 opacity-0 group-has-[:checked]:opacity-100 transition-all duration-300"
-                            alt="icon">
-                        <img src="{{ asset('assets/images/icons/diamonds.svg') }}"
-                            class="absolute w-6 h-6 flex shrink-0 group-has-[:checked]:opacity-0 transition-all duration-300"
-                            alt="icon">
+                        <img src="{{ asset('assets/images/icons/diamonds-orange.svg') }}" class="absolute w-6 h-6 flex shrink-0 opacity-0 group-has-[:checked]:opacity-100 transition-all duration-300" alt="icon">
+                        <img src="{{ asset('assets/images/icons/diamonds.svg') }}" class="absolute w-6 h-6 flex shrink-0 group-has-[:checked]:opacity-0 transition-all duration-300" alt="icon">
                     </div>
                     <p class="font-semibold">Pembayaran Lunas</p>
                 </div>
-                <div
-                    class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#91BF77] group-has-[:checked]:w-[90%] transition-all duration-300">
-                </div>
+                <div class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#91BF77] group-has-[:checked]:w-[90%] transition-all duration-300"></div>
             </label>
         </div>
         <div id="TabContent-Container">
             @php
             $subtotal = $motorcycle->price_per_day * $transaction['duration'];
             $total = $subtotal;
-            $downPayment = $total * 0.3;
             @endphp
-            <div id="DownPayment-Tab" class="tab-content flex flex-col gap-4">
-                <p class="text-sm text-gassor-grey">Anda perlu melunasi pembayaran secara cash setelah melakukan
-                    survey motor</p>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/card-tick.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                        <p class="text-gassor-grey">Pembayaran</p>
-                    </div>
-                    <p class="font-semibold">Uang Muka 30%</p>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/receipt-2.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                        <p class="text-gassor-grey">Jumlah Total</p>
-                    </div>
-                    <p class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/receipt-text.svg') }}" class="w-6 h-6 flex shrink-0"
-                            alt="icon">
-                        <p class="text-gassor-grey">Total Keseluruhan (30%)</p>
-                    </div>
-                    <p id="downPaymentPrice" class="font-semibold">Rp {{ number_format($downPayment, 0, ',', '.') }}</p>
-                </div>
-            </div>
-            <div id="FullPayment-Tab" class="tab-content flex flex-col gap-4 hidden">
-                <p class="text-sm text-gassor-grey">Anda tidak perlu membayar biaya tambahan apapun ketika
-                    survey motor</p>
+            <div id="FullPayment-Tab" class="tab-content flex flex-col gap-4">
+                <p class="text-sm text-gassor-grey">Anda tidak perlu membayar biaya tambahan apapun ketika survey motor</p>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <img src="{{ asset('assets/images/icons/card-tick.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
@@ -217,8 +160,7 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/receipt-text.svg') }}" class="w-6 h-6 flex shrink-0"
-                            alt="icon">
+                        <img src="{{ asset('assets/images/icons/receipt-text.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
                         <p class="text-gassor-grey">Total Keseluruhan</p>
                     </div>
                     <p id="fullPaymentPrice" class="font-semibold">Rp {{ number_format($total, 0, ',', '.') }}</p>
@@ -245,5 +187,8 @@
 
 @section('scripts')
 <script src="{{ asset('assets/js/accodion.js') }}"></script>
-<script src="{{ asset('assets/js/checkout.js') }}"></script>
+<script>
+    // Hanya satu metode pembayaran, update langsung harga total
+    document.getElementById('price').innerHTML = document.getElementById('fullPaymentPrice').textContent;
+</script>
 @endsection

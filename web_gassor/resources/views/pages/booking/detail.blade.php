@@ -139,11 +139,7 @@
     </label>
     @php
     $subtotal = $transaction->motorcycle->price_per_day * $transaction->duration;
-    // $tax = $subtotal * 0.11;
-    // $insurance = $subtotal * 0.01;
-    // $total = $subtotal + $tax + $insurance;
     $total = $subtotal;
-    $downPayment = $total * 0.3;
     @endphp
     <div class="flex flex-col gap-4 pt-[22px]">
         <div class="flex items-center justify-between">
@@ -151,20 +147,7 @@
                 <img src="assets/images/icons/card-tick.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Pembayaran</p>
             </div>
-
-            @if ($transaction->payment_method === 'full_payment')
             <p class="font-semibold">Pembayaran Lunas 100%</p>
-            @else
-            <p class="font-semibold">Uang Muka 30%</p>
-            @endif
-
-        </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/receipt-2.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Harga Motor</p>
-            </div>
-            <p class="font-semibold">Rp {{ number_format($transaction->motorcycle->price_per_day, 0, ',', '.') }}</p>
         </div>
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -173,48 +156,22 @@
             </div>
             <p class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
         </div>
-        {{-- <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/receipt-disscount.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">PPN 11%</p>
-            </div>
-            <p class="font-semibold">Rp {{ number_format($tax, 0, ',', '.') }}</p>
-        </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/security-user.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Asuransi</p>
-            </div>
-            <p class="font-semibold">Rp {{ number_format($insurance, 0, ',', '.') }}</p>
-        </div> --}}
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="assets/images/icons/receipt-text.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Total Keseluruhan</p>
             </div>
-            @if ($transaction->payment_method === 'full_payment')
             <p class="font-semibold">Rp {{ number_format($total, 0, ',', '.') }}</p>
-            @else
-            <p class="font-semibold">Rp {{ number_format($downPayment, 0, ',', '.') }}</p>
-            @endif
         </div>
-        @if ($transaction->payment_status === 'pending')
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="assets/images/icons/security-card.svg" class="w-6 h-6 flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Status</p>
             </div>
-            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px]">PENDING</p>
+            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px]">
+                {{ strtoupper($transaction->payment_status) }}
+            </p>
         </div>
-        @else
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/security-card.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Status</p>
-            </div>
-            <p class="rounded-full p-[6px_12px] bg-[#91BF77] font-bold text-xs leading-[18px]">SUCCESSFUL</p>
-        </div>
-        @endif
     </div>
 </div>
 <div id="BottomButton" class="relative flex w-full h-[98px] shrink-0">

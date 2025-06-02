@@ -55,7 +55,8 @@ class TransactionRepository implements TransactionRepositoryInterface
         $data['motorbike_rental_id'] = $motorcycle->motorbike_rental_id;
 
         $total = $this->calculateTotalAmount($motorcycle->price_per_day, $data['duration']);
-        $data['total_amount'] = $this->calculatePaymentAmount($total, $data['payment_method']);
+        $data['total_amount'] = $total;
+        $data['payment_method'] = 'full_payment';
 
         return $data;
     }
@@ -74,7 +75,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
     public function calculatePaymentAmount($total, $paymentMethod)
     {
-        return $paymentMethod === 'full_payment' ? $total : $total * 0.3;
+        return $total;
     }
     public function getLatestTransactionsByOwner($ownerId, $limit = 10)
     {
