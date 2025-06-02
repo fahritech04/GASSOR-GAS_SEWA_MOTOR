@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Clickjacking Test</title>
+    <style>
+      iframe {
+        width: 800px;
+        height: 600px;
+        border: 2px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Testing Clickjacking Protection</h2>
+    <p>Jika aplikasi Anda terlindungi, halaman di bawah ini tidak akan bisa ditampilkan dalam iframe.</p>
+    <iframe src="http://localhost:8000" title="Test Iframe"></iframe>
+  </body>
+</html>
