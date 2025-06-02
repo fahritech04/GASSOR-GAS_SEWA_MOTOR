@@ -12,37 +12,6 @@
         <div class="w-12 dummy-btn"></div>
       </div>
 
-      {{-- <div class="relative z-10 flex flex-col gap-5 px-5 pb-40" style="margin-top: 20px">
-        <a href="#" class="flex items-center justify-between rounded-[30px] p-5 bg-[#F5F6F8]">
-          <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/images/icons/tentang.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-            <p class="text-lg font-semibold">Tentang Gassor</p>
-          </div>
-          <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-        </a>
-        <a href="#" class="flex items-center justify-between rounded-[30px] p-5 bg-[#F5F6F8]">
-          <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/images/icons/syarat.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-            <p class="text-lg font-semibold">Syarat & Ketentuan</p>
-          </div>
-          <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-        </a>
-        <a href="#" class="flex items-center justify-between rounded-[30px] p-5 bg-[#F5F6F8]">
-          <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/images/icons/privasi.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-            <p class="text-lg font-semibold">Privasi & Kebijakan</p>
-          </div>
-          <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-        </a>
-        <a href="#" class="flex items-center justify-between rounded-[30px] p-5 bg-[#F5F6F8]">
-          <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/images/icons/bantuan.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-            <p class="text-lg font-semibold">Bantuan</p>
-          </div>
-          <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-        </a>
-      </div> --}}
-
         <div class="relative z-10 flex flex-col gap-5 px-5 pb-40" style="margin-top: 50px">
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
                 <label class="relative flex items-center justify-between">
@@ -50,36 +19,9 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                {{-- <div class="flex flex-col gap-4 pt-[22px]">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Full Name</p>
-                        </div>
-                        <p class="font-semibold">{{ Auth::user()->name }}</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/sms.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Email</p>
-                        </div>
-                        <p class="font-semibold">{{ Auth::user()->email }}</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/call.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Phone</p>
-                        </div>
-                        <p class="font-semibold">628123982138</p>
-                    </div>
-                    <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/location.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                        <p class="text-gassor-grey">Alamat</p>
-                    </div>
-                    <p class="font-semibold text-right"></p>
-                    </div>
-                </div> --}}
+                <div class="flex flex-col gap-4 pt-[22px]">
+                    <p>Gassor, Gas Sewa Motor, merupakan website aplikasi sewa motor dikalangan mahasiswa Telkom University, perbedaan dengan sewa motor yang lain disini kamu bisa menyewakan motor mu sendiri untuk orang lain.</p>
+                </div>
             </div>
 
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
@@ -88,22 +30,9 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                {{-- <div class="flex flex-col gap-4 pt-[22px]">
-                    <a href="#" class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Change Password</p>
-                        </div>
-                        <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a>
-                    <a href="#" class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/notification.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Notification Settings</p>
-                        </div>
-                        <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a>
-                </div> --}}
+                <div class="flex flex-col gap-4 pt-[22px]">
+                    <p>Data pribadi pengguna akan dijaga kerahasiaannya dan hanya digunakan untuk keperluan transaksi sewa motor di Gassor.</p>
+                </div>
             </div>
 
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
@@ -112,23 +41,25 @@
                     <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
                     <input type="checkbox" class="absolute hidden" />
                 </label>
-                {{-- <div class="flex flex-col gap-4 pt-[22px]">
-                    <a href="#" class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Change Password</p>
-                        </div>
-                        <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a>
-                    <a href="#" class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/notification.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Notification Settings</p>
-                        </div>
-                        <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a>
-                </div> --}}
+                <div class="flex flex-col gap-4 pt-[22px]">
+                    <p>Penyewa dan pemilik motor wajib mematuhi aturan yang berlaku di Gassor serta menjaga keamanan dan kenyamanan selama proses sewa menyewa.</p>
+                </div>
             </div>
+
+            <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
+                <label class="relative flex items-center justify-between">
+                    <p class="text-lg font-semibold">Dibuat Oleh</p>
+                    <img src="{{ asset('assets/images/icons/arrow-up.svg') }}" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon" />
+                    <input type="checkbox" class="absolute hidden" />
+                </label>
+                <div class="flex flex-col gap-4 pt-[22px]">
+                    <p>Aplikasi karya Proyek Akhir D3 Rekayasa Perangkat Lunak Aplikasi</p>
+                    <p>Noval Abdurramadan - NIM 6706223103</p>
+                    <p>Muhammad Raihan Fahrifi - NIM 6706223009</p>
+                </div>
+            </div>
+
+
         </div>
 
     </div>
