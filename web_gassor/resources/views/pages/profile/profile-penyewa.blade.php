@@ -12,9 +12,9 @@
             <div class="w-12 dummy-btn"></div>
         </div>
 
-        <div class="relative flex flex-row items-center justify-center gap-4 px-5 mt-8">
-            <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
-                <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/icons/profile-2user.svg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
+        <div class="relative flex flex-row items-center justify-center gap-4 px-5" style="margin-top: 10px;">
+            <div style="width: 90px; height: 90px; border-radius: 100%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
+                <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/photos/default_profil.jpg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
             </div>
             <div class="text">
                 <p class="text-xl font-semibold">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->name }}</p>
@@ -30,26 +30,26 @@
                     <input type="checkbox" class="absolute hidden" />
                 </label>
                 <div class="flex flex-col gap-4 pt-[22px]">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+                        <div class="flex items-center gap-3 w-full">
                             <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Nama Lengkap</p>
+                            <p class="text-gassor-grey text-left">Nama Lengkap</p>
                         </div>
-                        <p class="font-semibold">{{ Auth::user()->name }}</p>
+                        <p class="font-semibold w-full break-all text-right">{{ Auth::user()->name }}</p>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+                        <div class="flex items-center gap-3 w-full">
                             <img src="{{ asset('assets/images/icons/sms.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Email</p>
+                            <p class="text-gassor-grey text-left">Email</p>
                         </div>
-                        <p class="font-semibold">{{ Auth::user()->email }}</p>
+                        <p class="font-semibold w-full break-all text-right">{{ Auth::user()->email }}</p>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
+                    <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+                        <div class="flex items-center gap-3 w-full">
                             <img src="{{ asset('assets/images/icons/call.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Nomor Telepon</p>
+                            <p class="text-gassor-grey text-left">Nomor Telepon</p>
                         </div>
-                        <p class="font-semibold">{{ Auth::user()->phone }}</p>
+                        <p class="font-semibold w-full break-all text-right">{{ Auth::user()->phone }}</p>
                     </div>
                     {{-- <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
