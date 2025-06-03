@@ -44,11 +44,11 @@
             <div class="flex flex-col gap-3 w-full">
                 <p class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</p>
                 <hr class="border-[#F1F2F6]">
-                {{-- <div class="flex items-center gap-[6px]">
+                <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
-                    <p class="text-sm text-gassor-grey">{{ $motorcycle->capacity }} Orang</p>
-                </div> --}}
+                    <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>
+                </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
                     {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
@@ -98,7 +98,7 @@
             <label
                 class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#91BF77] transition-all duration-300 @error('phone') border-red-500 @enderror">
                 <img src="{{ asset('assets/images/icons/call.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
-                <input type="tel" name="phone_number" id=""
+                <input type="number" name="phone_number" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
                     placeholder="Ketik nomor telepon kamu" value="{{ old('phone_number', Auth::user() ? Auth::user()->phone : '') }}">
             </label>
@@ -106,32 +106,10 @@
             <p class="text-sm" style="color: red;">{{ $message }}</p>
             @enderror
         </div>
-        {{-- <div class="flex items-center justify-between px-5">
-            <p class="font-semibold">Durasi dalam Hari</p>
-            <div class="relative flex items-center gap-[10px] w-fit">
-                <button type="button" id="Minus" class="w-12 h-12 flex-shrink-0">
-                    <img src="{{ asset('assets/images/icons/minus.svg') }}" alt="icon">
-                </button>
-                <input id="Duration" type="text" value="1" name="duration"
-                    class="appearance-none outline-none !bg-transparent w-[42px] text-center font-semibold text-[22px] leading-[33px]"
-                    inputmode="numeric" pattern="[0-9]*" autocomplete="off">
-                    <div class="relative flex items-center gap-[10px] w-fit">
-                        <input id="Duration" type="hidden" value="1" name="duration">
-                        <span class="font-semibold text-[22px] leading-[33px]">1</span>
-                        <span class="ml-1">hari</span>
-                    </div>
-                <button type="button" id="Plus" class="w-12 h-12 flex-shrink-0">
-                    <img src="{{ asset('assets/images/icons/plus.svg') }}" alt="icon">
-                </button>
-            </div>
-        </div> --}}
         <div class="flex items-center px-5">
-            <p class="font-semibold">Durasi sewa hanya bisa dalam : </p>
-            <div class="flex items-center gap-2">
-                <input id="Duration" type="hidden" value="1" name="duration">
-                <span class="font-semibold text-[22px] leading-[33px]"> 1</span>
-                <span class="ml-1">hari</span>
-            </div>
+            <span class="font-semibold">Durasi sewa :</span>
+            <span class="font-semibold" style="margin-left:8px;">1 hari</span>
+            <input id="Duration" type="hidden" value="1" name="duration">
         </div>
         <div class="flex flex-col gap-2">
             <p class="font-semibold px-5">Pilih Tanggal & Jam Sewa</p>
@@ -141,11 +119,11 @@
             </div>
             <div class="flex flex-col md:flex-row gap-2 px-5 mt-2">
                 <div class="flex flex-col w-full md:w-1/2">
-                    <label class="font-semibold mb-1">Jam Mulai</label>
+                    <label class="font-semibold mb-1">Jam Pengambilan</label>
                     <input type="time" name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" required>
                 </div>
                 <div class="flex flex-col w-full md:w-1/2">
-                    <label class="font-semibold mb-1">Jam Selesai (Otomatis 24 Jam)</label>
+                    <label class="font-semibold mb-1">Jam Pengembalian</label>
                     <input type="time" name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" readonly>
                 </div>
             </div>
