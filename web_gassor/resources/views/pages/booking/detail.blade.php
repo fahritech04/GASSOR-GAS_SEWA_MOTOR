@@ -42,11 +42,11 @@
             <div class="flex flex-col gap-3 w-full">
                 <p class="font-semibold text-lg leading-[27px]">{{ $transaction->motorcycle->name }}</p>
                 <hr class="border-[#F1F2F6]">
-                {{-- <div class="flex items-center gap-[6px]">
+                <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
-                    <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->capacity }} Orang</p>
-                </div> --}}
+                    <p class="text-sm text-gassor-grey">STNK : {{ $transaction->motorcycle->stnk }}</p>
+                </div>
                 <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
@@ -68,26 +68,26 @@
         <input type="checkbox" class="absolute hidden">
     </label>
     <div class="flex flex-col gap-4 pt-[22px]">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/profile-2user.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Nama</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/profile-2user.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Nama</p>
             </div>
-            <p class="font-semibold">{{ $transaction->name }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction->name }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/sms.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Email</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/sms.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Email</p>
             </div>
-            <p class="font-semibold">{{ $transaction->email }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction->email }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/call.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Nomor Telepon</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/call.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Nomor Telepon</p>
             </div>
-            <p class="font-semibold">{{ $transaction->phone_number }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction->phone_number }}</p>
         </div>
     </div>
 </div>
@@ -98,35 +98,35 @@
         <input type="checkbox" class="absolute hidden">
     </label>
     <div class="flex flex-col gap-4 pt-[22px]">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/calendar.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">ID Pemesanan</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/calendar.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">ID Pemesanan</p>
             </div>
-            <p class="font-semibold">{{ $transaction->code }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction->code }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/clock.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Durasi</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/clock.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Durasi</p>
             </div>
-            <p class="font-semibold">{{ $transaction->duration }} Hari</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction->duration }} Hari</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/calendar.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Dimulai pada</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/calendar.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Dimulai pada</p>
             </div>
-            <p class="font-semibold">
+            <p class="font-semibold w-full break-all text-right">
                 {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i') }} WIB
             </p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/calendar.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Berakhir pada</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/calendar.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Berakhir pada</p>
             </div>
-            <p class="font-semibold">
+            <p class="font-semibold w-full break-all text-right">
                 {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }} - {{ \Carbon\Carbon::createFromFormat('H:i:s', $transaction->end_time)->format('H:i') }} WIB
             </p>
         </div>
@@ -143,33 +143,33 @@
     $total = $subtotal;
     @endphp
     <div class="flex flex-col gap-4 pt-[22px]">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/card-tick.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Pembayaran</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/card-tick.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Pembayaran</p>
             </div>
-            <p class="font-semibold">Pembayaran Lunas 100%</p>
+            <p class="font-semibold w-full break-all text-right">Pembayaran Lunas 100%</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/receipt-2.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Jumlah Total</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/receipt-2.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Jumlah Total</p>
             </div>
-            <p class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
+            <p class="font-semibold w-full break-all text-right">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/receipt-text.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Total Keseluruhan</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/receipt-text.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Total Keseluruhan</p>
             </div>
-            <p class="font-semibold">Rp {{ number_format($total, 0, ',', '.') }}</p>
+            <p class="font-semibold w-full break-all text-right">Rp {{ number_format($total, 0, ',', '.') }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="assets/images/icons/security-card.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Status</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="assets/images/icons/security-card.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Status</p>
             </div>
-            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px]">
+            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px] w-full break-all text-right">
                 {{ strtoupper($transaction->payment_status) }}
             </p>
         </div>
