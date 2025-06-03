@@ -12,6 +12,7 @@
     <p class="font-semibold">Checkout Motor</p>
     <div class="dummy-btn w-12"></div>
 </div>
+
 <div id="Header" class="relative flex items-center justify-between gap-2 px-5 mt-[18px]">
     <div class="flex flex-col w-full rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white">
         <div class="flex gap-4">
@@ -53,8 +54,8 @@
         </div>
     </div>
 </div>
-<div
-    class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5 overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
+
+<div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5 overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
     <label class="relative flex items-center justify-between">
         <p class="font-semibold text-lg">Pelanggan</p>
         <img src="{{ asset('assets/images/icons/arrow-up.svg') }}"
@@ -63,31 +64,31 @@
         <input type="checkbox" class="absolute hidden">
     </label>
     <div class="flex flex-col gap-4 pt-[22px]">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Nama</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Nama</p>
             </div>
-            <p class="font-semibold">{{ $transaction['name'] }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction['name'] }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/sms.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Email</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/sms.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Email</p>
             </div>
-            <p class="font-semibold">{{ $transaction['email'] }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction['email'] }}</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/call.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Nomor Telepon</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/call.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Nomor Telepon</p>
             </div>
-            <p class="font-semibold">{{ $transaction['phone_number'] }}</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction['phone_number'] }}</p>
         </div>
     </div>
 </div>
-<div
-    class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5 overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
+
+<div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5 overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
     <label class="relative flex items-center justify-between">
         <p class="font-semibold text-lg">Pemesanan</p>
         <img src="{{ asset('assets/images/icons/arrow-up.svg') }}"
@@ -96,33 +97,34 @@
         <input type="checkbox" class="absolute hidden">
     </label>
     <div class="flex flex-col gap-4 pt-[22px]">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/clock.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Durasi</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/clock.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Durasi</p>
             </div>
-            <p class="font-semibold">{{ $transaction['duration'] }} Hari</p>
+            <p class="font-semibold w-full break-all text-right">{{ $transaction['duration'] }} Hari</p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/calendar.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Dimulai pada</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/calendar.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Dimulai pada</p>
             </div>
-            <p class="font-semibold">
+            <p class="font-semibold w-full break-all text-right">
                 {{ \Carbon\Carbon::parse($transaction['start_date'])->isoFormat('D MMMM YYYY') }} - {{ isset($transaction['start_time']) ? (strlen($transaction['start_time']) === 5 ? $transaction['start_time'] : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction['start_time'])->format('H:i'))) : '-' }} WIB
             </p>
         </div>
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/icons/calendar.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Berakhir pada</p>
+        <div class="flex flex-col sm:grid sm:grid-cols-2 items-center w-full gap-2">
+            <div class="flex items-center gap-3 w-full">
+                <img src="{{ asset('assets/images/icons/calendar.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
+                <p class="text-gassor-grey text-left">Berakhir pada</p>
             </div>
-            <p class="font-semibold">
+            <p class="font-semibold w-full break-all text-right">
                 {{ \Carbon\Carbon::parse($transaction['start_date'])->addDays(intval($transaction['duration']))->isoFormat('D MMMM YYYY') }} - {{ isset($transaction['end_time']) ? (strlen($transaction['end_time']) === 5 ? $transaction['end_time'] : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction['end_time'])->format('H:i'))) : '-' }} WIB
             </p>
         </div>
     </div>
 </div>
+
 <form action="{{ route('booking.payment', $motorbikeRental->slug) }}" class="relative flex flex-col gap-6 mt-5 pt-5" method="POST">
     @csrf
     <div id="PaymentOptions" class="flex flex-col rounded-[30px] border border-[#F1F2F6] p-5 gap-4 mx-5">
