@@ -8,29 +8,34 @@
             <p>Selamat datang kembali</p>
             <h1 class="font-bold text-xl leading-[30px]">{{ auth()->user()->name }}</h1>
             </div>
-            <a href="{{ route('profile.pemilik') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
-            <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="https://wa.me/6285942572814" target="_blank" rel="noopener" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
+                    <img src="{{ asset('assets/images/icons/whatsapp.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
+                </a>
+                <a href="{{ route('profile.pemilik') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
+                    <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
+                </a>
+            </div>
         </div>
 
         <section id="Best" class="relative flex flex-col gap-4 px-5 mt-[30px]">
             <div class="flex flex-col gap-4">
             <div class="card">
                 <div class="flex justify-center gap-4 rounded-[30px] p-4 bg-white" style="border: 1.5px solid #e6a43b">
-                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4">
+                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">
                     <img src="{{ asset('assets/images/icons/total-motor.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    <span class="text-lg font-bold">{{ $motorcycles->count() }}</span>
-                    <span class="text-xs text-gassor-grey">Total Motor</span>
+                    <span class="text-m font-bold">{{ $motorcycles->count() }}</span>
+                    <span class="text-m text-gassor-grey">Total Motor</span>
                 </div>
-                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4">
+                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">
                     <img src="{{ asset('assets/images/icons/pesanan-aktif.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    <span class="text-lg font-bold">{{ $activeOrders }}</span>
-                    <span class="text-xs text-gassor-grey">Pesanan Aktif</span>
+                    <span class="text-m font-bold">{{ $activeOrders }}</span>
+                    <span class="text-m text-gassor-grey">Pesanan Aktif</span>
                 </div>
-                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4">
+                <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">
                     <img src="{{ asset('assets/images/icons/pendapatan.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    <span class="text-lg font-bold">Rp {{ number_format($totalIncome, 0, ',', '.') }}</span>
-                    <span class="text-xs text-gassor-grey">Pendapatan</span>
+                    <span class="text-m font-bold">Rp {{ number_format($totalIncome, 0, ',', '.') }}</span>
+                    <span class="text-m text-gassor-grey">Pendapatan</span>
                 </div>
                 </div>
             </div>
@@ -40,31 +45,10 @@
         <section id="Popular" class="flex flex-col gap-4 mt-[30px]">
             <div class="flex items-center justify-between px-5">
             <h2 class="font-bold">Daftar Motor Anda</h2>
-            {{-- <a href="#">
-                <div class="flex items-center gap-2">
-                <span>See all</span>
-                <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                </div>
-            </a> --}}
             </div>
             <div class="w-full overflow-x-hidden swiper">
             <div id="TabsContent" class="px-5">
                 <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
-                    {{-- <div class="flex flex-col gap-4">
-                        <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3">
-                            <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
-                                <img src="{{ asset('assets/images/thumbnails/bonus-1.png') }}" class="object-cover w-full h-full" alt="thumbnails" />
-                            </div>
-                            <div>
-                                <p class="font-semibold">Honda Beat</p>
-                                <div class="flex items-center gap-2 text-sm text-gassor-grey">
-                                <img src="{{ asset('assets/images/icons/status.svg') }}" class="w-4 h-4" alt="status" />
-                                <span>Tersedia</span>
-                                </div>
-                                <p class="text-sm text-gassor-grey">Harga • Rp 50.000/hari</p>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="flex flex-col gap-4">
                         @forelse($motorcycles as $motorcycle)
                             <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3">
@@ -126,7 +110,7 @@
 
     </div>
 
-{{-- @include('includes.navigation_pemilik') --}}
+@include('includes.navigation_pemilik')
 @endsection
 
 @section('script')
