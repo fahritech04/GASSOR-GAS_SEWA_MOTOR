@@ -85,8 +85,7 @@ class MotorbikeRentalResource extends Resource
                                             ->required(),
                                         Forms\Components\TextInput::make('vehicle_number_plate')
                                             ->required(),
-                                        Forms\Components\TextInput::make('capacity')
-                                            ->numeric()
+                                        Forms\Components\TextInput::make('stnk')
                                             ->required(),
                                         Forms\Components\TextInput::make('price_per_day')
                                             ->numeric()

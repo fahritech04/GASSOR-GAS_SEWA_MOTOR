@@ -68,8 +68,8 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     public function getMotorbikeRentalBySlug($slug)
     {
         return MotorbikeRental::with([
-            'motorcycles.images', // tanpa filter is_available
-            'city', 'category', 'bonuses', 'testimonials'
+            'motorcycles.images',
+            'city', 'category', 'bonuses'
         ])
         ->where('slug', $slug)
         ->firstOrFail();

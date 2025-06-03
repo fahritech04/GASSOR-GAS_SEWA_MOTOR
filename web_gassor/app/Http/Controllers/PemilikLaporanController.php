@@ -92,7 +92,8 @@ class PemilikLaporanController extends Controller
         $user = Auth::user();
         $filter = $request->get('filter', 'harian');
         $tanggal = $request->get('tanggal', now()->toDateString());
-        return Excel::download(new LaporanKeuanganExport($user, $filter, $tanggal), 'laporan_keuangan.xlsx');
+        $filename = 'laporan_keuangan_' . $filter . '_' . $tanggal . '.xlsx';
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LaporanKeuanganExport($user, $filter, $tanggal), $filename);
     }
 
     public function exportPdf(Request $request)
@@ -100,10 +101,11 @@ class PemilikLaporanController extends Controller
         $user = Auth::user();
         $filter = $request->get('filter', 'harian');
         $tanggal = $request->get('tanggal', now()->toDateString());
-        $export = new LaporanKeuanganExport($user, $filter, $tanggal);
+        $export = new \App\Exports\LaporanKeuanganExport($user, $filter, $tanggal);
         $data = $export->collection();
         $summary = $export->summary();
-        $pdf = Pdf::loadView('pages.pemilik.laporan_keuangan_pdf', compact('data', 'summary', 'filter', 'tanggal'));
-        return $pdf->download('laporan_keuangan.pdf');
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pages.pemilik.laporan_keuangan_pdf', compact('data', 'summary', 'filter', 'tanggal'));
+        $filename = 'laporan_keuangan_' . $filter . '_' . $tanggal . '.pdf';
+        return $pdf->download($filename);
     }
 }

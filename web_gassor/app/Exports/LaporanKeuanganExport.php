@@ -6,8 +6,12 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class LaporanKeuanganExport implements FromCollection, WithHeadings
+class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles, WithEvents
 {
     protected $user, $filter, $tanggal;
     protected $summary = [];
@@ -56,6 +60,58 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return ['Tanggal', 'Motor', 'Penyewa', 'Harga', 'Status Pembayaran'];
+    }
+
+    public function styles(Worksheet $sheet)
+    {
+        // Header style
+        $sheet->getStyle('A1:E1')->applyFromArray([
+            'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                'startColor' => ['rgb' => 'e6a43b'],
+                'endColor' => ['rgb' => 'ff9d00'],
+            ],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        ]);
+        // Border all
+        $highestRow = $sheet->getHighestRow();
+        $sheet->getStyle('A1:E'.$highestRow)->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => 'e6a43b'],
+                ],
+            ],
+        ]);
+        // Format Harga
+        $sheet->getStyle('D2:D'.$highestRow)
+            ->getNumberFormat()
+            ->setFormatCode('#,##0');
+        return $sheet;
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                // Auto width
+                foreach (range('A', 'E') as $col) {
+                    $event->sheet->getDelegate()->getColumnDimension($col)->setAutoSize(true);
+                }
+                // Add summary below table
+                $row = $event->sheet->getHighestRow() + 2;
+                $event->sheet->setCellValue('C'.$row, 'Total Pendapatan:');
+                $event->sheet->setCellValue('D'.$row, $this->summary['total_income'] ?? 0);
+                $event->sheet->getStyle('C'.$row.':D'.$row)->applyFromArray([
+                    'font' => ['bold' => true],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT],
+                ]);
+                $event->sheet->getStyle('D'.$row)
+                    ->getNumberFormat()
+                    ->setFormatCode('#,##0');
+            }
+        ];
     }
 
     public function summary()

@@ -42,11 +42,6 @@ class MotorbikeRental extends Model
         return $this->hasMany(Bonus::class);
     }
 
-    public function testimonials()
-    {
-        return $this->hasMany(Testimonial::class);
-    }
-
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

@@ -15,7 +15,7 @@ class Motorcycle extends Model
         'name',
         'motorcycle_type',
         'vehicle_number_plate',
-        'capacity',
+        'stnk',
         'price_per_day',
         'is_available',
     ];

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('motorcycle_type');
             $table->string('vehicle_number_plate');
-            $table->integer('capacity');
+            $table->string('stnk');
             $table->integer('price_per_day');
             $table->boolean('is_available');
             $table->softDeletes();
