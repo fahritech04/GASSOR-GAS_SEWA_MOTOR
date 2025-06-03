@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfilePemilikController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\PemilikLaporanController;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
@@ -30,19 +31,27 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('pemilik.block');
+Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show')->middleware('pemilik.block');
+Route::get('/city/{slug}', [CityController::class, 'show'])->name('city.show')->middleware('pemilik.block');
+Route::get('/find-motor', [MotorbikeRentalController::class, 'find'])->name('find-motor')->middleware('pemilik.block');
+Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->name('find-motor.results')->middleware('pemilik.block');
+Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi')->middleware('pemilik.block');
+Route::get('/motor/{slug}', [MotorbikeRentalController::class, 'show'])->name('motor.show')->middleware('pemilik.block');
+
 // Route khusus penyewa
 Route::middleware(['auth', 'role:penyewa'])->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
-    Route::get('/city/{slug}', [CityController::class, 'show'])->name('city.show');
-    Route::get('/motor/{slug}', [MotorbikeRentalController::class, 'show'])->name('motor.show');
+    // Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+    // Route::get('/city/{slug}', [CityController::class, 'show'])->name('city.show');
+    // Route::get('/find-motor', [MotorbikeRentalController::class, 'find'])->name('find-motor');
+    // Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->name('find-motor.results');
+    // Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
+    // Route::get('/motor/{slug}', [MotorbikeRentalController::class, 'show'])->name('motor.show');
     Route::get('/motor/{slug}/motorcycles', [MotorbikeRentalController::class, 'motorcycles'])->name('motor.motorcycles');
-    Route::get('/find-motor', [MotorbikeRentalController::class, 'find'])->name('find-motor');
-    Route::get('/find-results', [MotorbikeRentalController::class, 'findResults'])->name('find-motor.results');
     Route::get('/profile/penyewa', [ProfilePenyewaController::class, 'index'])->name('profile.penyewa');
     Route::get('/editprofile/penyewa', [ProfilePenyewaController::class, 'edit'])->name('editprofile.penyewa');
     Route::post('/editprofile/penyewa', [ProfilePenyewaController::class, 'update'])->name('editprofile.penyewa.update');
-    Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi');
     Route::get('/motor/booking/{slug}', [BookingController::class, 'booking'])->name('booking');
     Route::get('/motor/booking/{slug}/information', [BookingController::class, 'information'])->name('booking.information');
     Route::post('/motor/booking/{slug}/information/save', [BookingController::class, 'saveInformation'])->name('booking.information.save');
@@ -65,6 +74,9 @@ Route::middleware(['auth', 'role:pemilik'])->group(function () {
     Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
     Route::get('/map', [MapController::class, 'showMap'])->name('map');
     Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
+    Route::get('/pemilik/laporan-keuangan', [PemilikLaporanController::class, 'index'])->name('pemilik.laporan-keuangan');
+    Route::get('/pemilik/laporan-keuangan/export-excel', [PemilikLaporanController::class, 'exportExcel'])->name('pemilik.laporan-keuangan.export-excel');
+    Route::get('/pemilik/laporan-keuangan/export-pdf', [PemilikLaporanController::class, 'exportPdf'])->name('pemilik.laporan-keuangan.export-pdf');
 });
 
 
