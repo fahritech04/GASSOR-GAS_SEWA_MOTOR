@@ -19,22 +19,6 @@
         <div class="w-12 dummy-btn"></div>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success" style="background:#d1fae5;color:#065f46;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
-                {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-danger" style="background:#fee2e2;color:#991b1b;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
-                {{ session('error') }}
-            </div>
-        @endif
-        @if($errors->any())
-            <div class="alert alert-danger" style="background:#fee2e2;color:#991b1b;padding:12px 20px;border-radius:8px;margin-bottom:16px;">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
         <form method="POST" action="{{ route('editprofile.penyewa.update') }}" enctype="multipart/form-data" class="relative flex flex-col gap-5 px-5 mt-8">
             @csrf
             <!-- Profile Image Upload with Preview & Edit/Delete -->
@@ -43,7 +27,7 @@
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <div id="profile-image-preview-container" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; background: #F5F6F8; display: flex; align-items: center; justify-content: center; border: 2px solid #e6a43b; margin-right: 2rem;">
                         <img id="profile-image-preview"
-                            src="{{ old('profile_image_url', isset($user) && $user->profile_image_url ? (Str::startsWith($user->profile_image_url, 'http') ? $user->profile_image_url : asset('storage/' . $user->profile_image_url)) : asset('assets/images/icons/profile-2user.svg')) }}"
+                            src="{{ old('profile_image_url', isset($user) && $user->profile_image_url ? (Str::startsWith($user->profile_image_url, 'http') ? $user->profile_image_url : asset('storage/' . $user->profile_image_url)) : asset('assets/images/photos/default_profil.jpg')) }}"
                             alt="Preview"
                             style="object-fit: cover; border-radius: 50%; width: {{ (!isset($user) || !$user->profile_image_url) ? '70px' : '100%' }}; height: {{ (!isset($user) || !$user->profile_image_url) ? '70px' : '100%' }}; transition: width 0.2s, height 0.2s; background: #fff;" />
                     </div>
@@ -87,7 +71,7 @@
                 </div>
                 <div class="form-col">
                     <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
-                    <input type="tel" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required oninput="formatPhoneInput(this)" />
+                    <input type="number" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required oninput="formatPhoneInput(this)" />
                 </div>
             </div>
 
@@ -130,7 +114,7 @@
         const preview = document.getElementById('profile-image-preview');
         const fileInput = document.getElementById('profile_image');
         const removeInput = document.getElementById('remove_profile_image');
-        preview.src = "{{ asset('assets/images/icons/profile-2user.svg') }}";
+        preview.src = "{{ asset('assets/images/photos/default_profil.jpg') }}";
         preview.style.width = '70px';
         preview.style.height = '70px';
         fileInput.value = '';
