@@ -31,10 +31,10 @@
                 <div class="flex flex-col gap-3 w-full">
                     <p class="font-semibold text-lg leading-[27px]">{{ $transaction->motorcycle->name }}</p>
                     <hr class="border-[#F1F2F6]">
-                    {{-- <div class="flex items-center gap-[6px]">
+                    <div class="flex items-center gap-[6px]">
                         <img src="assets/images/icons/profile-2user.svg" class="w-5 h-5 flex shrink-0" alt="icon">
-                        <p class="text-sm text-gassor-grey">{{ $transaction->motorcycle->capacity }} Orang</p>
-                    </div> --}}
+                        <p class="text-sm text-gassor-grey">STNK : {{ $transaction->motorcycle->stnk }}</p>
+                    </div>
                     <div class="flex items-center gap-[6px]">
                         <img src="assets/images/icons/3dcube.svg" class="w-5 h-5 flex shrink-0" alt="icon">
                         <p class="text-sm text-gassor-grey">Nomor Polisi : {{ $transaction->motorcycle->vehicle_number_plate }}</p>
