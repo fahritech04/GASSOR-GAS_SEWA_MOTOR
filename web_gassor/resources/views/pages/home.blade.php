@@ -23,14 +23,20 @@
             {{ $greeting }}
         </p>
         <h1 class="font-bold text-xl leading-[30px]">
-            {{ Auth::user()->name }}
+            @auth
+                {{ Auth::user()->name }}
+            @else
+                Pengguna GASSOR
+            @endauth
         </h1>
     </div>
 
+    @auth
     <a href="{{ route('profile.penyewa') }}"
         class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white">
         <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon">
     </a>
+    @endauth
 </div>
 <div id="Categories" class="swiper w-full overflow-x-hidden mt-[30px]">
     <div class="swiper-wrapper">
