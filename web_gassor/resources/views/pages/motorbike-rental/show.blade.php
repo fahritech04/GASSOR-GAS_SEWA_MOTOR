@@ -84,11 +84,6 @@
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300 !bg-gassor-black !text-white"
                         data-target-tab="#Bonus-Tab">Bonus Motor</button>
                 </div>
-                {{-- <div class="swiper-slide !w-fit">
-                    <button
-                        class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
-                        data-target-tab="#Testimonials-Tab">Testimonials</button>
-                </div> --}}
                 <div class="swiper-slide !w-fit">
                     <button
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
@@ -114,33 +109,6 @@
                     @endforeach
                 </div>
             </div>
-            {{-- <div id="Testimonials-Tab" class="tab-content flex-col gap-5 hidden">
-                <div class="flex flex-col gap-4">
-                    @foreach ($motorbikeRental->testimonials as $testimonial)
-                    <div
-                        class="testi-card flex flex-col rounded-[22px] border border-[#F1F2F6] p-4 gap-3 bg-white hover:border-[#91BF77] transition-all duration-300">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-[70px] h-[70px] flex shrink-0 rounded-full border-4 border-white ring-1 ring-[#F1F2F6] overflow-hidden">
-                                <img src="{{ asset('storage/' . $testimonial->photo ) }}" class="w-full h-full object-cover"
-                                    alt="icon">
-                            </div>
-                            <div>
-                                <p class="font-semibold">{{ $testimonial->name }}</p>
-                                <p class="mt-[2px] text-sm text-gassor-grey">{{ $testimonial->created_at }}</p>
-                            </div>
-                        </div>
-                        <p class="leading-[26px]">{{ $testimonial->content }}</p>
-                        <div class="flex">
-                            @for ($i = 0; $i < $testimonial->rating; $i++)
-                                <img src="{{ asset('assets/images/icons/Star 1.svg') }}" class="w-[22px] h-[22px] flex shrink-0"
-                                    alt="">
-                                @endfor
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div> --}}
             <div id="Contact-Tab" class="tab-content flex flex-col gap-5 hidden">
                 <div class="flex flex-col gap-4">
                     @foreach ($motorbikeRental->contacts ?? [$motorbikeRental] as $contact)
