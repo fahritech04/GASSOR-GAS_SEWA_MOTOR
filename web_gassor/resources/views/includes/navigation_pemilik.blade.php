@@ -13,9 +13,9 @@
                 <img src="{{ asset('assets/images/icons/note-favorite' . (request()->routeIs('pemilik.pesanan') ? '-green' : '') . '.svg') }}" class="w-8 h-8 flex shrink-0" alt="icon">
                 <span class="font-semibold text-sm text-white">Pesanan</span>
             </a>
-            <a href="{{ route('informasi') }}" class="flex flex-col items-center text-center gap-2">
-                <img src="{{ asset('assets/images/icons/24-support' . (request()->routeIs('informasi') ? '-green' : '') . '.svg') }}" class="w-8 h-8 flex shrink-0" alt="icon">
-                <span class="font-semibold text-sm text-white">Informasi</span>
+            <a href="{{ route('pemilik.laporan-keuangan') }}" class="flex flex-col items-center text-center gap-2">
+                <img src="{{ asset('assets/images/icons/24-support' . (request()->routeIs('pemilik.laporan-keuangan') ? '-green' : '') . '.svg') }}" class="w-8 h-8 flex shrink-0" alt="icon">
+                <span class="font-semibold text-sm text-white">Laporan Keuangan</span>
             </a>
         </div>
     </nav>
