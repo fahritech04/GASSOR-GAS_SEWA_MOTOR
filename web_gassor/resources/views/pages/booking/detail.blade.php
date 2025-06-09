@@ -169,15 +169,89 @@
                 <img src="assets/images/icons/security-card.svg" class="flex w-6 h-6 shrink-0" alt="icon" />
                 <p class="text-gassor-grey text-left">Status</p>
             </div>
-            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px] w-full break-all text-right">
-                {{ strtoupper($transaction->payment_status) }}
+            @php
+                $status = strtoupper($transaction->payment_status);
+                $statusColor = match($status) {
+                    'SUCCESS' => '#27ae60',
+                    'FAILED' => '#eb5757',
+                    'CANCELED' => '#bdbdbd',
+                    'PENDING' => '#f2994a',
+                    'EXPIRED' => '#9b51e0',
+                    default => '#828282',
+                };
+            @endphp
+            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] w-full break-all text-right text-white" style="background: {{ $statusColor }};">
+                {{ $status }}
             </p>
         </div>
     </div>
 </div>
+@if(strtoupper($transaction->payment_status) === 'SUCCESS')
+<div class="flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5">
+    <div class="flex items-center justify-between mb-2">
+        <p class="font-semibold text-lg">STNK Motor</p>
+    </div>
+    <div class="flex flex-col gap-4 pt-[22px]">
+        @if(isset($transaction->motorcycle->stnk_images) && is_array($transaction->motorcycle->stnk_images) && count($transaction->motorcycle->stnk_images) > 0)
+            <div class="flex flex-col gap-4 items-center">
+                @foreach($transaction->motorcycle->stnk_images as $stnkImg)
+                    <div class="rounded-lg border max-w-xs w-full overflow-hidden bg-white cursor-pointer" onclick="showStnkModal('{{ asset('storage/' . $stnkImg) }}')">
+                        <img src="{{ asset('storage/' . $stnkImg) }}" alt="Gambar STNK" class="object-contain w-full h-48">
+                    </div>
+                @endforeach
+            </div>
+        @elseif(isset($transaction->motorcycle->stnk_images) && is_string($transaction->motorcycle->stnk_images) && !empty($transaction->motorcycle->stnk_images))
+            <div class="rounded-lg border max-w-xs w-full overflow-hidden bg-white mx-auto cursor-pointer" onclick="showStnkModal('{{ asset('storage/' . $transaction->motorcycle->stnk_images) }}')">
+                <img src="{{ asset('storage/' . $transaction->motorcycle->stnk_images) }}" alt="Gambar STNK" class="object-contain w-full h-48">
+            </div>
+        @else
+            <p class="text-center text-gassor-grey">Gambar STNK tidak tersedia.</p>
+        @endif
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function showStnkModal(imgUrl) {
+    Swal.fire({
+        imageUrl: imgUrl,
+        imageAlt: 'Gambar STNK',
+        showCloseButton: true,
+        showConfirmButton: false,
+        width: 'auto',
+        background: '#fff',
+        customClass: {
+            image: 'w-full h-auto max-w-2xl rounded-lg',
+            popup: 'p-0',
+        }
+    });
+}
+</script>
+@endif
 <div id="BottomButton" class="relative flex w-full h-[98px] shrink-0">
     <div class="fixed bottom-[30px] w-full max-w-[640px] px-5 z-10">
-        <a href="https://wa.me/6285174309823" class="flex w-full justify-center rounded-full p-[14px_20px] bg-gassor-orange font-bold text-white">Hubungi Layanan Pelanggan</a>
+        @if(in_array($transaction->payment_status, ['FAILED','EXPIRED','PENDING']))
+            <div class="flex gap-2 mb-2">
+                <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" class="flex-1">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-full py-3 px-4 bg-gradient-to-r from-yellow-400 via-gassor-orange to-orange-600 hover:from-yellow-500 hover:to-orange-700 text-white font-bold shadow-md transition-all duration-200">
+                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' /></svg>
+                        Bayar Ulang
+                    </button>
+                </form>
+                <form action="{{ route('booking.cancel', $transaction->code) }}" method="POST" class="flex-1">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-full py-3 px-4 bg-gradient-to-r from-red-400 via-red-600 to-red-800 hover:from-red-500 hover:to-red-900 text-white font-bold shadow-md transition-all duration-200">
+                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12' /></svg>
+                        Batalkan Pesanan
+                    </button>
+                </form>
+            </div>
+        @elseif($transaction->payment_status === 'CANCELED')
+            <div class="flex w-full justify-center rounded-full p-[14px_20px] bg-gray-400 font-bold text-white">Pesanan Dibatalkan</div>
+        @elseif($transaction->payment_status === 'SUCCESS')
+            <div class="flex w-full justify-center rounded-full p-[14px_20px] bg-green-500 font-bold text-white">Pembayaran Berhasil</div>
+        @endif
+        <a href="https://wa.me/6285174309823" class="flex w-full justify-center rounded-full p-[14px_20px] bg-gassor-orange font-bold text-white mt-2">Hubungi Layanan Pelanggan</a>
     </div>
 </div>
 @endsection
@@ -185,21 +259,16 @@
 @section('scripts')
 <script src="{{ asset('assets/js/accodion.js') }}"></script>
 <script>
-    // Get all tab buttons
     const tabLinks = document.querySelectorAll('.tab-link');
 
-    // Add click event listener to each button
     tabLinks.forEach(button => {
         button.addEventListener('click', () => {
-            // Get the target tab id from the data attribute
             const targetTab = button.getAttribute('data-target-tab');
             console.log(targetTab)
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
 
-            // Show the target tab content
             document.querySelector(targetTab).classList.toggle('hidden');
         });
     });

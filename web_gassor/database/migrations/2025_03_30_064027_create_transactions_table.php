@@ -22,9 +22,12 @@ return new class extends Migration
             $table->enum('payment_method', ['down_payment', 'full_payment'])->nullable();
             $table->string('payment_status')->nullable();
             $table->date('start_date');
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->integer('duration');
             $table->integer('total_amount')->nullable();
             $table->date('transaction_date')->nullable();
+            $table->string('snap_url')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

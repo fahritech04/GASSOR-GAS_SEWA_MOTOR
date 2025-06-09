@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('motorcycle_type');
             $table->string('vehicle_number_plate');
             $table->string('stnk');
+            $table->json('stnk_images')->nullable();
             $table->integer('price_per_day');
             $table->boolean('is_available');
             $table->softDeletes();

@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'pemilik.block' => \App\Http\Middleware\RedirectIfPemilik::class,
+        'block.manual.access' => \App\Http\Middleware\BlockManualAccess::class,
     ];
 }

@@ -27,6 +27,10 @@ class User extends Authenticatable
         'tempat_lahir',
         'tanggal_lahir',
         'phone',
+        'ktp_image_url',
+        'sim_image_url',
+        'ktm_image_url',
+        'google_blocked',
     ];
 
     /**
@@ -48,5 +52,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'tanggal_lahir' => 'date',
+        'google_blocked' => 'boolean',
     ];
 }

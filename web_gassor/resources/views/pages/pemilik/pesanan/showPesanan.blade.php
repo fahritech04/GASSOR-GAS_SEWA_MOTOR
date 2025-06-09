@@ -24,7 +24,16 @@
                     Tanggal: {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }}
                 </p>
             </div>
-            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px]">
+            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
+                match(strtoupper($transaction->payment_status)) {
+                    'SUCCESS' => '#27ae60',
+                    'FAILED' => '#eb5757',
+                    'CANCELED' => '#bdbdbd',
+                    'PENDING' => '#f2994a',
+                    'EXPIRED' => '#9b51e0',
+                    default => '#828282',
+                }
+            }};">
                 {{ strtoupper($transaction->payment_status) }}
             </p>
         </div>

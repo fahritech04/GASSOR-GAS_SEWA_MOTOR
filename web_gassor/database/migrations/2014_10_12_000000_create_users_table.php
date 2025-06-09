@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->string('phone')->nullable();
+            $table->string('ktp_image_url')->nullable();
+            $table->string('sim_image_url')->nullable();
+            $table->string('ktm_image_url')->nullable();
+            $table->boolean('google_blocked')->default(false);
         });
     }
 

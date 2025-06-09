@@ -1,9 +1,29 @@
 @extends('layouts.app')
 
 @section('vendor-style')
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/dropzone/dropzone.css')}}" />
 <style>
     .form-row { display: flex; gap: 20px; }
     .form-col { flex: 1; display: flex; flex-direction: column; gap: 0.25rem; }
+
+    @media (max-width: 600px) {
+      .ktp-sim-ktm-upload-col {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+      .ktp-sim-ktm-upload-imgbox {
+        width: 100% !important;
+        height: 110px !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+      .ktp-sim-ktm-upload-btn {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+    }
 </style>
 @endsection
 
@@ -21,7 +41,6 @@
 
         <form method="POST" action="{{ route('editprofile.penyewa.update') }}" enctype="multipart/form-data" class="relative flex flex-col gap-5 px-5 mt-8">
             @csrf
-            <!-- Profile Image Upload with Preview & Edit/Delete -->
             <div style="display: flex; flex-direction: column; gap: 0.75rem">
                 <label for="profile_image" class="text-sm font-medium">Foto Profil</label>
                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -39,9 +58,7 @@
                     </div>
                 </div>
             </div>
-            <!-- End Profile Image Upload with Preview & Edit/Delete -->
 
-            <!-- Full Name (single column) -->
             <div style="display: flex; flex-direction: column; gap: 0.25rem">
                 <label for="fullname" class="text-sm font-medium">Nama Lengkap <span style="color: #dc3545;">*</span></label>
                 <input type="text" id="fullname" name="name" value="{{ old('name', isset($user) ? $user->name : '') }}" placeholder="Masukan nama lengkap" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
@@ -51,7 +68,6 @@
                 <input type="text" id="username" name="username" value="{{ old('username', isset($user) ? $user->username : '') }}" placeholder="Masukan nama pengguna" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required />
             </div>
 
-            <!-- Tempat & Tanggal Lahir (two columns) -->
             <div class="form-row">
                 <div class="form-col">
                     <label for="tempat_lahir" class="text-sm font-medium text-gray-700 mb-1">Tempat Lahir <span style="color: #dc3545;">*</span></label>
@@ -63,7 +79,6 @@
                 </div>
             </div>
 
-            <!-- Email and Phone Number (two columns) -->
             <div class="form-row">
                 <div class="form-col">
                     <label for="email" class="text-sm font-medium">Email <span style="color: #dc3545;">*</span></label>
@@ -75,21 +90,61 @@
                 </div>
             </div>
 
+            <div class="form-row" style="gap: 24px; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
+                    <label for="ktp_image" class="text-sm font-medium mb-2">Upload KTP</label>
+                    <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
+                        <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('ktp_image').click()">
+                            <img id="ktp-preview" src="{{ old('ktp_image_url', isset($user) && $user->ktp_image_url ? asset('storage/' . $user->ktp_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->ktp_image_url) ? 'block' : 'none' }};" alt="Preview KTP" />
+                            <div id="ktp-placeholder" style="display:{{ (isset($user) && $user->ktp_image_url) ? 'none' : 'flex' }}; align-items:center; justify-content:center; width:100%; height:100%; color:#aaa; font-size:14px;">Klik untuk upload KTP</div>
+                        </div>
+                        <input type="file" name="ktp_image" id="ktp_image" accept="image/*" style="display:none;" onchange="previewImage(event, 'ktp-preview')">
+                        {{-- <button type="button" class="btn btn-danger w-100 ktp-sim-ktm-upload-btn" style="width: 100%; margin-top: 2px;" onclick="removeImage('ktp')">Hapus Foto</button> --}}
+                        <input type="hidden" name="remove_ktp_image" id="remove_ktp_image" value="0" />
+                    </div>
+                </div>
+                <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
+                    <label for="sim_image" class="text-sm font-medium mb-2">Upload SIM</label>
+                    <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
+                        <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('sim_image').click()">
+                            <img id="sim-preview" src="{{ old('sim_image_url', isset($user) && $user->sim_image_url ? asset('storage/' . $user->sim_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->sim_image_url) ? 'block' : 'none' }};" alt="Preview SIM" />
+                            <div id="sim-placeholder" style="display:{{ (isset($user) && $user->sim_image_url) ? 'none' : 'flex' }}; align-items:center; justify-content:center; width:100%; height:100%; color:#aaa; font-size:14px;">Klik untuk upload SIM</div>
+                        </div>
+                        <input type="file" name="sim_image" id="sim_image" accept="image/*" style="display:none;" onchange="previewImage(event, 'sim-preview')">
+                        {{-- <button type="button" class="btn btn-danger w-100 ktp-sim-ktm-upload-btn" style="width: 100%; margin-top: 2px;" onclick="removeImage('sim')">Hapus Foto</button> --}}
+                        <input type="hidden" name="remove_sim_image" id="remove_sim_image" value="0" />
+                    </div>
+                </div>
+                <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
+                    <label for="ktm_image" class="text-sm font-medium mb-2">Upload KTM</label>
+                    <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
+                        <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('ktm_image').click()">
+                            <img id="ktm-preview" src="{{ old('ktm_image_url', isset($user) && $user->ktm_image_url ? asset('storage/' . $user->ktm_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->ktm_image_url) ? 'block' : 'none' }};" alt="Preview KTM" />
+                            <div id="ktm-placeholder" style="display:{{ (isset($user) && $user->ktm_image_url) ? 'none' : 'flex' }}; align-items:center; justify-content:center; width:100%; height:100%; color:#aaa; font-size:14px;">Klik untuk upload KTM</div>
+                        </div>
+                        <input type="file" name="ktm_image" id="ktm_image" accept="image/*" style="display:none;" onchange="previewImage(event, 'ktm-preview')">
+                        {{-- <button type="button" class="btn btn-danger w-100 ktp-sim-ktm-upload-btn" style="width: 100%; margin-top: 2px;" onclick="removeImage('ktm')">Hapus Foto</button> --}}
+                        <input type="hidden" name="remove_ktm_image" id="remove_ktm_image" value="0" />
+                    </div>
+                </div>
+            </div>
+
             <button type="submit" class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Simpan Akun</button>
         </form>
     </div>
 @endsection
 
+@section('vendor-script')
+<script src="{{asset('assets/vendor/libs/dropzone/dropzone.js')}}"></script>
+@endsection
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function formatPhoneInput(input) {
         let val = input.value;
-        // Jika dimulai dengan 0, ganti dengan 62
         if (val.startsWith('0')) {
             val = '62' + val.substring(1);
         }
-        // Jika tidak dimulai dengan 62, tambahkan 62 di depan
         if (!val.startsWith('62')) {
             val = '62' + val.replace(/^\D+/, '').replace(/^62+/, '');
         }
@@ -120,6 +175,33 @@
         fileInput.value = '';
         removeInput.value = '1';
     }
+    function previewImage(event, previewId) {
+        const input = event.target;
+        const preview = document.getElementById(previewId);
+        const placeholder = document.getElementById(previewId.replace('-preview', '-placeholder'));
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function removeImage(type) {
+        const preview = document.getElementById(type+'-preview');
+        const placeholder = document.getElementById(type+'-placeholder');
+        const input = document.getElementById(type+'_image');
+        const removeInput = document.getElementById('remove_'+type+'_image');
+        if (preview) {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+        if (placeholder) placeholder.style.display = 'flex';
+        if (input) input.value = '';
+        if (removeInput) removeInput.value = '1';
+    }
     document.addEventListener('DOMContentLoaded', function() {
         @if(session('success'))
             Swal.fire({
@@ -148,6 +230,44 @@
                 showConfirmButton: false
             });
         @endif
+        // Validasi wajib isi semua kolom (termasuk upload KTP, SIM, KTM)
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            let requiredFields = [
+                'name', 'username', 'tempat_lahir', 'tanggal_lahir', 'email', 'phone'
+            ];
+            let isValid = true;
+            let firstEmpty = null;
+            // Cek input text, email, dll
+            requiredFields.forEach(function(field) {
+                let input = document.getElementsByName(field)[0];
+                if (input && input.value.trim() === '') {
+                    isValid = false;
+                    if (!firstEmpty) firstEmpty = input;
+                }
+            });
+            // Cek upload KTP, SIM, KTM wajib ada (preview harus ada gambarnya)
+            ['ktp', 'sim', 'ktm'].forEach(function(type) {
+                let preview = document.getElementById(type+'-preview');
+                let removeInput = document.getElementById('remove_'+type+'_image');
+                // Cek jika tidak ada gambar sama sekali (src kosong atau default)
+                if (!preview || !preview.src || preview.src === '' || preview.style.display === 'none' || (removeInput && removeInput.value === '1')) {
+                    isValid = false;
+                    if (!firstEmpty) firstEmpty = document.getElementById(type+'_image');
+                }
+            });
+            if (!isValid) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Semua kolom wajib diisi!!!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                if (firstEmpty) firstEmpty.focus();
+            }
+        });
     });
 </script>
 @endsection

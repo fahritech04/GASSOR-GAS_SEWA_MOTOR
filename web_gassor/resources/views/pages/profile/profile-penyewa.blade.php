@@ -75,17 +75,16 @@
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
-                    <a href="#" class="flex items-center justify-between">
+                    {{-- <a href="#" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                             <p class="text-gassor-grey">Ganti Kata Sandi</p>
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 
-            {{-- Tombol Logout di tengah bawah, tidak fixed --}}
             <div id="BottomButton" class="flex w-full h-[98px] shrink-0 mt-8 justify-center items-center">
                 <form method="POST" action="{{ route('logout') }}" class="w-full max-w-[640px] px-5">
                     @csrf

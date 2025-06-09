@@ -30,6 +30,9 @@
                         </span>
                     </div>
                 </div>
+                <div class="flex justify-end mb-2">
+                    <a href="{{ route('password.request') }}" class="text-sm text-orange-500 hover:underline" onclick="sessionStorage.setItem('can_access_forgot_password', '1');">Lupa Password?</a>
+                </div>
                 {{-- Alert placeholder --}}
                 <div id="alert-placeholder"></div>
                 <button type="submit" class="w-full p-4 mt-4 font-bold text-white" style="background-color: #ff801a; border-radius: 12px;">Masuk</button>
@@ -39,7 +42,7 @@
                     <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
                 </div>
             </form>
-            {{-- Google Login Form DILUAR form utama, di bawah OR dan di atas Register --}}
+            {{-- Google Login form diluar form awal --}}
             <form id="google-login-form" method="POST" action="{{ route('google.login') }}" class="mt-5">
                 @csrf
                 <input type="hidden" name="role" id="google-role-input" value="{{ request('role') }}" />
@@ -50,10 +53,10 @@
                     Masuk / Daftar
                 </button>
             </form>
-            {{-- <p class="mt-5 text-sm text-center">
-                Belum punya akun?
-                <a href="{{ route('register') }}" style="font-medium; color: #f97316">Daftar</a>
-            </p> --}}
+            <p class="mt-5 text-sm text-center" style="color: #9a9a9a">
+                Dengan memilih mendaftar, saya setuju dengan <br>
+                <span style="color: #f97316">Persyaratan Layanan</span> dan <span style="color: #f97316">Kebijakan Privasi</span>
+            </p>
         </div>
     </div>
 @endsection
@@ -80,6 +83,20 @@
                 document.getElementById('google-login-form').submit();
             }
         }
+
+        // Set session flag ke server saat klik link lupa password
+        document.querySelectorAll('a[href$="password/reset"]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                fetch('{{ route('password.request') }}', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
+                });
+                sessionStorage.setItem('can_access_forgot_password', '1');
+            });
+        });
 
         @if ($errors->any())
             Swal.fire({

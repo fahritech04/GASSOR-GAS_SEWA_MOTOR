@@ -87,6 +87,14 @@ class MotorbikeRentalResource extends Resource
                                             ->required(),
                                         Forms\Components\TextInput::make('stnk')
                                             ->required(),
+                                        Forms\Components\FileUpload::make('stnk_images')
+                                            ->label('STNK (Depan & Belakang)')
+                                            ->multiple()
+                                            ->image()
+                                            ->directory('stnk')
+                                            ->maxFiles(2)
+                                            ->helperText('Upload gambar STNK depan dan belakang (maksimal 2 gambar)')
+                                            ->columnSpanFull(),
                                         Forms\Components\TextInput::make('price_per_day')
                                             ->numeric()
                                             ->prefix('IDR')

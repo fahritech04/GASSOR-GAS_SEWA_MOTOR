@@ -25,6 +25,7 @@ class Transaction extends Model
         'total_amount',
         'transaction_date',
         'end_time',
+        'snap_url',
     ];
 
     public function motorbikeRental()

@@ -53,7 +53,6 @@
                         @forelse($motorcycles as $motorcycle)
                             <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3">
                                 <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
-                                    {{-- Ganti src sesuai field thumbnail motor jika ada --}}
                                     <img src="{{ asset('storage/' . $motorcycle->images->first()->image) }}" class="w-full h-full object-cover" alt="icon">
                                 </div>
                                 <div>
@@ -74,15 +73,9 @@
             </div>
         </section>
 
-        <section id="Cities" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
+        <section id="transaction" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
             <div class="flex items-center justify-between">
             <h2 class="font-bold">Pesanan Terbaru</h2>
-            {{-- <a href="#">
-                <div class="flex items-center gap-2">
-                <span>See all</span>
-                <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                </div>
-            </a> --}}
             </div>
             <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
                 <div class="flex flex-col gap-4">
@@ -97,7 +90,16 @@
                                     Tanggal: {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }}
                                 </p>
                             </div>
-                            <p class="rounded-full p-[6px_12px] bg-gassor-orange font-bold text-xs leading-[18px]">
+                            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
+                                match(strtoupper($transaction->payment_status)) {
+                                    'SUCCESS' => '#27ae60',
+                                    'FAILED' => '#eb5757',
+                                    'CANCELED' => '#bdbdbd',
+                                    'PENDING' => '#f2994a',
+                                    'EXPIRED' => '#9b51e0',
+                                    default => '#828282',
+                                }
+                            }};">
                                 {{ strtoupper($transaction->payment_status) }}
                             </p>
                         </div>
