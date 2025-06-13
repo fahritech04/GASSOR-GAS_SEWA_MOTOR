@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('stnk_images')->nullable();
             $table->integer('price_per_day');
             $table->boolean('is_available');
+            $table->boolean('has_gps')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

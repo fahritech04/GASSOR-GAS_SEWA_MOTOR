@@ -58,4 +58,9 @@ class MotorbikeRental extends Model
             'owner_id' // Local key motorcycles
         )->distinct();
     }
+
+    public function motorcyclesWithGps()
+    {
+        return $this->hasMany(Motorcycle::class)->where('has_gps', true);
+    }
 }

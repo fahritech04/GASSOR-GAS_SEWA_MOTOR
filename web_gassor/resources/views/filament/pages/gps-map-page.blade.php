@@ -5,6 +5,19 @@
             <pre class="text-xs">{{ json_encode($this->gpsData, JSON_PRETTY_PRINT) }}</pre>
         </div>
     @endif
+    @if(isset($this->motorcyclesWithGps) && count($this->motorcyclesWithGps))
+        <div class="p-2 bg-blue-100 text-blue-800 rounded mb-2">
+            <b>Daftar Motor dengan GPS IoT:</b>
+            <ul class="text-xs list-disc pl-4">
+                @foreach($this->motorcyclesWithGps as $motor)
+                    <li>
+                        <b>{{ $motor->name }}</b> - {{ $motor->vehicle_number_plate }}
+                        ({{ $motor->motorcycle_type }})
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />

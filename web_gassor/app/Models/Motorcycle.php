@@ -19,10 +19,12 @@ class Motorcycle extends Model
         'stnk_images',
         'price_per_day',
         'is_available',
+        'has_gps',
     ];
 
     protected $casts = [
         'stnk_images' => 'array',
+        'has_gps' => 'boolean',
     ];
 
     /**

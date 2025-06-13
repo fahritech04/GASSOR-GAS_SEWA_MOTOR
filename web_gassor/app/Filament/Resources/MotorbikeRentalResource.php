@@ -101,6 +101,9 @@ class MotorbikeRentalResource extends Resource
                                             ->required(),
                                         Forms\Components\Toggle::make('is_available')
                                             ->required(),
+                                        Forms\Components\Toggle::make('has_gps')
+                                            ->label('Ada GPS IoT?')
+                                            ->helperText('Centang jika motor ini sudah terpasang GPS IoT.'),
                                         Forms\Components\Repeater::make('images')
                                             ->relationship('images')
                                             ->schema([
