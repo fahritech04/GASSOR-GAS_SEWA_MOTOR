@@ -82,8 +82,8 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');
         Route::get('/pemilik/daftar-motor', [PemilikController::class, 'showDaftarMotor'])->name('pemilik.daftar-motor');
         Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
-        Route::get('/map', [MapController::class, 'showMap'])->name('map');
-        Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
+        // Route::get('/map', [MapController::class, 'showMap'])->name('map');
+        // Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
         Route::get('/pemilik/laporan-keuangan', [PemilikLaporanController::class, 'index'])->name('pemilik.laporan-keuangan');
         Route::get('/pemilik/laporan-keuangan/export-excel', [PemilikLaporanController::class, 'exportExcel'])->name('pemilik.laporan-keuangan.export-excel');
         Route::get('/pemilik/laporan-keuangan/export-pdf', [PemilikLaporanController::class, 'exportPdf'])->name('pemilik.laporan-keuangan.export-pdf');
@@ -95,6 +95,10 @@ Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestF
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->middleware('guest')->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->middleware('guest')->name('password.update');
+
+Route::middleware(['auth:filament'])->prefix('filament')->group(function () {
+    Route::get('/api/gps', [MapController::class, 'getGps'])->name('filament.api.gps');
+});
 
 Route::fallback(function () {
     $user = Auth::user();
