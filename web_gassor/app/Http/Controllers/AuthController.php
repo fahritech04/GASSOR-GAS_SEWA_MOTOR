@@ -77,7 +77,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        // Redirect sesuai role
         if ($user->role === 'pemilik') {
             return redirect()->route('pemilik.dashboard');
         } else {
@@ -90,57 +89,19 @@ class AuthController extends Controller
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+        session()->forget('google_role');
+        return redirect('/');
     }
 
-    // --- GOOGLE LOGIN ---
     public function redirectToGoogle(Request $request)
     {
         $request->validate([
             'role' => ['required', 'in:pemilik,penyewa'],
         ]);
         session(['google_role' => $request->role]);
-        return Socialite::driver('google')->redirect();
+        // Google selalu tampilkan pilihan akun
+        return Socialite::driver('google')->with(['prompt' => 'select_account'])->redirect();
     }
-
-    // public function handleGoogleCallback()
-    // {
-    //     try {
-    //         $googleUser = Socialite::driver('google')->user();
-    //     } catch (\Exception $e) {
-    //         return redirect('/login')->withErrors(['email' => 'Gagal login dengan Google.']);
-    //     }
-
-    //     $role = session('google_role', 'penyewa'); // default penyewa jika tidak ada
-
-    //     $user = User::where('email', $googleUser->getEmail())->first();
-
-    //     if (!$user) {
-    //         $user = User::create([
-    //             'name' => $googleUser->getName() ?? $googleUser->getNickname(),
-    //             'username' => $googleUser->getNickname() ?? null,
-    //             'email' => $googleUser->getEmail(),
-    //             'profile_image_url' => $googleUser->getAvatar(),
-    //             'password' => bcrypt(Str::random(16)),
-    //             'role' => $role,
-    //         ]);
-    //     } else {
-    //         // Update role jika berbeda
-    //         if ($user->role !== $role) {
-    //             $user->role = $role;
-    //             $user->save();
-    //         }
-    //     }
-
-    //     Auth::login($user, true);
-
-    //     // Redirect sesuai role
-    //     if ($user->role === 'pemilik') {
-    //         return redirect()->route('pemilik.dashboard');
-    //     } else {
-    //         return redirect()->route('home');
-    //     }
-    // }
 
     public function handleGoogleCallback()
     {
@@ -150,27 +111,25 @@ class AuthController extends Controller
             return redirect('/login')->withErrors(['email' => 'Gagal login dengan Google.']);
         }
 
-        $role = session('google_role', 'penyewa'); // default penyewa jika tidak ada
+        $role = session('google_role', 'penyewa');
 
         $user = User::where('email', $googleUser->getEmail())->first();
 
         if ($user) {
-            // Jika user sudah pernah reset password, blokir login/daftar Google
             if ($user->google_blocked) {
                 return redirect('/login')->withErrors([
                     'email' => 'Akun ini sudah tidak bisa login/daftar dengan Google karena Anda sudah pernah reset password. Silakan login dengan email & password.'
                 ]);
             }
-            // Jika email sudah ada, cek role-nya
+            // email sudah ada, cek role
             if ($user->role !== $role) {
-                // Email sudah terdaftar dengan role lain, tolak login/daftar
                 return redirect('/login')->withErrors([
                     'email' => 'Akun ini sudah terdaftar sebagai ' . ucfirst($user->role) . '. Anda hanya bisa menggunakan satu akun Google untuk satu role. Silakan login sesuai role yang sudah terdaftar.'
                 ]);
             }
-            // Jika role sama, lanjutkan login
+            // role sama, lanjutkan login
         } else {
-            // Email belum ada, buat user baru
+            // Email belum ada, buat baru
             $user = User::create([
                 'name' => $googleUser->getName() ?? $googleUser->getNickname(),
                 'username' => $googleUser->getNickname() ?? null,
@@ -183,7 +142,6 @@ class AuthController extends Controller
 
         Auth::login($user, true);
 
-        // Redirect sesuai role
         if ($user->role === 'pemilik') {
             return redirect()->route('pemilik.dashboard');
         } else {

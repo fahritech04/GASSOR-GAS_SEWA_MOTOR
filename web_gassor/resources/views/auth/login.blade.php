@@ -6,7 +6,7 @@
         <div class="w-full max-w-md">
             <div class="flex flex-col items-center">
                 <h1 class="text-3xl font-bold text-center">Masuk Gassor</h1>
-                <p class="mt-2 text-center text-gassor-grey">Nggak pakai ribet sewa motor di Gassor langsung gas</p>
+                <p class="mt-2 text-center text-gassor-black">Nggak pakai ribet sewa motor di Gassor langsung gas</p>
             </div>
             <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5 mt-6">
                 @csrf
@@ -155,5 +155,15 @@
                 }
             });
         @endif
+    </script>
+    <script>
+        document.cookie.split(';').forEach(function(c) {
+            document.cookie = c
+                .replace(/^ +/, '')
+                .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
+        });
+
+        if (window.sessionStorage) sessionStorage.clear();
+        if (window.localStorage) localStorage.clear();
     </script>
 @endsection
