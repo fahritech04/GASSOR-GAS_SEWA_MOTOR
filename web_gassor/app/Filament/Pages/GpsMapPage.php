@@ -18,7 +18,8 @@ class GpsMapPage extends Page
     {
         $controller = new MapController();
         $this->gpsData = $controller->getGps()->getData();
-        $this->motorcyclesWithGps = Motorcycle::where('has_gps', true)->get();
+        // Ambil motor yang sedang disewa (is_available = 0) dan punya GPS (has_gps = 1)
+        $this->motorcyclesWithGps = Motorcycle::where('is_available', false)->where('has_gps', true)->get();
     }
 
     public function getGpsData()

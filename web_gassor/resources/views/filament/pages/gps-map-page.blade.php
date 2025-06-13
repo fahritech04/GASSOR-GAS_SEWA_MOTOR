@@ -7,15 +7,18 @@
     @endif
     @if(isset($this->motorcyclesWithGps) && count($this->motorcyclesWithGps))
         <div class="p-2 bg-blue-100 text-blue-800 rounded mb-2">
-            <b>Daftar Motor dengan GPS IoT:</b>
+            <b>Daftar Motor (Lagi Disewa & Ada GPS IoT):</b>
             <ul class="text-xs list-disc pl-4">
                 @foreach($this->motorcyclesWithGps as $motor)
                     <li>
-                        <b>{{ $motor->name }}</b> - {{ $motor->vehicle_number_plate }}
-                        ({{ $motor->motorcycle_type }})
+                        <b>{{ $motor->name }}</b> - {{ $motor->vehicle_number_plate }} ({{ $motor->motorcycle_type }})
                     </li>
                 @endforeach
             </ul>
+        </div>
+    @else
+        <div class="p-2 bg-yellow-100 text-yellow-800 rounded mb-2">
+            Tidak ada motor yang sedang disewa & memiliki GPS IoT.
         </div>
     @endif
     <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet" />
@@ -87,34 +90,43 @@
         popupAnchor:  [0, -35]
       });
       let map = L.map('shapeMap', { zoomControl: false }).setView([-6.2, 106.8], 13);
-      let marker;
+      let markers = [];
       L.control.zoom({ position: 'topright' }).addTo(map);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
-      function updateMarker(data) {
-        if (!data || !data.latitude || !data.longitude) return;
-        const lat = data.latitude;
-        const lng = data.longitude;
-        const popup = `
-          <strong>Lokasi Terkini</strong><br>
-          Lat: ${lat}<br>
-          Lng: ${lng}<br>
-          Speed: ${data.speed_kmph ?? '-'} km/h<br>
-          Arah: ${data.heading_deg ?? '-'}°<br>
-          <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">📍 Google Maps</a>
-        `;
-        if (!marker) {
-          marker = L.marker([lat, lng], {icon: motorIcon}).addTo(map).bindPopup(popup).openPopup();
-          map.setView([lat, lng], 15);
-        } else {
-          marker.setLatLng([lat, lng]).setPopupContent(popup);
+
+      function clearMarkers() {
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+      }
+
+      function updateMarkersFromGpsList(motorcycles) {
+        clearMarkers();
+        if (!motorcycles || motorcycles.length === 0) return;
+        motorcycles.forEach(function(motor) {
+          // Pastikan setiap motor punya data latitude & longitude
+          if (!motor.latitude || !motor.longitude) return;
+          const popup = `
+            <strong>${motor.name}</strong><br>
+            Plat: ${motor.vehicle_number_plate}<br>
+            Lat: ${motor.latitude}<br>
+            Lng: ${motor.longitude}<br>
+            Speed: ${motor.speed_kmph ?? '-'} km/h<br>
+            Arah: ${motor.heading_deg ?? '-'}°<br>
+            <a href="https://maps.google.com/?q=${motor.latitude},${motor.longitude}" target="_blank">📍 Google Maps</a>
+          `;
+          const marker = L.marker([motor.latitude, motor.longitude], {icon: motorIcon}).addTo(map).bindPopup(popup);
+          markers.push(marker);
+        });
+        if (markers.length > 0) {
+          map.setView(markers[0].getLatLng(), 15);
         }
       }
-      setInterval(() => {
-        $.getJSON('/filament/api/gps', function(data) {
-          updateMarker(data);
-        });
-      }, 1000);
+
+      // Ambil data motor dari blade (PHP ke JS)
+      const motorcyclesWithGps = @json($this->motorcyclesWithGps);
+      // Jika backend sudah mengirim data GPS per motor, gunakan fungsi ini:
+      updateMarkersFromGpsList(motorcyclesWithGps);
     </script>
 </x-filament-panels::page>
