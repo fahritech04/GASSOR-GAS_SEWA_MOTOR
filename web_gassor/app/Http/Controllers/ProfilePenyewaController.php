@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
 class ProfilePenyewaController extends Controller
 {
-    public function index ()
+    public function index()
     {
-        return view ('pages.profile.profile-penyewa');
+        return view('pages.profile.profile-penyewa');
     }
-    public function edit ()
+
+    public function edit()
     {
         $user = Auth::user();
-        return view ('pages.profile.editprofile-penyewa', compact('user'));
+
+        return view('pages.profile.editprofile-penyewa', compact('user'));
     }
 
     public function update(Request $request)
@@ -25,7 +27,7 @@ class ProfilePenyewaController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'phone' => 'required|string|max:20',
@@ -114,7 +116,7 @@ class ProfilePenyewaController extends Controller
 
             return redirect()->route('editprofile.penyewa')->with('success', 'Profil berhasil diperbarui!');
         } catch (\Exception $e) {
-            return redirect()->route('editprofile.penyewa')->with('error', 'Terjadi kesalahan saat memperbarui profil: ' . $e->getMessage());
+            return redirect()->route('editprofile.penyewa')->with('error', 'Terjadi kesalahan saat memperbarui profil: '.$e->getMessage());
         }
     }
 }

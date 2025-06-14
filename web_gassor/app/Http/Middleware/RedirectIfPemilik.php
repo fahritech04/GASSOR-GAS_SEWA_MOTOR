@@ -17,6 +17,7 @@ class RedirectIfPemilik
         if ($user && $user->role === 'pemilik') {
             return redirect()->route('pemilik.dashboard');
         }
+
         return $next($request);
     }
 }

@@ -6,12 +6,12 @@ use App\Http\Requests\BookingShowRequest;
 use App\Http\Requests\CustomerInformationStoreRequest;
 use App\Interfaces\MotorbikeRentalRepositoryInterface;
 use App\Interfaces\TransactionRepositoryInterface;
-use App\Models\MotorbikeRental;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
     private MotorbikeRentalRepositoryInterface $motorbikeRentalRepository;
+
     private TransactionRepositoryInterface $transactionRepository;
 
     public function __construct(
@@ -32,17 +32,18 @@ class BookingController extends Controller
     public function booking(Request $request, $slug)
     {
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
-        if (!$motorcycle || !$motorcycle->is_available) {
+        if (! $motorcycle || ! $motorcycle->is_available) {
             return redirect()->back()->with('error', 'Motor sudah tidak tersedia.');
         }
         $this->transactionRepository->saveTransactionDataToSession($request->all());
+
         return redirect()->route('booking.information', $slug);
     }
 
     public function information($slug)
     {
         $transaction = $this->transactionRepository->getTransactionDataFormSession();
-        if (!$transaction || !isset($transaction['motorcycle_id'])) {
+        if (! $transaction || ! isset($transaction['motorcycle_id'])) {
             return redirect()->route('home')->with('error', 'Data booking tidak ditemukan atau sudah kadaluarsa.');
         }
         $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
@@ -68,7 +69,7 @@ class BookingController extends Controller
     public function checkout($slug)
     {
         $transaction = $this->transactionRepository->getTransactionDataFormSession();
-        if (!$transaction || !isset($transaction['motorcycle_id'])) {
+        if (! $transaction || ! isset($transaction['motorcycle_id'])) {
             return redirect()->route('home')->with('error', 'Data booking tidak ditemukan atau sudah kadaluarsa.');
         }
         $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
@@ -112,7 +113,7 @@ class BookingController extends Controller
     {
         $transaction = $this->transactionRepository->getTransactionByCode($request->order_id);
 
-        if (!$transaction) {
+        if (! $transaction) {
             return redirect()->route('home');
         }
 
@@ -126,6 +127,7 @@ class BookingController extends Controller
         if (auth()->check()) {
             $transactions = $this->transactionRepository->getTransactionsByUser(auth()->user()->id);
         }
+
         return view('pages.booking.check-booking', compact('transactions'));
     }
 
@@ -133,7 +135,7 @@ class BookingController extends Controller
     {
         $transaction = $this->transactionRepository->getTransactionByCodeEmailPhone($request->code, $request->email, $request->phone_number);
 
-        if (!$transaction) {
+        if (! $transaction) {
             return redirect()->back()->with('error', 'Data Transaksi Tidak Ditemukan');
         }
 
@@ -143,7 +145,7 @@ class BookingController extends Controller
     public function retryPayment(Request $request, $code)
     {
         $transaction = $this->transactionRepository->getTransactionByCode($code);
-        if (!$transaction) {
+        if (! $transaction) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
         // Generate code/order_id baru (benar-benar baru, bukan append timestamp)
@@ -169,17 +171,19 @@ class BookingController extends Controller
         $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
         $transaction->snap_url = $paymentUrl;
         $transaction->save();
+
         return redirect($paymentUrl);
     }
 
     public function cancel(Request $request, $code)
     {
         $transaction = $this->transactionRepository->getTransactionByCode($code);
-        if (!$transaction || !in_array(strtolower($transaction->payment_status), ['failed','expired','pending'])) {
+        if (! $transaction || ! in_array(strtolower($transaction->payment_status), ['failed', 'expired', 'pending'])) {
             return redirect()->back()->with('error', 'Transaksi tidak valid untuk dibatalkan.');
         }
         $transaction->payment_status = 'canceled';
         $transaction->save();
+
         // Jika motor perlu di-set available lagi, tambahkan di sini
         return redirect()->route('check-booking')->with('success', 'Pesanan berhasil dibatalkan.');
     }
@@ -188,11 +192,11 @@ class BookingController extends Controller
     {
         $orderId = $request->query('order_id');
         $transaction = $this->transactionRepository->getTransactionByCode($orderId);
-        if (!$transaction) {
+        if (! $transaction) {
             return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan.');
         }
         // Selalu cek status terbaru ke Midtrans jika belum success/canceled/expired/failed
-        if (!in_array(strtolower($transaction->payment_status), ['success','canceled','expired','failed'])) {
+        if (! in_array(strtolower($transaction->payment_status), ['success', 'canceled', 'expired', 'failed'])) {
             try {
                 \Midtrans\Config::$serverKey = config('midtrans.serverKey');
                 \Midtrans\Config::$isProduction = config('midtrans.isProduction');
@@ -222,6 +226,7 @@ class BookingController extends Controller
         if ($status === 'success') {
             return redirect()->route('booking.success', ['order_id' => $orderId]);
         }
+
         // Tampilkan halaman status spesifik
         return view('pages.booking.status', [
             'transaction' => $transaction,

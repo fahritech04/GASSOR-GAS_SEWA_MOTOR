@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
-use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
     public function showLogin(Request $request)
     {
         // Jika tidak ada role di query, redirect ke select-role
-        if (!$request->has('role') || !in_array($request->role, ['penyewa', 'pemilik'])) {
+        if (! $request->has('role') || ! in_array($request->role, ['penyewa', 'pemilik'])) {
             return redirect()->route('select-role');
         }
+
         return view('auth.login');
         // return view('select-role');
     }
@@ -48,6 +49,7 @@ class AuthController extends Controller
                 return redirect()->route('home');
             } else {
                 Auth::logout();
+
                 return back()->withErrors(['email' => 'Role tidak valid.']);
             }
         }
@@ -90,6 +92,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         session()->forget('google_role');
+
         return redirect('/');
     }
 
@@ -99,6 +102,7 @@ class AuthController extends Controller
             'role' => ['required', 'in:pemilik,penyewa'],
         ]);
         session(['google_role' => $request->role]);
+
         // Google selalu tampilkan pilihan akun
         return Socialite::driver('google')->with(['prompt' => 'select_account'])->redirect();
     }
@@ -118,13 +122,13 @@ class AuthController extends Controller
         if ($user) {
             if ($user->google_blocked) {
                 return redirect('/login')->withErrors([
-                    'email' => 'Akun ini sudah tidak bisa login/daftar dengan Google karena Anda sudah pernah reset password. Silakan login dengan email & password.'
+                    'email' => 'Akun ini sudah tidak bisa login/daftar dengan Google karena Anda sudah pernah reset password. Silakan login dengan email & password.',
                 ]);
             }
             // email sudah ada, cek role
             if ($user->role !== $role) {
                 return redirect('/login')->withErrors([
-                    'email' => 'Akun ini sudah terdaftar sebagai ' . ucfirst($user->role) . '. Anda hanya bisa menggunakan satu akun Google untuk satu role. Silakan login sesuai role yang sudah terdaftar.'
+                    'email' => 'Akun ini sudah terdaftar sebagai '.ucfirst($user->role).'. Anda hanya bisa menggunakan satu akun Google untuk satu role. Silakan login sesuai role yang sudah terdaftar.',
                 ]);
             }
             // role sama, lanjutkan login

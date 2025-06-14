@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User;
 
 class ProfilePemilikController extends Controller
 {
-    public function index ()
+    public function index()
     {
-        return view ('pages.pemilik.profile.profile-pemilik');
+        return view('pages.pemilik.profile.profile-pemilik');
     }
 
-    public function edit ()
+    public function edit()
     {
         $user = Auth::user();
-        return view ('pages.pemilik.profile.editprofile-pemilik', compact('user'));
+
+        return view('pages.pemilik.profile.editprofile-pemilik', compact('user'));
     }
 
     public function update(Request $request)
@@ -26,7 +27,7 @@ class ProfilePemilikController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'phone' => 'required|string|max:20',
@@ -118,7 +119,7 @@ class ProfilePemilikController extends Controller
 
             return redirect()->route('editprofile.pemilik')->with('success', 'Profil berhasil diperbarui!');
         } catch (\Exception $e) {
-            return redirect()->route('editprofile.pemilik')->with('error', 'Terjadi kesalahan saat memperbarui profil: ' . $e->getMessage());
+            return redirect()->route('editprofile.pemilik')->with('error', 'Terjadi kesalahan saat memperbarui profil: '.$e->getMessage());
         }
     }
 }

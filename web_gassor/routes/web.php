@@ -1,21 +1,20 @@
 <?php
 
-use App\Http\Controllers\MotorbikeRentalController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfilePenyewaController;
-use App\Http\Controllers\ProfilePemilikController;
 use App\Http\Controllers\InformasiController;
-use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\MotorbikeRentalController;
+use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\PemilikLaporanController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ProfilePemilikController;
+use App\Http\Controllers\ProfilePenyewaController;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login/google', [AuthController::class, 'redirectToGoogle'])->name('google.login');
@@ -36,7 +35,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('pemilik.block');
 
 // Middleware untuk blokir akses manual (direct URL)
-use Illuminate\Http\Request;
 
 Route::middleware(['block.manual.access'])->group(function () {
     Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show')->middleware('pemilik.block');
@@ -75,8 +73,8 @@ Route::middleware(['block.manual.access'])->group(function () {
     // Route khusus pemilik
     Route::middleware(['auth', 'role:pemilik'])->group(function () {
         Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])
-        ->middleware(['auth', 'role:pemilik'])
-        ->name('pemilik.dashboard');
+            ->middleware(['auth', 'role:pemilik'])
+            ->name('pemilik.dashboard');
         Route::get('/profile/pemilik', [ProfilePemilikController::class, 'index'])->name('profile.pemilik');
         Route::get('/editprofile/pemilik', [ProfilePemilikController::class, 'edit'])->name('editprofile.pemilik');
         Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');
@@ -109,6 +107,7 @@ Route::fallback(function () {
             return redirect()->route('home');
         }
     }
+
     // Jika belum login, redirect ke login
     return redirect()->route('login');
 });

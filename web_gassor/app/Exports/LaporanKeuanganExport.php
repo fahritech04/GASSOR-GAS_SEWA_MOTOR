@@ -1,19 +1,24 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\Transaction;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles, WithEvents
+class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings, WithStyles
 {
-    protected $user, $filter, $tanggal;
+    protected $user;
+
+    protected $filter;
+
+    protected $tanggal;
+
     protected $summary = [];
 
     public function __construct($user, $filter, $tanggal)
@@ -26,7 +31,7 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles,
     public function collection()
     {
         $date = Carbon::parse($this->tanggal);
-        $query = Transaction::whereHas('motorcycle', function($q) {
+        $query = Transaction::whereHas('motorcycle', function ($q) {
             $q->where('owner_id', $this->user->id);
         });
         if ($this->filter === 'harian') {
@@ -34,11 +39,11 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles,
         } elseif ($this->filter === 'mingguan') {
             $query->whereBetween('start_date', [
                 $date->copy()->startOfWeek(),
-                $date->copy()->endOfWeek()
+                $date->copy()->endOfWeek(),
             ]);
         } elseif ($this->filter === 'bulanan') {
             $query->whereMonth('start_date', $date->month)
-                  ->whereYear('start_date', $date->year);
+                ->whereYear('start_date', $date->year);
         }
         $transactions = $query->with(['motorcycle'])->orderBy('start_date', 'desc')->get();
         $this->summary = [
@@ -46,7 +51,8 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles,
             'total_transactions' => $transactions->count(),
             'average_income' => $transactions->count() > 0 ? $transactions->sum('total_amount') / $transactions->count() : 0,
         ];
-        return $transactions->map(function($trx) {
+
+        return $transactions->map(function ($trx) {
             return [
                 'Tanggal' => Carbon::parse($trx->start_date)->isoFormat('D MMM YYYY'),
                 'Motor' => $trx->motorcycle->name ?? '-',
@@ -88,13 +94,14 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles,
         $sheet->getStyle('D2:D'.$highestRow)
             ->getNumberFormat()
             ->setFormatCode('#,##0');
+
         return $sheet;
     }
 
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 // Auto width
                 foreach (range('A', 'E') as $col) {
                     $event->sheet->getDelegate()->getColumnDimension($col)->setAutoSize(true);
@@ -110,7 +117,7 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles,
                 $event->sheet->getStyle('D'.$row)
                     ->getNumberFormat()
                     ->setFormatCode('#,##0');
-            }
+            },
         ];
     }
 

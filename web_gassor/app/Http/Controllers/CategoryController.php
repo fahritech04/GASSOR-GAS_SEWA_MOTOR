@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\MotorbikeRentalRepositoryInterface;
 use App\Interfaces\CategoryRepositoryInterface;
-use App\Repositories\CategoryRepository;
-use Illuminate\Http\Request;
+use App\Interfaces\MotorbikeRentalRepositoryInterface;
 
 class CategoryController extends Controller
 {
     private MotorbikeRentalRepositoryInterface $motorbikeRentalRepository;
+
     private CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(

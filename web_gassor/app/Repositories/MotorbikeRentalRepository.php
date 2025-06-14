@@ -14,7 +14,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
         $query = MotorbikeRental::query();
 
         if ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%'.$search.'%');
         }
 
         if ($city) {
@@ -69,10 +69,10 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     {
         return MotorbikeRental::with([
             'motorcycles.images',
-            'city', 'category', 'bonuses'
+            'city', 'category', 'bonuses',
         ])
-        ->where('slug', $slug)
-        ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
     }
 
     public function getMotorbikeRentalMotorcycleById($id)
@@ -83,12 +83,12 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     public function getMotorbikeRentalAvailableBySlug($slug)
     {
         return MotorbikeRental::with([
-            'motorcycles' => function($q) {
+            'motorcycles' => function ($q) {
                 $q->where('is_available', true);
             },
-            'motorcycles.images', 'city', 'category'
+            'motorcycles.images', 'city', 'category',
         ])
-        ->where('slug', $slug)
-        ->firstOrFail();
+            ->where('slug', $slug)
+            ->firstOrFail();
     }
 }

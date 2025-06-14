@@ -34,6 +34,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         $transaction = Transaction::create($data);
         session()->forget('transaction');
+
         return $transaction;
     }
 
@@ -66,20 +67,24 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function generateTransactionCode()
     {
-        return 'GASMTR' . rand(100000, 999999);
+        return 'GASMTR'.rand(100000, 999999);
     }
+
     public function calculateTotalAmount($pricePerMonth, $duration)
     {
         $subtotal = $pricePerMonth * $duration;
+
         // $tax = $subtotal * 0.11;
         // $insurance = $subtotal * 0.01;
         // return $subtotal + $tax + $insurance;
         return $subtotal;
     }
+
     public function calculatePaymentAmount($total, $paymentMethod)
     {
         return $total;
     }
+
     public function getLatestTransactionsByOwner($ownerId, $limit = 10)
     {
         return Transaction::with(['motorcycle', 'motorcycle.owner'])
@@ -90,6 +95,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->take($limit)
             ->get();
     }
+
     public function getTransactionsByUser($userId)
     {
         // Ambil transaksi berdasarkan nama/email user (penyewa)

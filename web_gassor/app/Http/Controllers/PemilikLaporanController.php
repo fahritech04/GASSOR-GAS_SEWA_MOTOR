@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Models\Motorcycle;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\LaporanKeuanganExport;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PemilikLaporanController extends Controller
 {
@@ -21,7 +17,7 @@ class PemilikLaporanController extends Controller
         $date = Carbon::parse($tanggal);
 
         // Query dasar transaksi milik pemilik
-        $query = Transaction::whereHas('motorcycle', function($q) use ($user) {
+        $query = Transaction::whereHas('motorcycle', function ($q) use ($user) {
             $q->where('owner_id', $user->id);
         });
 
@@ -31,11 +27,11 @@ class PemilikLaporanController extends Controller
         } elseif ($filter === 'mingguan') {
             $query->whereBetween('start_date', [
                 $date->copy()->startOfWeek(),
-                $date->copy()->endOfWeek()
+                $date->copy()->endOfWeek(),
             ]);
         } elseif ($filter === 'bulanan') {
             $query->whereMonth('start_date', $date->month)
-                  ->whereYear('start_date', $date->year);
+                ->whereYear('start_date', $date->year);
         }
 
         $transactions = $query->with(['motorcycle'])->orderBy('start_date', 'desc')->get();
@@ -55,7 +51,7 @@ class PemilikLaporanController extends Controller
             for ($d = $date->copy()->startOfWeek(); $d <= $date->copy()->endOfWeek(); $d->addDay()) {
                 $label = $d->isoFormat('ddd, D');
                 $chartLabels[] = $label;
-                $chartData[] = $transactions->filter(function($trx) use ($d) {
+                $chartData[] = $transactions->filter(function ($trx) use ($d) {
                     return Carbon::parse($trx->start_date)->isSameDay($d);
                 })->sum('total_amount');
             }
@@ -65,7 +61,7 @@ class PemilikLaporanController extends Controller
                 $d = $date->copy()->day($i);
                 $label = $d->isoFormat('D');
                 $chartLabels[] = $label;
-                $chartData[] = $transactions->filter(function($trx) use ($d) {
+                $chartData[] = $transactions->filter(function ($trx) use ($d) {
                     return Carbon::parse($trx->start_date)->isSameDay($d);
                 })->sum('total_amount');
             }
@@ -92,7 +88,8 @@ class PemilikLaporanController extends Controller
         $user = Auth::user();
         $filter = $request->get('filter', 'harian');
         $tanggal = $request->get('tanggal', now()->toDateString());
-        $filename = 'laporan_keuangan_' . $filter . '_' . $tanggal . '.xlsx';
+        $filename = 'laporan_keuangan_'.$filter.'_'.$tanggal.'.xlsx';
+
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\LaporanKeuanganExport($user, $filter, $tanggal), $filename);
     }
 
@@ -105,7 +102,8 @@ class PemilikLaporanController extends Controller
         $data = $export->collection();
         $summary = $export->summary();
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pages.pemilik.laporan_keuangan_pdf', compact('data', 'summary', 'filter', 'tanggal'));
-        $filename = 'laporan_keuangan_' . $filter . '_' . $tanggal . '.pdf';
+        $filename = 'laporan_keuangan_'.$filter.'_'.$tanggal.'.pdf';
+
         return $pdf->download($filename);
     }
 }

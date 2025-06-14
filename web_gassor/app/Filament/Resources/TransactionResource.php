@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionResource extends Resource
 {
@@ -41,7 +38,7 @@ class TransactionResource extends Resource
                 Forms\Components\Select::make('payment_method')
                     ->options([
                         'down_payment' => 'Down Payment',
-                        'full_payment' => 'Full Payment'
+                        'full_payment' => 'Full Payment',
                     ])
                     ->required(),
                 Forms\Components\TextInput::make('payment_status')

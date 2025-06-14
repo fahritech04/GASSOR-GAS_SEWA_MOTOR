@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MotorbikeRentalResource\Pages;
-use App\Filament\Resources\MotorbikeRentalResource\RelationManagers;
 use App\Models\MotorbikeRental;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class MotorbikeRentalResource extends Resource
@@ -65,7 +62,7 @@ class MotorbikeRentalResource extends Resource
                                             ->required(),
                                         Forms\Components\TextInput::make('description')
                                             ->required(),
-                                    ])
+                                    ]),
                             ]),
                         Forms\Components\Tabs\Tab::make('Motor')
                             ->schema([
@@ -111,10 +108,10 @@ class MotorbikeRentalResource extends Resource
                                                     ->image()
                                                     ->required()
                                                     ->directory('motorcycles'),
-                                            ])
-                                    ])
+                                            ]),
+                                    ]),
                             ]),
-                    ])->columnSpan(2)
+                    ])->columnSpan(2),
             ]);
     }
 
@@ -125,7 +122,7 @@ class MotorbikeRentalResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('city.name'),
                 Tables\Columns\TextColumn::make('category.name'),
-                Tables\Columns\ImageColumn::make('thumbnail')
+                Tables\Columns\ImageColumn::make('thumbnail'),
             ])
             ->filters([
                 //

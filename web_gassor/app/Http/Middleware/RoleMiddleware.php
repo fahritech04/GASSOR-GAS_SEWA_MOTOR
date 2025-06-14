@@ -15,11 +15,11 @@ class RoleMiddleware
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect('/login');
         }
 
-        if (!in_array($user->role, $roles)) {
+        if (! in_array($user->role, $roles)) {
             // Redirect ke dashboard sesuai role
             if ($user->role === 'pemilik') {
                 return redirect()->route('pemilik.dashboard');

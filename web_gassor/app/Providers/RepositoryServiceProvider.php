@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Interfaces\MotorbikeRentalRepositoryInterface;
 use App\Interfaces\CategoryRepositoryInterface;
 use App\Interfaces\CityRepositoryInterface;
+use App\Interfaces\MotorbikeRentalRepositoryInterface;
 use App\Interfaces\TransactionRepositoryInterface;
-use App\Repositories\MotorbikeRentalRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CityRepository;
+use App\Repositories\MotorbikeRentalRepository;
 use App\Repositories\TransactionRepository;
 use Illuminate\Support\ServiceProvider;
 

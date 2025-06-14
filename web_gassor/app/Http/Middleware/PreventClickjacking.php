@@ -16,6 +16,7 @@ class PreventClickjacking
         $response = $next($request);
         $response->headers->set('X-Frame-Options', 'DENY');
         $response->headers->set('Content-Security-Policy', ", frame-ancestors 'none'");
+
         return $response;
     }
 }

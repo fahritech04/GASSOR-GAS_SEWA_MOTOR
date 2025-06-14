@@ -20,7 +20,7 @@ class CustomerInformationStoreRequest extends FormRequest
             'duration' => 'required',
             'start_date' => 'required',
             'start_time' => 'required',
-            'end_time' => 'required'
+            'end_time' => 'required',
         ];
     }
 }

@@ -13,7 +13,7 @@ class BlockManualAccess
         // Deteksi akses manual: tidak ada HTTP_REFERER atau referer bukan dari domain sendiri
         $referer = $request->headers->get('referer');
         $host = $request->getSchemeAndHttpHost();
-        if (!$referer || strpos($referer, $host) !== 0) {
+        if (! $referer || strpos($referer, $host) !== 0) {
             // Redirect sesuai role jika sudah login
             if (Auth::check()) {
                 if (Auth::user()->role === 'pemilik') {
@@ -22,9 +22,11 @@ class BlockManualAccess
                     return redirect()->route('home');
                 }
             }
+
             // Jika belum login, redirect ke login
             return redirect()->route('login');
         }
+
         return $next($request);
     }
 }

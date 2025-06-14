@@ -16,7 +16,7 @@ class BookingShowRequest extends FormRequest
         return [
             'code' => 'required',
             'email' => 'required|email',
-            'phone_number' => 'required'
+            'phone_number' => 'required',
         ];
     }
 }

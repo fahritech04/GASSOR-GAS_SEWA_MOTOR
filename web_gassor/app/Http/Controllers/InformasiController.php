@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class InformasiController extends Controller
 {
-    public function index ()
+    public function index()
     {
-        return view ('pages.informasi.informasi');
+        return view('pages.informasi.informasi');
     }
 }

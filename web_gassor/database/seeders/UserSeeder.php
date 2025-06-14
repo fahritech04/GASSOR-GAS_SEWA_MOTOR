@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
@@ -25,15 +24,15 @@ class UserSeeder extends Seeder
         $owners = [];
         for ($i = 1; $i <= 10; $i++) {
             $owners[] = [
-                'name' => 'Pemilik ' . $i,
-                'username' => 'pemilik' . $i,
-                'email' => 'pemilik' . $i . '@gmail.com',
-                'password' => Hash::make('pemilik' . $i),
+                'name' => 'Pemilik '.$i,
+                'username' => 'pemilik'.$i,
+                'email' => 'pemilik'.$i.'@gmail.com',
+                'password' => Hash::make('pemilik'.$i),
                 'role' => 'pemilik',
                 'profile_image_url' => null,
-                'tempat_lahir' => 'Kota ' . $i,
-                'tanggal_lahir' => '1990-01-0' . $i,
-                'phone' => '0812345678' . $i,
+                'tempat_lahir' => 'Kota '.$i,
+                'tanggal_lahir' => '1990-01-0'.$i,
+                'phone' => '0812345678'.$i,
             ];
         }
 

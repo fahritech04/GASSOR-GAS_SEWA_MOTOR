@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class MapController extends Controller
@@ -27,6 +26,7 @@ class MapController extends Controller
         $secret = env('FIREBASE_GPS_SECRET');
 
         $response = Http::get($url, ['auth' => $secret]);
+
         return response()->json($response->json());
     }
 }

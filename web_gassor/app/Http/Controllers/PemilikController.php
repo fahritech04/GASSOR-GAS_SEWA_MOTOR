@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Motorcycle;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 
 class PemilikController extends Controller
 {
@@ -33,11 +32,12 @@ class PemilikController extends Controller
 
         $totalIncome = $transactions
             ->where('payment_status', 'success')
-            ->sum(function($transaction) {
+            ->sum(function ($transaction) {
                 // Hitung durasi hari sewa
                 $start = \Carbon\Carbon::parse($transaction->start_date);
                 $end = \Carbon\Carbon::parse($transaction->end_date);
                 $days = $start->diffInDays($end) ?: 1; // minimal 1 hari
+
                 return $transaction->motorcycle->price_per_day * $days;
             });
 
@@ -47,6 +47,7 @@ class PemilikController extends Controller
     public function showDaftarMotor()
     {
         $motorcycles = Motorcycle::where('owner_id', auth()->id())->get();
+
         return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles'));
     }
 
