@@ -71,7 +71,7 @@
                     <a href="{{ route('editprofile.pemilik') }}" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Edit Akun</p>
+                            <p class="text-gassor-grey">Akun Saya</p>
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>

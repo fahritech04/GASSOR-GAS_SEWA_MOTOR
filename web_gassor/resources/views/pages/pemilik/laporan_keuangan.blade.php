@@ -23,12 +23,12 @@
                     <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ request('tanggal', date('Y-m-d')) }}">
                 </div>
                 <div style="flex-shrink:0;">
-                    <button type="submit" class="btn btn-warning fw-bold text-white" style="white-space:nowrap;"><i class="fas fa-filter me-1"></i> Terapkan</button>
+                    <button type="submit" class="btn btn-success fw-bold text-white" style="white-space:nowrap;"><i class="fas fa-filter me-1"></i> Terapkan</button>
                 </div>
             </form>
             <div class="laporan-actionbar print:hidden">
-                <a href="{{ route('pemilik.laporan-keuangan.export-excel', request()->all()) }}" class="btn btn-primary fw-bold"><i class="fas fa-file-excel me-1"></i> Export Excel</a>
-                <a href="{{ route('pemilik.laporan-keuangan.export-pdf', request()->all()) }}" class="btn btn-danger fw-bold"><i class="fas fa-file-pdf me-1"></i> Export PDF</a>
+                {{-- <a href="{{ route('pemilik.laporan-keuangan.export-excel', request()->all()) }}" class="btn btn-primary fw-bold"><i class="fas fa-file-excel me-1"></i> Export Excel</a> --}}
+                <a href="{{ route('pemilik.laporan-keuangan.export-pdf', request()->all()) }}" class="btn btn-success fw-bold"><i class="fas fa-file-pdf me-1"></i> Export PDF</a>
                 <button type="button" onclick="window.print()" class="btn btn-success fw-bold"><i class="fas fa-print me-1"></i> Cetak</button>
             </div>
         </div>
@@ -36,14 +36,14 @@
         <!-- Summary -->
         <div class="laporan-summary row justify-content-center">
             <div class="summary-card col-md-3 mx-2 mb-2">
-                <span class="icon"><i class="fas fa-wallet text-warning"></i></span>
+                <span class="icon"><i class="fas fa-wallet text-success"></i></span>
                 <span class="fs-6 fw-semibold">Total Pendapatan</span>
-                <span class="fs-4 fw-bold text-warning">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
+                <span class="fs-4 fw-bold text-success">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
-                <span class="icon"><i class="fas fa-receipt text-primary"></i></span>
+                <span class="icon"><i class="fas fa-receipt text-success"></i></span>
                 <span class="fs-6 fw-semibold">Total Transaksi</span>
-                <span class="fs-4 fw-bold text-primary">{{ $summary['total_transactions'] ?? 0 }}</span>
+                <span class="fs-4 fw-bold text-success">{{ $summary['total_transactions'] ?? 0 }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-chart-line text-success"></i></span>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="bg-white p-4 shadow overflow-auto">
-            <h2 class="fw-bold mb-4 fs-5 d-flex align-items-center gap-2"><i class="fas fa-table text-primary"></i> Detail Transaksi</h2>
+            <h2 class="fw-bold mb-4 fs-5 d-flex align-items-center gap-2"><i class="fas fa-table text-success"></i> Detail Transaksi</h2>
             <table class="table table-bordered laporan-table align-middle mb-0">
                 <thead class="table-light">
                     <tr>
@@ -102,7 +102,7 @@
     body { background: #f8fafc; }
     #Content-Container { box-shadow: 0 4px 32px 0 rgba(0,0,0,0.08); }
     .laporan-header {
-        background: linear-gradient(90deg, #e6a43b 0%, #ff9d00 100%);
+        background: linear-gradient(90deg, #e6a43b 0%, #e6a43b 100%);
         color: #fff;
         padding: 32px 24px 24px 24px;
         margin-bottom: 32px;

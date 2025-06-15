@@ -30,7 +30,7 @@
                     <p class="text-sm text-gassor-grey">Wilayah {{ $motorbikeRental->city->name }}</p>
                 </div>
                 <div class="flex items-center gap-[6px]">
-                    <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
+                    <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
                 </div>
@@ -45,9 +45,13 @@
                 <p class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</p>
                 <hr class="border-[#F1F2F6]">
                 <div class="flex items-center gap-[6px]">
-                    <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
+                    <img src="{{ asset('assets/images/icons/notes.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>
+                </div>
+                <div class="flex items-center gap-[6px]">
+                    <img src="{{ asset('assets/images/icons/police.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                    <p class="text-sm text-gassor-grey">Nomor Polisi : {{ $motorcycle->vehicle_number_plate }}</p>
                 </div>
                 <hr class="border-[#F1F2F6]">
                 <p class="font-semibold text-lg text-gassor-orange">Rp
@@ -63,7 +67,10 @@
     @csrf
     <div class="flex flex-col gap-[6px] px-5">
         <h1 class="font-semibold text-lg">Informasi Kamu</h1>
-        <p class="text-sm text-gassor-grey">Isi kolom di bawah ini dengan data Anda yang valid</p>
+        <p class="text-sm text-gassor-grey">
+            Pastikan nama, email, dan nomor telepon sudah terisi,
+            <a href="{{ route('profile.penyewa') }}" class="text-gassor-orange underline font-semibold">klik di sini untuk mengubah profil</a>.
+        </p>
     </div>
     <div id="InputContainer" class="flex flex-col gap-[18px]">
         <div class="flex flex-col w-full gap-2 px-5">
@@ -74,7 +81,7 @@
                     alt="icon">
                 <input type="text" name="name" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik nama kamu" value="{{ old('name', Auth::user() ? Auth::user()->name : '') }}">
+                    placeholder="Ketik nama kamu" value="{{ old('name', Auth::user() ? Auth::user()->name : '') }}" readonly>
             </label>
             @error('name')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
@@ -87,7 +94,7 @@
                 <img src="{{ asset('assets/images/icons/sms.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <input type="email" name="email" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik email kamu" value="{{ old('email', Auth::user() ? Auth::user()->email : '') }}">
+                    placeholder="Ketik email kamu" value="{{ old('email', Auth::user() ? Auth::user()->email : '') }}" readonly>
             </label>
             @error('email')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
@@ -98,9 +105,9 @@
             <label
                 class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#91BF77] transition-all duration-300 @error('phone') border-red-500 @enderror">
                 <img src="{{ asset('assets/images/icons/call.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
-                <input type="number" name="phone_number" id=""
+                <input type="number" name="phone_number" id="phone_number"
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
-                    placeholder="Ketik nomor telepon kamu" value="{{ old('phone_number', Auth::user() ? Auth::user()->phone : '') }}">
+                    value="{{ old('phone_number', Auth::user() ? Auth::user()->phone : '') }}" readonly>
             </label>
             @error('phone_number')
             <p class="text-sm" style="color: red;">{{ $message }}</p>
@@ -147,8 +154,32 @@
 @endsection
 
 @section('scripts')
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const defaultPrice = parseFloat('{{ $motorcycle->price_per_day }}');
+
+    // Validasi input sebelum submit
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action="{{ route('booking.information.save', $motorbikeRental->slug) }}"]');
+        const nameInput = form.querySelector('input[name="name"]');
+        const emailInput = form.querySelector('input[name="email"]');
+        const phoneInput = form.querySelector('input[name="phone_number"]');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', function(e) {
+            if (!nameInput.value.trim() || !emailInput.value.trim() || !phoneInput.value.trim()) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Lengkapi dulu akun kamu',
+                    text: 'Pastikan nama, email, dan nomor telepon sudah terisi.',
+                    confirmButtonColor: '#ff9900',
+                });
+                return false;
+            }
+        });
+    });
 </script>
 <script src="{{ asset('assets/js/cust-info.js') }}"></script>
 @endsection

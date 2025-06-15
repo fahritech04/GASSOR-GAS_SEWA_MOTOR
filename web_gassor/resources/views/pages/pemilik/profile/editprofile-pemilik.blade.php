@@ -35,7 +35,7 @@
         <a href="{{ route('profile.pemilik') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
             <img src="{{ asset('assets/images/icons/arrow-left.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
         </a>
-        <p class="font-semibold">Edit Akun</p>
+        <p class="font-semibold">Akun Saya</p>
         <div class="w-12 dummy-btn"></div>
         </div>
 
@@ -86,7 +86,7 @@
                 </div>
                 <div class="form-col">
                     <label for="phone" class="text-sm font-medium">Nomor Telepon <span style="color: #dc3545;">*</span></label>
-                    <input type="number" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Enter your phone number" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required oninput="formatPhoneInput(this)" />
+                    <input type="number" id="phone" name="phone" value="{{ old('phone', isset($user) ? $user->phone : '') }}" placeholder="Masukkan dengan 62" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" data-rule-required="true" required oninput="formatPhoneInput(this)" />
                 </div>
             </div>
 

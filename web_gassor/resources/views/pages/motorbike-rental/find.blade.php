@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="Background"
-    class="absolute top-0 w-full h-[430px] rounded-b-[75px] bg-[linear-gradient(180deg,#F2F9E6_0%,#D2EDE4_100%)]">
-</div>
+<div style="position: absolute; top: 0; width: 100%; height: 430px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%)"></div>
 <div class="relative flex flex-col gap-[30px] my-[60px] px-5">
     <h1 class="font-bold text-[30px] leading-[45px] text-center">Jelajahi Motor<br>Di Webgassor Kami</h1>
     <form action="{{ route('find-motor.results') }}"

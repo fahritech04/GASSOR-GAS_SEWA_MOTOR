@@ -2,7 +2,8 @@
 
 @section('content')
     <div id="Content-Container" class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden">
-        <div style="position: absolute; top: 0; width: 100%; height: 230px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #ff9d00 100%)"></div>
+        {{-- <div style="position: absolute; top: 0; width: 100%; height: 230px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #ff9d00 100%)"></div> --}}
+        <div style="position: absolute; top: 0; width: 100%; height: 230px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%)"></div>
         <div id="TopNav" class="relative flex items-center justify-between px-5 mt-[60px]">
             <div class="flex flex-col gap-1">
             <p>Selamat datang kembali</p>

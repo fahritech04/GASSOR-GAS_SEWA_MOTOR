@@ -25,7 +25,7 @@
                 <p class="text-sm text-gassor-grey">Wilayah {{ $motorbikeRental->city->name }}</p>
             </div>
             <div class="flex items-center gap-[6px]">
-                <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
             </div>
         </div>
@@ -52,12 +52,12 @@
                         <h3 class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</h3>
                         <hr class="border-[#F1F2F6]">
                         <div class="flex items-center gap-[6px]">
-                            <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
+                            <img src="{{ asset('assets/images/icons/notes.svg') }}" class="w-5 h-5 flex shrink-0"
                                 alt="icon">
                             <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>
                         </div>
                         <div class="flex items-center gap-[6px]">
-                            <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                            <img src="{{ asset('assets/images/icons/police.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                             <p class="text-sm text-gassor-grey">Nomor Polisi : {{ $motorcycle->vehicle_number_plate }}</p>
                         </div>
                         <hr class="border-[#F1F2F6]">

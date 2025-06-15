@@ -3,7 +3,7 @@
 @section('content')
 <div id="Background"
     class="absolute top-0 w-full h-[570px] rounded-b-[75px]"
-    style="background: linear-gradient(180deg, #e6a43b 0%, #ff9d00 100%);">
+    style="background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%);">
 </div>
 <div id="Header" class="relative flex items-center justify-between gap-2 px-5 mt-[18px]">
     <div class="flex flex-col gap-[6px]">

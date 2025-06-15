@@ -25,9 +25,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-      .leaflet-map { width: 100%; height: 380px; border-radius: 18px; }
+      .leaflet-map { width: 100%; height: 640px; border-radius: 18px; }
     </style>
-    <div id="Content-Container" class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden">
+    <div id="Content-Container" class="relative flex flex-col bg-white overflow-x-hidden">
       <div id="Gallery" class="swiper-gallery w-full overflow-x-hidden -mb-[38px]" style="position:relative; z-index:1;">
         <div class="row">
           <div class="col-12">
@@ -39,45 +39,6 @@
           </div>
         </div>
       </div>
-      <main id="Details" class="relative flex flex-col rounded-t-[40px] py-5 pb-[10px] gap-4 bg-white z-10" style="position:relative; z-index:10;">
-        <div id="Title" class="flex items-center justify-between gap-2 px-5">
-          <h1 class="font-bold text-[22px] leading-[33px]">Lokasi Kendaraan Sekarang</h1>
-        </div>
-        <hr class="border-[#F1F2F6] mx-5" />
-        <div id="TabsContent" class="px-5">
-          <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
-            <div class="flex flex-col gap-4">
-              <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#91BF77] transition-all duration-300">
-                <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
-                  <img src="/assets/images/thumbnails/bonus-1.png" class="object-cover w-full h-full" alt="thumbnails" />
-                </div>
-                <div>
-                  <p class="font-semibold">Honda Beat</p>
-                  <p class="text-sm text-gassor-grey">Super Fast • 2 Max</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="Features" class="grid grid-cols-2 gap-x-[10px] gap-y-4 px-5">
-          <div class="flex items-center gap-[6px]">
-            <img src="/assets/images/icons/location.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Wilayah Bojongsoang</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="/assets/images/icons/3dcube.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Kategori Matic</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="/assets/images/icons/profile-2user.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">2 Max</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="/assets/images/icons/shield-tick.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Privacy 100%</p>
-          </div>
-        </div>
-      </main>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
