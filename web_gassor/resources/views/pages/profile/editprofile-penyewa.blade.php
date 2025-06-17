@@ -71,11 +71,11 @@
             <div class="form-row">
                 <div class="form-col">
                     <label for="tempat_lahir" class="text-sm font-medium text-gray-700 mb-1">Tempat Lahir <span style="color: #dc3545;">*</span></label>
-                    <input type="text" id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir', isset($user) ? $user->tempat_lahir : '') }}" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir', isset($user) ? $user->tempat_lahir : '') }}" placeholder="Masukkan tempat lahir Anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#E6A43B] focus:ring-2 focus:ring-[#E6A43B] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
                 </div>
                 <div class="form-col">
                     <label for="tanggal_lahir" class="text-sm font-medium text-gray-700 mb-1">Tanggal Lahir <span style="color: #dc3545;">*</span></label>
-                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user) && $user->tanggal_lahir ? $user->tanggal_lahir->format('Y-m-d') : '') }}" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#91BF77] focus:ring-2 focus:ring-[#91BF77] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', isset($user) && $user->tanggal_lahir ? $user->tanggal_lahir->format('Y-m-d') : '') }}" class="w-full p-4 rounded-full bg-[#F5F6F8] border border-gray-200 focus:border-[#E6A43B] focus:ring-2 focus:ring-[#E6A43B] transition-all duration-200 text-gray-800 placeholder-gray-400" data-rule-required="true" required />
                 </div>
             </div>
 

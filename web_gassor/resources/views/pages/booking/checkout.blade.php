@@ -148,7 +148,7 @@
                     </div>
                     <p class="font-semibold">Pembayaran Lunas</p>
                 </div>
-                <div class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#91BF77] group-has-[:checked]:w-[90%] transition-all duration-300"></div>
+                <div class="w-0 mx-auto group-has-[:checked]:ring-1 group-has-[:checked]:ring-[#E6A43B] group-has-[:checked]:w-[90%] transition-all duration-300"></div>
             </label>
         </div>
         <div id="TabContent-Container">

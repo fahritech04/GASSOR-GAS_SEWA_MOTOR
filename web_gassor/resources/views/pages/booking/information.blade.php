@@ -76,7 +76,7 @@
         <div class="flex flex-col w-full gap-2 px-5">
             <p class="font-semibold">Nama Lengkap</p>
             <label
-                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#91BF77] transition-all duration-300 @error('name') border-red-500 @enderror">
+                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#E6A43B] transition-all duration-300 @error('name') border-red-500 @enderror">
                 <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-5 h-5 flex shrink-0"
                     alt="icon">
                 <input type="text" name="name" id=""
@@ -90,7 +90,7 @@
         <div class="flex flex-col w-full gap-2 px-5">
             <p class="font-semibold">Email</p>
             <label
-                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#91BF77] transition-all duration-300 @error('email') border-red-500 @enderror">
+                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#E6A43B] transition-all duration-300 @error('email') border-red-500 @enderror">
                 <img src="{{ asset('assets/images/icons/sms.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <input type="email" name="email" id=""
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
@@ -103,7 +103,7 @@
         <div class="flex flex-col w-full gap-2 px-5">
             <p class="font-semibold">Nomor Telepon</p>
             <label
-                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#91BF77] transition-all duration-300 @error('phone') border-red-500 @enderror">
+                class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white focus-within:ring-1 focus-within:ring-[#E6A43B] transition-all duration-300 @error('phone') border-red-500 @enderror">
                 <img src="{{ asset('assets/images/icons/call.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                 <input type="number" name="phone_number" id="phone_number"
                     class="appearance-none outline-none w-full font-semibold placeholder:text-gassor-grey placeholder:font-normal"
@@ -124,14 +124,20 @@
                 <div class="swiper-wrapper select-dates">
                 </div>
             </div>
+            <div class="flex flex-col gap-[6px] px-5">
+                <p class="text-sm text-gassor-grey">
+                    Hanya bisa memilih jam pengambilan dan pengembalian,
+                    <span class="text-gassor-orange underline font-semibold">dari jam 08:00 sampai dengan 16:00</span>.
+                </p>
+            </div>
             <div class="flex flex-col md:flex-row gap-2 px-5 mt-2">
                 <div class="flex flex-col w-full md:w-1/2">
                     <label class="font-semibold mb-1">Jam Pengambilan</label>
-                    <input type="time" name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" required>
+                    <input type="time" name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" required>
                 </div>
                 <div class="flex flex-col w-full md:w-1/2">
                     <label class="font-semibold mb-1">Jam Pengembalian</label>
-                    <input type="time" name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#91BF77] transition-all duration-300" readonly>
+                    <input type="time" name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" readonly>
                 </div>
             </div>
         </div>

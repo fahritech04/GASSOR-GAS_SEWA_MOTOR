@@ -96,7 +96,7 @@
                 <div class="flex flex-col gap-4">
                     @foreach ($motorbikeRental->bonuses as $bonus)
                     <div
-                        class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#91BF77] transition-all duration-300">
+                        class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#E6A43B] transition-all duration-300">
                         <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
                             <img src="{{ asset('storage/' . $bonus->image) }}" class="w-full h-full object-cover"
                                 alt="thumbnails">
@@ -128,7 +128,7 @@
                                 @endphp
                                 {{ $ownerNames }}
                             </p>
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-green-600 font-bold hover:underline flex items-center gap-1">
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-orange-600 font-bold hover:underline flex items-center gap-1">
                                 {{ $contact->contact }}
                             </a>
                         </div>

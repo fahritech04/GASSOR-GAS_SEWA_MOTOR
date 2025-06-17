@@ -1082,9 +1082,9 @@ video {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.bg-\[\#91BF77\] {
+.bg-\[\#E6A43B\] {
     --tw-bg-opacity: 1;
-    background-color: rgb(145 191 119 / var(--tw-bg-opacity));
+    background-color: rgb(230 164 59 / var(--tw-bg-opacity));
 }
 
 .bg-\[linear-gradient\(180deg\2c
@@ -1412,14 +1412,14 @@ body {
         var(--tw-shadow, 0 0 #0000);
 }
 
-.focus-within\:ring-\[\#91BF77\]:focus-within {
+.focus-within\:ring-\[\#E6A43B\]:focus-within {
     --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(145 191 119 / var(--tw-ring-opacity));
+    --tw-ring-color: rgb(230 164 59 / var(--tw-ring-opacity));
 }
 
-.hover\:border-\[\#91BF77\]:hover {
+.hover\:border-\[\#E6A43B\]:hover {
     --tw-border-opacity: 1;
-    border-color: rgb(145 191 119 / var(--tw-border-opacity));
+    border-color: rgb(230 164 59 / var(--tw-border-opacity));
 }
 
 .hover\:bg-gassor-black:hover {
@@ -1445,9 +1445,9 @@ body {
         var(--tw-shadow, 0 0 #0000);
 }
 
-.has-\[\:checked\]\:ring-\[\#91BF77\]:has(:checked) {
+.has-\[\:checked\]\:ring-\[\#E6A43B\]:has(:checked) {
     --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(145 191 119 / var(--tw-ring-opacity));
+    --tw-ring-color: rgb(230 164 59 / var(--tw-ring-opacity));
 }
 
 .group:has(:checked) .group-has-\[\:checked\]\:w-\[90\%\] {
@@ -1487,7 +1487,7 @@ body {
         var(--tw-shadow, 0 0 #0000);
 }
 
-.group:has(:checked) .group-has-\[\:checked\]\:ring-\[\#91BF77\] {
+.group:has(:checked) .group-has-\[\:checked\]\:ring-\[\#E6A43B\] {
     --tw-ring-opacity: 1;
-    --tw-ring-color: rgb(145 191 119 / var(--tw-ring-opacity));
+    --tw-ring-color: rgb(230 164 59 / var(--tw-ring-opacity));
 }

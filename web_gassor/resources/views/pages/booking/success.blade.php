@@ -54,7 +54,7 @@
     <div class="flex flex-col gap-[18px]">
         <p class="font-semibold">ID Pemesanan Kamu</p>
         <div class="flex items-center rounded-full p-[14px_20px] gap-3 bg-[#F5F6F8]">
-            <img src="assets/images/icons/note-favorite-green.svg" class="w-5 h-5 flex shrink-0" alt="icon">
+            <img src="assets/images/icons/note-favorite-orange.svg" class="w-5 h-5 flex shrink-0" alt="icon">
             <p class="font-semibold">{{ $transaction->code }}</p>
         </div>
     </div>

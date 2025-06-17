@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     @if(isset($this->gpsData) && $this->gpsData)
-        <div class="p-2 bg-green-100 text-green-800 rounded mb-2">
+        <div class="p-2 bg-orange-100 text-orange-800 rounded mb-2">
             <b>GPS Data (Initial):</b>
             <pre class="text-xs">{{ json_encode($this->gpsData, JSON_PRETTY_PRINT) }}</pre>
         </div>

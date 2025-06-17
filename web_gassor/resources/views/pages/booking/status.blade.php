@@ -6,10 +6,10 @@
     <div class="w-full max-w-xl bg-white rounded-[30px] shadow-lg p-8 flex flex-col items-center gap-6 z-10">
         @if($status === 'success')
             <div class="flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-2">
-                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-2">
+                    <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <h1 class="text-2xl font-bold text-green-600 mb-2">Pembayaran Berhasil</h1>
+                <h1 class="text-2xl font-bold text-orange-600 mb-2">Pembayaran Berhasil</h1>
                 <p class="text-center text-gassor-grey">Pembayaran Anda telah <b>berhasil</b>. Silakan cek detail pesanan Anda.</p>
             </div>
         @elseif($status === 'pending')
@@ -59,7 +59,7 @@
             <div class="flex flex-col gap-1">
                 <span class="text-sm text-gray-400">ID Pemesanan</span>
                 <div class="flex items-center rounded-full p-[10px_18px] gap-2 bg-[#F5F6F8] w-fit mx-auto">
-                    <img src="/assets/images/icons/note-favorite-green.svg" class="w-5 h-5 flex shrink-0" alt="icon">
+                    <img src="/assets/images/icons/note-favorite-orange.svg" class="w-5 h-5 flex shrink-0" alt="icon">
                     <span class="font-semibold">{{ $transaction->code }}</span>
                 </div>
             </div>
@@ -128,7 +128,7 @@
         <div class="flex flex-col gap-[18px]">
             <p class="font-semibold">ID Pemesanan Kamu</p>
             <div class="flex items-center rounded-full p-[14px_20px] gap-3 bg-[#F5F6F8]">
-                <img src="assets/images/icons/note-favorite-green.svg" class="w-5 h-5 flex shrink-0" alt="icon">
+                <img src="assets/images/icons/note-favorite-orange.svg" class="w-5 h-5 flex shrink-0" alt="icon">
                 <p class="font-semibold">{{ $transaction->code }}</p>
             </div>
         </div>

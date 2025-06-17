@@ -31,14 +31,14 @@
                             @php
                                 $rentalStatus = $transaction->motorcycle->status ?? null;
                                 $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
-                                $rentalStatusColor = $rentalStatus === 'on_going' ? '#f2994a' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
+                                $rentalStatusColor = $rentalStatus === 'on_going' ? '#E6A43B' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
                             @endphp
                             <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
                                 match(strtoupper($transaction->payment_status)) {
                                     'SUCCESS' => '#27ae60',
                                     'FAILED' => '#eb5757',
                                     'CANCELED' => '#bdbdbd',
-                                    'PENDING' => '#f2994a',
+                                    'PENDING' => '#E6A43B',
                                     'EXPIRED' => '#9b51e0',
                                     default => '#828282',
                                 }
@@ -59,7 +59,7 @@
                     <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" style="flex: 1;">
                         @csrf
                         <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
-                        onmouseover="this.style.borderColor='#F2994A'" onmouseout="this.style.borderColor='#fff'">
+                        onmouseover="this.style.borderColor='#E6A43B'" onmouseout="this.style.borderColor='#fff'">
                             Bayar Ulang
                         </button>
                     </form>

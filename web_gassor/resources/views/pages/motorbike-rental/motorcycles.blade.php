@@ -42,7 +42,7 @@
             <label class="relative group">
                 <input type="radio" name="motorcycle_id" class="absolute top-1/2 left-1/2 -z-10 opacity-0" value="{{ $motorcycle->id }}" required>
                 <div
-                    class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#91BF77] group-has-[:checked]:ring-2 group-has-[:checked]:ring-[#91BF77] transition-all duration-300">
+                    class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] group-has-[:checked]:ring-2 group-has-[:checked]:ring-[#E6A43B] transition-all duration-300">
                     <div class="flex w-[120px] h-[156px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
                         {{-- @dd($motorcycle->images) --}}
 

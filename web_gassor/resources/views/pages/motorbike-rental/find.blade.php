@@ -10,7 +10,7 @@
             <div class="flex flex-col w-full gap-2">
                 <p class="font-semibold">Nama</p>
                 <label
-                    class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#91BF77] transition-all duration-300">
+                    class="flex items-center w-full rounded-full p-[14px_20px] gap-3 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#E6A43B] transition-all duration-300">
                     <img src="assets/images/icons/note-favorite-grey.svg" class="w-5 h-5 flex shrink-0"
                         alt="icon">
                     <input type="text" name="search" id=""
@@ -21,7 +21,7 @@
             <div class="flex flex-col w-full gap-2">
                 <p class="font-semibold">Pilih Wilayah</p>
                 <label
-                    class="relative flex items-center w-full rounded-full p-[14px_20px] gap-2 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#91BF77] transition-all duration-300">
+                    class="relative flex items-center w-full rounded-full p-[14px_20px] gap-2 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#E6A43B] transition-all duration-300">
                     <img src="assets/images/icons/location.svg"
                         class="absolute w-5 h-5 flex shrink-0 transform -translate-y-1/2 top-1/2 left-5"
                         alt="icon">
@@ -37,7 +37,7 @@
             <div class="flex flex-col w-full gap-2">
                 <p class="font-semibold">Pilih Kategori</p>
                 <label
-                    class="relative flex items-center w-full rounded-full p-[14px_20px] gap-2 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#91BF77] transition-all duration-300">
+                    class="relative flex items-center w-full rounded-full p-[14px_20px] gap-2 bg-white ring-1 ring-[#F1F2F6] focus-within:ring-[#E6A43B] transition-all duration-300">
                     <img src="assets/images/icons/location.svg"
                         class="absolute w-5 h-5 flex shrink-0 transform -translate-y-1/2 top-1/2 left-5"
                         alt="icon">

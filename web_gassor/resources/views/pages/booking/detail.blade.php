@@ -175,7 +175,7 @@
                     'SUCCESS' => '#27ae60',
                     'FAILED' => '#eb5757',
                     'CANCELED' => '#bdbdbd',
-                    'PENDING' => '#f2994a',
+                    'PENDING' => '#E6A43B',
                     'EXPIRED' => '#9b51e0',
                     default => '#828282',
                 };
@@ -210,7 +210,7 @@
                         @endphp
                         {{ $ownerNames }}
                     </p>
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-green-600 font-bold hover:underline flex items-center gap-1">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-orange-600 font-bold hover:underline flex items-center gap-1">
                         {{ $contact->contact }}
                     </a>
                 </div>

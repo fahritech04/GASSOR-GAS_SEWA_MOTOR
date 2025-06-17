@@ -24,7 +24,7 @@
     @foreach ($motorbikeRentals as $motorbikeRental)
     <a href="{{ route('motor.show', $motorbikeRental->slug) }}" class="card">
         <div
-            class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#91BF77] transition-all duration-300">
+            class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300">
             <div class="flex w-[120px] h-[183px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
                 <img src="{{ asset('storage/' . $motorbikeRental->thumbnail ) }}" class="w-full h-full object-cover" alt="icon">
             </div>

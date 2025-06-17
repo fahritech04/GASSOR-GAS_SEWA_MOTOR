@@ -14,7 +14,7 @@
 <section id="Result" class="relative flex flex-col gap-4 px-5 mt-5 mb-9">
     <h2 class="font-bold text-lg mb-2">Motor yang dimiliki {{ auth()->user()->name }}</h2>
     @forelse ($motorcycles as $motorcycle)
-        <div class="card flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#91BF77] transition-all duration-300">
+        <div class="card flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300">
             <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
                 <img src="{{ asset('storage/' . ($motorcycle->images->first()->image ?? 'default.png')) }}" class="object-cover w-full h-full" alt="icon">
             </div>

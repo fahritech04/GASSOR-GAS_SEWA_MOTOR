@@ -96,7 +96,7 @@
                                     'SUCCESS' => '#27ae60',
                                     'FAILED' => '#eb5757',
                                     'CANCELED' => '#bdbdbd',
-                                    'PENDING' => '#f2994a',
+                                    'PENDING' => '#E6A43B',
                                     'EXPIRED' => '#9b51e0',
                                     default => '#828282',
                                 }

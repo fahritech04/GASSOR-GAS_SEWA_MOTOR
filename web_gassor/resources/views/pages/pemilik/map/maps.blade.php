@@ -41,7 +41,7 @@
         <div id="TabsContent" class="px-5">
           <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
             <div class="flex flex-col gap-4">
-              <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#91BF77] transition-all duration-300">
+              <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#E6A43B] transition-all duration-300">
                 <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
                   <img src="assets/images/thumbnails/bonus-1.png" class="object-cover w-full h-full" alt="thumbnails" />
                 </div>

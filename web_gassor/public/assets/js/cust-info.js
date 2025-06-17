@@ -29,7 +29,7 @@ for (let i = today.getDate(); i <= lastDayOfMonth; i++) {
 
     datesElement.innerHTML += `
         <div class="swiper-slide !w-fit py-[2px]">
-            <label class="relative flex flex-col items-center justify-center w-fit rounded-3xl p-[14px_20px] gap-3 bg-white border border-white hover:border-[#91BF77] has-[:checked]:ring-2 has-[:checked]:ring-[#91BF77] transition-all duration-300">
+            <label class="relative flex flex-col items-center justify-center w-fit rounded-3xl p-[14px_20px] gap-3 bg-white border border-white hover:border-[#E6A43B] has-[:checked]:ring-2 has-[:checked]:ring-[#E6A43B] transition-all duration-300">
                 <img src="/assets/images/icons/calendar.svg" class="w-8 h-8" alt="icon">
                 <p class="font-semibold text-nowrap">${date.getDate()} ${month}</p>
                 <input type="radio" name="start_date" class="absolute top-1/2 left-1/2 -z-10 opacity-0" value="${realDate}" required>
@@ -73,7 +73,7 @@ durationInput.addEventListener("blur", () => {
     }
 });
 
-// Inisialisasi harga awal
+// harga awal
 updatePrice();
 
 // Set end_time otomatis 24 jam setelah start_time
@@ -83,12 +83,20 @@ const endTimeInput = document.getElementById("end_time");
 if (startTimeInput && endTimeInput) {
     startTimeInput.addEventListener("input", function () {
         if (this.value) {
-            // Parse jam mulai
-            const [hours, minutes] = this.value.split(":").map(Number);
+            let [hours, minutes] = this.value.split(":").map(Number);
+            if (hours < 8) {
+                hours = 8;
+                minutes = 0;
+                this.value = "08:00";
+            } else if (hours > 16 || (hours === 16 && minutes > 0)) {
+                hours = 16;
+                minutes = 0;
+                this.value = "16:00";
+            }
             // Tambah 24 jam
             const endDate = new Date();
             endDate.setHours(hours + 24, minutes, 0, 0);
-            // Format kembali ke HH:MM
+            // Format HH:MM
             const endHours = String(endDate.getHours()).padStart(2, "0");
             const endMinutes = String(endDate.getMinutes()).padStart(2, "0");
             endTimeInput.value = `${endHours}:${endMinutes}`;
