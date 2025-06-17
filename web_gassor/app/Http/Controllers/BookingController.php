@@ -55,7 +55,7 @@ class BookingController extends Controller
     public function saveInformation(CustomerInformationStoreRequest $request, $slug)
     {
         $data = $request->validated();
-        // Pastikan end_time otomatis 24 jam setelah start_time
+        // end_time otomatis 24 jam setelah start_time
         if (isset($data['start_time'])) {
             $start = \Carbon\Carbon::createFromFormat('H:i', $data['start_time']);
             $end = $start->copy()->addDay();
@@ -84,7 +84,6 @@ class BookingController extends Controller
 
         $transaction = $this->transactionRepository->saveTransaction($this->transactionRepository->getTransactionDataFormSession());
 
-        // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
         \Midtrans\Config::$isProduction = config('midtrans.isProduction');
         \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
@@ -139,7 +138,11 @@ class BookingController extends Controller
             return redirect()->back()->with('error', 'Data Transaksi Tidak Ditemukan');
         }
 
-        return view('pages.booking.detail', compact('transaction'));
+        // return view('pages.booking.detail', compact('transaction'));
+        return view('pages.booking.detail', [
+            'transaction' => $transaction,
+            'motorbikeRental' => $transaction->motorbikeRental,
+        ]);
     }
 
     public function retryPayment(Request $request, $code)
@@ -148,7 +151,7 @@ class BookingController extends Controller
         if (! $transaction) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
-        // Generate code/order_id baru (benar-benar baru, bukan append timestamp)
+        // generate code/order_id baru
         $newOrderId = $this->transactionRepository->generateTransactionCode();
         $transaction->code = $newOrderId;
         $transaction->payment_status = 'pending';
@@ -184,7 +187,7 @@ class BookingController extends Controller
         $transaction->payment_status = 'canceled';
         $transaction->save();
 
-        // Jika motor perlu di-set available lagi, tambahkan di sini
+        // jika motor perlu di-set available lagi, tambah di sini
         return redirect()->route('check-booking')->with('success', 'Pesanan berhasil dibatalkan.');
     }
 
@@ -195,7 +198,7 @@ class BookingController extends Controller
         if (! $transaction) {
             return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan.');
         }
-        // Selalu cek status terbaru ke Midtrans jika belum success/canceled/expired/failed
+        // selalu cek status terbaru ke Midtrans jika belum success/canceled/expired/failed
         if (! in_array(strtolower($transaction->payment_status), ['success', 'canceled', 'expired', 'failed'])) {
             try {
                 \Midtrans\Config::$serverKey = config('midtrans.serverKey');
@@ -227,7 +230,7 @@ class BookingController extends Controller
             return redirect()->route('booking.success', ['order_id' => $orderId]);
         }
 
-        // Tampilkan halaman status spesifik
+        // halaman status spesifik
         return view('pages.booking.status', [
             'transaction' => $transaction,
             'status' => $status,

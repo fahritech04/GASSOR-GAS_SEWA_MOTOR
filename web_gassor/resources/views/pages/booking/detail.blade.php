@@ -186,6 +186,38 @@
         </div>
     </div>
 </div>
+<div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5 overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
+    <label class="relative flex items-center justify-between">
+        <p class="font-semibold text-lg">Whatsapp Pemilik</p>
+        <img src="assets/images/icons/arrow-up.svg" class="w-[28px] h-[28px] flex shrink-0 group-has-[:checked]:rotate-180 transition-all duration-300" alt="icon">
+        <input type="checkbox" class="absolute hidden">
+    </label>
+    <div class="flex flex-col gap-4 pt-[22px]">
+        @foreach ($motorbikeRental->contacts ?? [$motorbikeRental] as $contact)
+            <div
+                onclick="window.open('https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}', '_blank')"
+                class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#25D366] transition-all duration-300 cursor-pointer"
+                style="cursor:pointer;"
+            >
+                <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#ffffff] overflow-hidden items-center justify-center">
+                    <img src="{{ asset('assets/images/icons/whatsapp.svg') }}" class="w-12 h-12" alt="WhatsApp">
+                </div>
+                <div>
+                    <p class="font-semibold">WhatsApp -
+                        @php
+                            $owners = $motorbikeRental->owners;
+                            $ownerNames = $owners->pluck('name')->unique()->implode(', ');
+                        @endphp
+                        {{ $ownerNames }}
+                    </p>
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contact->contact) }}" target="_blank" class="text-green-600 font-bold hover:underline flex items-center gap-1">
+                        {{ $contact->contact }}
+                    </a>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
 @if(strtoupper($transaction->payment_status) === 'SUCCESS')
 <div class="flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] mx-5 mt-5">
     <div class="flex items-center justify-between mb-2">
@@ -215,7 +247,6 @@ function showStnkModal(imgUrl) {
     Swal.fire({
         imageUrl: imgUrl,
         imageAlt: 'Gambar STNK',
-        showCloseButton: true,
         showConfirmButton: false,
         width: 'auto',
         background: '#fff',
@@ -229,28 +260,6 @@ function showStnkModal(imgUrl) {
 @endif
 <div id="BottomButton" class="relative flex w-full h-[98px] shrink-0">
     <div class="fixed bottom-[30px] w-full max-w-[640px] px-5 z-10">
-        @if(in_array($transaction->payment_status, ['FAILED','EXPIRED','PENDING']))
-            <div class="flex gap-2 mb-2">
-                <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" class="flex-1">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-full py-3 px-4 bg-gradient-to-r from-yellow-400 via-gassor-orange to-orange-600 hover:from-yellow-500 hover:to-orange-700 text-white font-bold shadow-md transition-all duration-200">
-                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' /></svg>
-                        Bayar Ulang
-                    </button>
-                </form>
-                <form action="{{ route('booking.cancel', $transaction->code) }}" method="POST" class="flex-1">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 rounded-full py-3 px-4 bg-gradient-to-r from-red-400 via-red-600 to-red-800 hover:from-red-500 hover:to-red-900 text-white font-bold shadow-md transition-all duration-200">
-                        <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12' /></svg>
-                        Batalkan Pesanan
-                    </button>
-                </form>
-            </div>
-        @elseif($transaction->payment_status === 'CANCELED')
-            <div class="flex w-full justify-center rounded-full p-[14px_20px] bg-gray-400 font-bold text-white">Pesanan Dibatalkan</div>
-        @elseif($transaction->payment_status === 'SUCCESS')
-            <div class="flex w-full justify-center rounded-full p-[14px_20px] bg-green-500 font-bold text-white">Pembayaran Berhasil</div>
-        @endif
         <a href="https://wa.me/6285174309823" class="flex w-full justify-center rounded-full p-[14px_20px] bg-gassor-orange font-bold text-white mt-2">Hubungi Layanan Pelanggan</a>
     </div>
 </div>
