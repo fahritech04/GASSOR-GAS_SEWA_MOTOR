@@ -80,6 +80,7 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');
         Route::get('/pemilik/daftar-motor', [PemilikController::class, 'showDaftarMotor'])->name('pemilik.daftar-motor');
         Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
+        Route::post('/pemilik/pesanan/{transaction}/return', [PemilikController::class, 'returnMotor'])->name('pemilik.pesanan.return');
         // Route::get('/map', [MapController::class, 'showMap'])->name('map');
         // Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
         Route::get('/pemilik/laporan-keuangan', [PemilikLaporanController::class, 'index'])->name('pemilik.laporan-keuangan');

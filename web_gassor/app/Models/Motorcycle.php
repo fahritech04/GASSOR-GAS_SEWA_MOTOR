@@ -20,6 +20,7 @@ class Motorcycle extends Model
         'price_per_day',
         'is_available',
         'has_gps',
+        'status'
     ];
 
     protected $casts = [

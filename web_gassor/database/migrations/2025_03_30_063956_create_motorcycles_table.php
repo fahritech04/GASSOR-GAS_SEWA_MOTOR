@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('price_per_day');
             $table->boolean('is_available');
             $table->boolean('has_gps')->default(false);
+            $table->enum('status', ['on_going', 'finished'])->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

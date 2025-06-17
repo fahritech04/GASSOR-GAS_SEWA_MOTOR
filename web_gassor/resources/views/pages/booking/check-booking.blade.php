@@ -15,33 +15,41 @@
                     <div class="bonus-card flex items-center justify-between rounded-[22px] border border-[#000000] p-[10px] gap-3 mb-3 bg-white transition-shadow hover:shadow-lg cursor-pointer">
                         <div style="text-align:left;width:100%">
                             <p class="font-semibold text-lg" style="text-align:left">{{ $transaction->motorcycle->name ?? '-' }}</p>
+                            {{-- <p class="text-sm text-gassor-grey" style="text-align:left">
+                                Disewa : <span class="font-semibold" style="text-align:left">{{ $transaction->name }}</span>
+                            </p> --}}
                             <p class="text-sm text-gassor-grey" style="text-align:left">
-                                Disewa Oleh: <span class="font-semibold" style="text-align:left">{{ $transaction->name }}</span>
+                                Pemilik : <span class="font-semibold" style="text-align:left">{{ $transaction->motorcycle->owner->name ?? '-' }}</span>
                             </p>
                             <p class="text-sm text-gassor-grey" style="text-align:left">
-                                Pemilik motor : <span class="font-semibold" style="text-align:left">{{ $transaction->motorcycle->owner->name ?? '-' }}</span>
-                            </p>
-                            <p class="text-sm text-gassor-grey" style="text-align:left">
-                                Mulai: {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') . ($transaction->start_time ? ' - ' . (strlen($transaction->start_time) === 5 ? $transaction->start_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
+                                Mulai : {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') . ($transaction->start_time ? ' - ' . (strlen($transaction->start_time) === 5 ? $transaction->start_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
                                 <br>
-                                Selesai: {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->addDays(1)->isoFormat('D MMMM YYYY') . ($transaction->end_time ? ' - ' . (strlen($transaction->end_time) === 5 ? $transaction->end_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->end_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
+                                Selesai : {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->addDays(1)->isoFormat('D MMMM YYYY') . ($transaction->end_time ? ' - ' . (strlen($transaction->end_time) === 5 ? $transaction->end_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->end_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
                             </p>
                         </div>
-                        <div class="flex flex-col items-end gap-2">
+                        <div class="flex flex-col items-end gap-2 justify-center h-full">
                             @php
-                                $status = strtoupper($transaction->payment_status);
-                                $statusColor = match($status) {
+                                $rentalStatus = $transaction->motorcycle->status ?? null;
+                                $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
+                                $rentalStatusColor = $rentalStatus === 'on_going' ? '#f2994a' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
+                            @endphp
+                            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
+                                match(strtoupper($transaction->payment_status)) {
                                     'SUCCESS' => '#27ae60',
                                     'FAILED' => '#eb5757',
                                     'CANCELED' => '#bdbdbd',
                                     'PENDING' => '#f2994a',
                                     'EXPIRED' => '#9b51e0',
                                     default => '#828282',
-                                };
-                            @endphp
-                            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] text-white" style="background: {{ $statusColor }};">
-                                {{ $status }}
+                                }
+                            }};">
+                                {{ strtoupper($transaction->payment_status) }}
                             </p>
+                            @if(strtoupper($transaction->payment_status) === 'SUCCESS' && $rentalStatusLabel)
+                                <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] text-white text-center" style="background: {{ $rentalStatusColor }};">
+                                    {{ $rentalStatusLabel }}
+                                </p>
+                            @endif
                         </div>
                     </div>
                 </button>
@@ -50,17 +58,15 @@
                 <div style="display: flex; gap: 16px; margin-top: 32px; margin-bottom: 8px;">
                     <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" style="flex: 1;">
                         @csrf
-                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #fff; border: 2px solid #fff; color: #F2994A; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
+                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
                         onmouseover="this.style.borderColor='#F2994A'" onmouseout="this.style.borderColor='#fff'">
-                            <svg xmlns='http://www.w3.org/2000/svg' style='height:20px;width:20px' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' /></svg>
                             Bayar Ulang
                         </button>
                     </form>
                     <form action="{{ route('booking.cancel', $transaction->code) }}" method="POST" style="flex: 1;">
                         @csrf
-                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #fff; border: 2px solid #fff; color: #EB5757; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
+                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #EB5757; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
                         onmouseover="this.style.borderColor='#EB5757'" onmouseout="this.style.borderColor='#fff'">
-                            <svg xmlns='http://www.w3.org/2000/svg' style='height:20px;width:20px' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12' /></svg>
                             Batalkan
                         </button>
                     </form>

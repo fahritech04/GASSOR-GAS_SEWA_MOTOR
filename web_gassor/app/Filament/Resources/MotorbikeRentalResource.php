@@ -101,6 +101,13 @@ class MotorbikeRentalResource extends Resource
                                         Forms\Components\Toggle::make('has_gps')
                                             ->label('Ada GPS IoT?')
                                             ->helperText('Centang jika motor ini sudah terpasang GPS IoT.'),
+                                        Forms\Components\Select::make('status')
+                                            ->options([
+                                                'on_going' => 'Sedang Berjalan',
+                                                'finished' => 'Selesai',
+                                            ])
+                                            ->label('Status')
+                                            ->required(),
                                         Forms\Components\Repeater::make('images')
                                             ->relationship('images')
                                             ->schema([

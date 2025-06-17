@@ -26,6 +26,7 @@ class Transaction extends Model
         'transaction_date',
         'end_time',
         'snap_url',
+        'status',
     ];
 
     public function motorbikeRental()

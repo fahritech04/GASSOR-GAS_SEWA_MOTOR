@@ -58,4 +58,19 @@ class PemilikController extends Controller
 
         return view('pages.pemilik.pesanan.showPesanan', compact('transactions'));
     }
+
+    public function returnMotor(Transaction $transaction)
+    {
+        if (
+            $transaction->motorcycle &&
+            $transaction->motorcycle->status === 'on_going' &&
+            strtoupper($transaction->payment_status) === 'SUCCESS'
+        ) {
+            $motorcycle = $transaction->motorcycle;
+            $motorcycle->status = 'finished';
+            $motorcycle->is_available = 1;
+            $motorcycle->save();
+        }
+        return redirect()->route('pemilik.pesanan')->with('success', 'Status motor berhasil diubah menjadi selesai.');
+    }
 }
