@@ -5,8 +5,8 @@
     <div class="flex items-center justify-center min-h-screen relative px-5">
         <div class="w-full max-w-md">
             <div class="flex flex-col items-center">
-                <h2 class="text-3xl font-bold text-center">Lupa Password</h2>
-                <p class="mt-2 text-center text-gassor-grey">Masukkan email Anda untuk menerima link reset password
+                <h2 class="text-3xl font-bold text-center">Lupa Kata Sandi</h2>
+                <p class="mt-2 text-center text-gassor-grey">Masukkan email Anda untuk menerima link reset kata sandi
                 </p>
             </div>
             @if (session('status'))
@@ -28,7 +28,7 @@
                 </div>
                 <button type="submit"
                     class="w-full p-4 mt-4 font-bold text-white"
-                    style="background-color: #ff801a; border-radius: 12px;">Kirim Link Reset Password</button>
+                    style="background-color: #ff801a; border-radius: 12px;">Kirim Link Reset Kata Sandi</button>
                 <a href="{{ route('home') }}"
                    class="w-full p-4 mt-2 font-bold text-center text-white block"
                    style="background-color: #000000; border-radius: 12px; text-decoration: none;">Batalkan</a>

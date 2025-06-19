@@ -5,8 +5,8 @@
     <div class="flex items-center justify-center min-h-screen relative px-5">
         <div class="w-full max-w-md">
             <div class="flex flex-col items-center">
-                <h2 class="text-3xl font-bold text-center">Reset Password</h2>
-                <p class="mt-2 text-center text-gassor-grey">Masukkan email dan password baru Anda untuk mengatur ulang password
+                <h2 class="text-3xl font-bold text-center">Reset Kata Sandi</h2>
+                <p class="mt-2 text-center text-gassor-grey">Masukkan email dan kata sandi baru anda untuk mengatur ulang kata sandi
                 </p>
             </div>
             <form method="POST" action="{{ route('password.update') }}" class="flex flex-col gap-5 mt-6">
@@ -22,7 +22,7 @@
                     @enderror
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label for="password" class="text-sm font-medium">Password Baru</label>
+                    <label for="password" class="text-sm font-medium">Kata Sandi Baru</label>
                     <div style="position: relative;">
                         <input id="password" type="password" name="password" required
                             class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
@@ -38,14 +38,14 @@
                     @enderror
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label for="password-confirm" class="text-sm font-medium">Konfirmasi Password</label>
+                    <label for="password-confirm" class="text-sm font-medium">Konfirmasi Kata Sandi</label>
                     <input id="password-confirm" type="password" name="password_confirmation" required
                         class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
                         style="border-radius: 12px;" />
                 </div>
                 <button type="submit"
                     class="w-full p-4 mt-4 font-bold text-white"
-                    style="background-color: #ff801a; border-radius: 12px;">Reset Password</button>
+                    style="background-color: #ff801a; border-radius: 12px;">Reset Kata Sandi</button>
             </form>
         </div>
     </div>
