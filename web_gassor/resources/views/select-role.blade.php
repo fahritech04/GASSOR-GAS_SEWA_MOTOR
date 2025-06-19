@@ -20,5 +20,8 @@
                 <div class="text-xs font-normal mt-1 text-white/80">Kelola motor dan pesanan Anda</div>
             </a>
         </div>
+        <a href="{{ route('home') }}"
+                   class="w-full p-4 mt-2 font-bold text-center text-white block"
+                   style="background-color: #000000; border-radius: 12px; text-decoration: none;">Kembali ke halaman utama</a>
     </div>
 @endsection

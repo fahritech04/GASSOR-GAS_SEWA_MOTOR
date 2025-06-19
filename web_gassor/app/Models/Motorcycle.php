@@ -11,6 +11,7 @@ class Motorcycle extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'owner_id',
         'motorbike_rental_id',
         'name',
         'motorcycle_type',
@@ -41,7 +42,7 @@ class Motorcycle extends Model
      */
     public function setStnkImagesAttribute($value)
     {
-        $this->attributes['stnk_images'] = json_encode($value);
+        $this->attributes['stnk_images'] = is_array($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : $value;
     }
 
     public function motorbikeRental()

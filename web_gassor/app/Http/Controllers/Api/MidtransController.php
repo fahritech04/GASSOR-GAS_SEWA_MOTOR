@@ -11,10 +11,16 @@ class MidtransController extends Controller
 {
     public function callback(Request $request)
     {
+        \Log::info('Midtrans callback received', $request->all());
+
         $serverKey = config('midtrans.serverKey');
         $hashedKey = hash('sha512', $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
 
         if ($hashedKey !== $request->signature_key) {
+            \Log::warning('Midtrans callback invalid signature', [
+                'expected' => $hashedKey,
+                'received' => $request->signature_key,
+            ]);
             return response()->json(['message' => 'Invalid signature key'], 403);
         }
 
@@ -23,6 +29,7 @@ class MidtransController extends Controller
         $transaction = Transaction::where('code', $orderId)->first();
 
         if (! $transaction) {
+            \Log::warning('Midtrans callback transaction not found', ['order_id' => $orderId]);
             return response()->json(['message' => 'Transaction not found'], 404);
         }
 
@@ -40,56 +47,37 @@ class MidtransController extends Controller
             'Kami tunggu kedatangan Anda.';
 
         switch ($transactionStatus) {
-            // case 'capture':
-            //     if ($request->payment_type == 'credit_card') {
-            //         if ($request->fraud_status == 'challange') {
-            //             $transaction->update(['payment_status' => 'pending']);
-            //         } else {
-            //             $transaction->update(['payment_status' => 'success']);
-            //         }
-            //     } else {
-            //         $transaction->update(['payment_status' => 'success']);
-            //     }
-            //     break;
-            // case 'settlement':
-            //     $transaction->update(['payment_status' => 'success']);
-
-            //     $twilio->messages
-            //         ->create(
-            //             "whatsapp:+" . $transaction->phone_number, // to
-            //             array(
-            //                 "from" => "whatsapp:+14155238886",
-            //                 "body" => $messages
-            //             )
-            //         );
-
-            //     break;
             case 'capture':
                 if ($request->payment_type == 'credit_card') {
-                    if ($request->fraud_status == 'challange') {
+                    if ($request->fraud_status == 'challenge') {
                         $transaction->update(['payment_status' => 'pending']);
                     } else {
                         $transaction->update(['payment_status' => 'success']);
-                        // Set motor tidak tersedia
                         if ($transaction->motorcycle) {
-                            $transaction->motorcycle->update(['is_available' => false]);
+                            $transaction->motorcycle->update([
+                                'is_available' => false,
+                                'status' => 'on_going',
+                            ]);
                         }
                     }
                 } else {
                     $transaction->update(['payment_status' => 'success']);
-                    // Set motor tidak tersedia
                     if ($transaction->motorcycle) {
-                        $transaction->motorcycle->update(['is_available' => false]);
+                        $transaction->motorcycle->update([
+                            'is_available' => false,
+                            'status' => 'on_going',
+                        ]);
                     }
                 }
                 break;
             case 'settlement':
                 $transaction->update(['payment_status' => 'success']);
-                // Set motor tidak tersedia
                 if ($transaction->motorcycle) {
-                    $transaction->motorcycle->update(['is_available' => false]);
+                    $transaction->motorcycle->update([
+                        'is_available' => false,
+                        'status' => 'on_going',
+                    ]);
                 }
-
                 $twilio->messages
                     ->create(
                         'whatsapp:+'.$transaction->phone_number, // to
@@ -98,7 +86,6 @@ class MidtransController extends Controller
                             'body' => $messages,
                         ]
                     );
-
                 break;
             case 'pending':
                 $transaction->update(['payment_status' => 'pending']);
@@ -116,6 +103,12 @@ class MidtransController extends Controller
                 $transaction->update(['payment_status' => 'unknown']);
                 break;
         }
+
+        \Log::info('Midtrans callback processed', [
+            'order_id' => $request->order_id,
+            'transaction_status' => $request->transaction_status,
+            'payment_status' => $transaction->payment_status,
+        ]);
 
         return response()->json(['message' => 'Callback received successfully']);
     }

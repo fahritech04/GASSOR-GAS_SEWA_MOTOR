@@ -106,8 +106,7 @@ class MotorbikeRentalResource extends Resource
                                                 'on_going' => 'Sedang Berjalan',
                                                 'finished' => 'Selesai',
                                             ])
-                                            ->label('Status')
-                                            ->required(),
+                                            ->label('Status'),
                                         Forms\Components\Repeater::make('images')
                                             ->relationship('images')
                                             ->schema([

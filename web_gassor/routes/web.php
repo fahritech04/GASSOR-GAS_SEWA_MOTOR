@@ -79,6 +79,10 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::get('/editprofile/pemilik', [ProfilePemilikController::class, 'edit'])->name('editprofile.pemilik');
         Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');
         Route::get('/pemilik/daftar-motor', [PemilikController::class, 'showDaftarMotor'])->name('pemilik.daftar-motor');
+        Route::get('/pemilik/daftar-motor/create', [PemilikController::class, 'createMotor'])->name('pemilik.create-motor');
+        Route::post('/pemilik/daftar-motor/store', [PemilikController::class, 'storeMotor'])->name('pemilik.daftar-motor.store');
+        Route::get('/pemilik/daftar-motor/{motorcycle}/edit', [PemilikController::class, 'editMotor'])->name('pemilik.edit-motor');
+        Route::post('/pemilik/daftar-motor/{motorcycle}/update', [PemilikController::class, 'updateMotor'])->name('pemilik.update-motor');
         Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
         Route::post('/pemilik/pesanan/{transaction}/return', [PemilikController::class, 'returnMotor'])->name('pemilik.pesanan.return');
         // Route::get('/map', [MapController::class, 'showMap'])->name('map');
@@ -86,6 +90,7 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::get('/pemilik/laporan-keuangan', [PemilikLaporanController::class, 'index'])->name('pemilik.laporan-keuangan');
         Route::get('/pemilik/laporan-keuangan/export-excel', [PemilikLaporanController::class, 'exportExcel'])->name('pemilik.laporan-keuangan.export-excel');
         Route::get('/pemilik/laporan-keuangan/export-pdf', [PemilikLaporanController::class, 'exportPdf'])->name('pemilik.laporan-keuangan.export-pdf');
+        Route::delete('/pemilik/daftar-motor/hapus-rental/{motorbike_rental}', [PemilikController::class, 'destroyRental'])->name('pemilik.destroy-rental');
     });
 });
 

@@ -23,37 +23,37 @@
                     <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ request('tanggal', date('Y-m-d')) }}">
                 </div>
                 <div style="flex-shrink:0;">
-                    <button type="submit" class="btn btn-success fw-bold text-white" style="white-space:nowrap;"><i class="fas fa-filter me-1"></i> Terapkan</button>
+                    <button type="submit" class="btn fw-bold text-white" style="white-space:nowrap; background:#000000; border-color:#000000;"><i class="fas fa-filter me-1"></i> Terapkan</button>
                 </div>
             </form>
             <div class="laporan-actionbar print:hidden">
                 {{-- <a href="{{ route('pemilik.laporan-keuangan.export-excel', request()->all()) }}" class="btn btn-primary fw-bold"><i class="fas fa-file-excel me-1"></i> Export Excel</a> --}}
-                <a href="{{ route('pemilik.laporan-keuangan.export-pdf', request()->all()) }}" class="btn btn-success fw-bold"><i class="fas fa-file-pdf me-1"></i> Export PDF</a>
-                <button type="button" onclick="window.print()" class="btn btn-success fw-bold"><i class="fas fa-print me-1"></i> Cetak</button>
+                <a href="{{ route('pemilik.laporan-keuangan.export-pdf', request()->all()) }}" class="btn fw-bold text-white" style="background:#000000; border-color:#000000;"><i class="fas fa-file-pdf me-1"></i> Export PDF</a>
+                <button type="button" onclick="window.print()" class="btn fw-bold text-white" style="background:#000000; border-color:#000000;"><i class="fas fa-print me-1"></i> Cetak</button>
             </div>
         </div>
 
         <!-- Summary -->
         <div class="laporan-summary row justify-content-center">
             <div class="summary-card col-md-3 mx-2 mb-2">
-                <span class="icon"><i class="fas fa-wallet text-success"></i></span>
+                <span class="icon"><i class="fas fa-wallet" style="color:#000000;"></i></span>
                 <span class="fs-6 fw-semibold">Total Pendapatan</span>
-                <span class="fs-4 fw-bold text-success">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
+                <span class="fs-4 fw-bold">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
-                <span class="icon"><i class="fas fa-receipt text-success"></i></span>
+                <span class="icon"><i class="fas fa-receipt" style="color:#000000;"></i></span>
                 <span class="fs-6 fw-semibold">Total Transaksi</span>
-                <span class="fs-4 fw-bold text-success">{{ $summary['total_transactions'] ?? 0 }}</span>
+                <span class="fs-4 fw-bold">{{ $summary['total_transactions'] ?? 0 }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
-                <span class="icon"><i class="fas fa-chart-line text-success"></i></span>
+                <span class="icon"><i class="fas fa-chart-line" style="color:#000000;"></i></span>
                 <span class="fs-6 fw-semibold">Pendapatan Rata-rata</span>
-                <span class="fs-4 fw-bold text-success">Rp {{ number_format($summary['average_income'] ?? 0, 0, ',', '.') }}</span>
+                <span class="fs-4 fw-bold">Rp {{ number_format($summary['average_income'] ?? 0, 0, ',', '.') }}</span>
             </div>
         </div>
 
         <div class="bg-white p-4 shadow overflow-auto">
-            <h2 class="fw-bold mb-4 fs-5 d-flex align-items-center gap-2"><i class="fas fa-table text-success"></i> Detail Transaksi</h2>
+            <h2 class="fw-bold mb-4 fs-5 d-flex align-items-center gap-2"><i class="fas fa-table" style="color:#000000;"></i> Detail Transaksi</h2>
             <table class="table table-bordered laporan-table align-middle mb-0">
                 <thead class="table-light">
                     <tr>

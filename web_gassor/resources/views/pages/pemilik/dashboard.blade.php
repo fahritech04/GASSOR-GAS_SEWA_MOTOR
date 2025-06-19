@@ -46,6 +46,12 @@
         <section id="Popular" class="flex flex-col gap-4 mt-[30px]">
             <div class="flex items-center justify-between px-5">
             <h2 class="font-bold">Daftar Motor Anda</h2>
+            <a href="{{ route('pemilik.daftar-motor') }}">
+                <div class="flex items-center gap-2">
+                    <span>Semua</span>
+                    <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
+                </div>
+            </a>
             </div>
             <div class="w-full overflow-x-hidden swiper">
             <div id="TabsContent" class="px-5">
@@ -77,6 +83,12 @@
         <section id="transaction" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
             <div class="flex items-center justify-between">
             <h2 class="font-bold">Pesanan Terbaru</h2>
+            <a href="{{ route('pemilik.pesanan') }}">
+                <div class="flex items-center gap-2">
+                    <span>Semua</span>
+                    <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
+                </div>
+            </a>
             </div>
             <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
                 <div class="flex flex-col gap-4">

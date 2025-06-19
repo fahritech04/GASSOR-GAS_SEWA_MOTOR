@@ -24,6 +24,19 @@
         max-width: 100% !important;
       }
     }
+
+    @media (max-width: 480px) {
+        .form-row {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+        .form-col,
+        .ktp-sim-ktm-upload-col {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+    }
 </style>
 @endsection
 
@@ -129,7 +142,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="w-full p-4 mt-4 font-bold text-white rounded-full bg-gassor-orange">Simpan Akun</button>
+            <button type="submit" class="w-full p-4 font-bold text-white rounded-full bg-gassor-orange" style="margin-bottom: 40px">Simpan Akun</button>
         </form>
     </div>
 @endsection
@@ -246,6 +259,29 @@
                     if (!firstEmpty) firstEmpty = input;
                 }
             });
+            // Validasi umur minimal 17 tahun
+            let tanggalLahirInput = document.getElementsByName('tanggal_lahir')[0];
+            if (tanggalLahirInput && tanggalLahirInput.value) {
+                let today = new Date();
+                let birthDate = new Date(tanggalLahirInput.value);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                let m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                if (age < 17) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Anda belum cukup umur (minimal 17 tahun)',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    tanggalLahirInput.focus();
+                    return;
+                }
+            }
             // Cek upload KTP, SIM, KTM wajib ada (preview harus ada gambarnya)
             ['ktp', 'sim', 'ktm'].forEach(function(type) {
                 let preview = document.getElementById(type+'-preview');

@@ -208,6 +208,12 @@ class BookingController extends Controller
                 if ($midtransStatus === 'settlement' || $midtransStatus === 'capture') {
                     $transaction->payment_status = 'success';
                     $transaction->save();
+                    // Update status motor juga
+                    if ($transaction->motorcycle) {
+                        $transaction->motorcycle->is_available = false;
+                        $transaction->motorcycle->status = 'on_going';
+                        $transaction->motorcycle->save();
+                    }
                 } elseif ($midtransStatus === 'pending') {
                     $transaction->payment_status = 'pending';
                     $transaction->save();

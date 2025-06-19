@@ -54,7 +54,7 @@
                 @endif
             </div>
         </div>
-        @if($rentalStatus === 'on_going')
+        @if($rentalStatus === 'on_going' && strtoupper($transaction->payment_status) === 'SUCCESS')
             <form method="POST" action="{{ route('pemilik.pesanan.return', $transaction->id) }}">
                 @csrf
                 <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
@@ -66,6 +66,35 @@
     @empty
         <p class="text-center text-gassor-grey">Belum ada pesanan terbaru.</p>
     @endforelse
+
+    <div class="mt-4 flex justify-center">
+        @if ($transactions->hasPages())
+            <nav style="display: flex; gap: 4px; align-items: center;" aria-label="Pagination">
+                {{-- Halaman Sebelumnya --}}
+                @if ($transactions->onFirstPage())
+                    <span style="padding: 6px 14px; border-radius: 8px; background: #e5e5e5; color: #aaa; font-weight: bold; border: 1px solid #e5e5e5; cursor: not-allowed;">&laquo;</span>
+                @else
+                    <a href="{{ $transactions->previousPageUrl() }}" style="padding: 6px 14px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">&laquo;</a>
+                @endif
+
+                {{-- halaman angka --}}
+                @foreach ($transactions->getUrlRange(1, $transactions->lastPage()) as $page => $url)
+                    @if ($page == $transactions->currentPage())
+                        <span style="padding: 6px 12px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}" style="padding: 6px 12px; border-radius: 8px; background: #fff; color: #000; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Halaman Selanjutnya --}}
+                @if ($transactions->hasMorePages())
+                    <a href="{{ $transactions->nextPageUrl() }}" style="padding: 6px 14px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">&raquo;</a>
+                @else
+                    <span style="padding: 6px 14px; border-radius: 8px; background: #e5e5e5; color: #aaa; font-weight: bold; border: 1px solid #e5e5e5; cursor: not-allowed;">&raquo;</span>
+                @endif
+            </nav>
+        @endif
+    </div>
 </section>
 
 @include('includes.navigation_pemilik')
