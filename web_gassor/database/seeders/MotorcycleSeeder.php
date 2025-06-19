@@ -20,6 +20,10 @@ class MotorcycleSeeder extends Seeder
                 'motorcycle_type' => 'matic',
                 'vehicle_number_plate' => 'B 1234 KZT',
                 'stnk' => 'Tersedia',
+                'stnk' => json_encode([
+                    'stnk/stnk_depan.png',
+                    'stnk/stnk_belakang.png',
+                ]),
                 'price_per_day' => 50000,
                 'is_available' => true,
                 'created_at' => now(),
