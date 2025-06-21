@@ -7,7 +7,15 @@
         <div id="TopNav" class="relative flex items-center justify-between px-5 mt-[60px]">
             <div class="flex flex-col gap-1">
             <p>Selamat datang kembali</p>
-            <h1 class="font-bold text-xl leading-[30px]">{{ auth()->user()->name }}</h1>
+            <h1 class="font-bold text-xl leading-[30px]">
+                @auth
+                    @if (empty(Auth::user()->name))
+                        Pemilik GASSOR
+                    @else
+                        {{ Auth::user()->name }}
+                    @endif
+                @endauth
+            </h1>
             </div>
             <div class="flex items-center gap-2">
                 <a href="https://wa.me/6285942572814" target="_blank" rel="noopener" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">

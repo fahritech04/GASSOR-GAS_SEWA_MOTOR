@@ -20,6 +20,12 @@ class RoleMiddleware
         }
 
         if (! in_array($user->role, $roles)) {
+            // Hindari redirect loop
+            if ($user->role === 'pemilik' && $request->routeIs('pemilik.dashboard')) {
+                abort(403, 'Akses ditolak.');
+            } elseif ($user->role === 'penyewa' && $request->routeIs('home')) {
+                abort(403, 'Akses ditolak.');
+            }
             // Redirect ke dashboard sesuai role
             if ($user->role === 'pemilik') {
                 return redirect()->route('pemilik.dashboard');

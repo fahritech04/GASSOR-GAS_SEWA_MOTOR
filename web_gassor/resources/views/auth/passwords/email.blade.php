@@ -9,11 +9,6 @@
                 <p class="mt-2 text-center text-gassor-grey">Masukkan email Anda untuk menerima link reset kata sandi
                 </p>
             </div>
-            @if (session('status'))
-                <div class="mb-4 font-medium text-orange-600 text-center">
-                    {{ session('status') }}
-                </div>
-            @endif
             <form method="POST" action="{{ route('password.email') }}"
                 class="flex flex-col gap-5 mt-6">
                 @csrf
@@ -22,9 +17,6 @@
                     <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
                         class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
                         style="border-radius: 12px;" />
-                    @error('email')
-                        <span class="text-red-500 text-xs">{{ $message }}</span>
-                    @enderror
                 </div>
                 <button type="submit"
                     class="w-full p-4 mt-4 font-bold text-white"
@@ -35,4 +27,30 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: '{{ $errors->first() }}',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            });
+        @endif
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('status') }}',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            });
+        @endif
+    </script>
 @endsection

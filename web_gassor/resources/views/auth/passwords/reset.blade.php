@@ -17,9 +17,6 @@
                     <input id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required
                         class="w-full p-4 bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none"
                         style="border-radius: 12px;" />
-                    @error('email')
-                        <span class="text-red-500 text-xs">{{ $message }}</span>
-                    @enderror
                 </div>
                 <div class="flex flex-col gap-1">
                     <label for="password" class="text-sm font-medium">Kata Sandi Baru</label>
@@ -33,9 +30,6 @@
                                 style="width: 22px; height: 22px;">
                         </span>
                     </div>
-                    @error('password')
-                        <span class="text-red-500 text-xs">{{ $message }}</span>
-                    @enderror
                 </div>
                 <div class="flex flex-col gap-1">
                     <label for="password-confirm" class="text-sm font-medium">Konfirmasi Kata Sandi</label>
@@ -67,30 +61,22 @@
 
         @if ($errors->any())
             Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: '{{ $errors->first() }}',
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 2000,
                 timerProgressBar: true,
-                width: 630,
-                heightAuto: false,
-                position: 'center',
-                background: '#fff',
-                html: `
-                    <div style="display: flex; align-items: center; height: 100px;">
-                        <div>
-                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <circle cx="24" cy="24" r="24" fill="#F87171"/>
-                                <path d="M16 16L32 32M32 16L16 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div style="margin-left: 24px; text-align: left;">
-                            <div style="font-weight: bold; font-size: 1.25rem; color: #111827;">Oops...</div>
-                            <div style="font-size: 1rem; color: #374151; margin-top: 2px;">{{ $errors->first() }}</div>
-                        </div>
-                    </div>
-                `,
-                didOpen: () => {
-                    document.querySelector('.swal2-popup').style.height = '150px';
-                }
+            });
+        @endif
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('status') }}',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
             });
         @endif
     </script>

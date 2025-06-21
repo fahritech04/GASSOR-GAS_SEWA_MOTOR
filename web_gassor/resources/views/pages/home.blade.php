@@ -22,7 +22,11 @@
         </p>
         <h1 class="font-bold text-xl leading-[30px]">
             @auth
-                {{ Auth::user()->name }}
+                @if (empty(Auth::user()->name))
+                    Pengguna GASSOR
+                @else
+                    {{ Auth::user()->name }}
+                @endif
             @else
                 Pengguna GASSOR
             @endauth

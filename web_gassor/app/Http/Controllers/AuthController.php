@@ -22,8 +22,11 @@ class AuthController extends Controller
         // return view('select-role');
     }
 
-    public function showRegister()
+    public function showRegister(Request $request)
     {
+        if (! $request->has('role') || ! in_array($request->role, ['penyewa', 'pemilik'])) {
+            return redirect()->route('select-role');
+        }
         return view('auth.register');
     }
 
@@ -62,19 +65,25 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'fullname' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'phone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:pemilik,penyewa',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:penyewa,pemilik',
         ]);
 
         $user = User::create([
-            'name' => $request->fullname,
+            'name' => null,
             'email' => $request->email,
-            'phone' => $request->phone,
+            'phone' => null,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'username' => null,
+            'profile_image_url' => null,
+            'tempat_lahir' => null,
+            'tanggal_lahir' => null,
+            'ktp_image_url' => null,
+            'sim_image_url' => null,
+            'ktm_image_url' => null,
+            'google_blocked' => false,
         ]);
 
         Auth::login($user);
@@ -112,10 +121,12 @@ class AuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
         } catch (\Exception $e) {
+            session()->forget('google_role');
             return redirect('/login')->withErrors(['email' => 'Gagal login dengan Google.']);
         }
 
         $role = session('google_role', 'penyewa');
+        session()->forget('google_role');
 
         $user = User::where('email', $googleUser->getEmail())->first();
 
@@ -125,31 +136,36 @@ class AuthController extends Controller
                     'email' => 'Akun ini sudah tidak bisa login/daftar dengan Google karena Anda sudah pernah reset password. Silakan login dengan email & password.',
                 ]);
             }
-            // email sudah ada, cek role
             if ($user->role !== $role) {
                 return redirect('/login')->withErrors([
                     'email' => 'Akun ini sudah terdaftar sebagai '.ucfirst($user->role).'. Anda hanya bisa menggunakan satu akun Google untuk satu role. Silakan login sesuai role yang sudah terdaftar.',
                 ]);
             }
             // role sama, lanjutkan login
+            Auth::login($user, true);
+            request()->session()->regenerate();
         } else {
             // Email belum ada, buat baru
             $user = User::create([
-                'name' => $googleUser->getName() ?? $googleUser->getNickname(),
+                'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'User',
                 'username' => $googleUser->getNickname() ?? null,
                 'email' => $googleUser->getEmail(),
                 'profile_image_url' => $googleUser->getAvatar(),
                 'password' => bcrypt(Str::random(16)),
                 'role' => $role,
             ]);
+            Auth::login($user, true);
+            request()->session()->regenerate();
         }
 
-        Auth::login($user, true);
-
+        // Cek role sebelum redirect
         if ($user->role === 'pemilik') {
             return redirect()->route('pemilik.dashboard');
-        } else {
+        } elseif ($user->role === 'penyewa') {
             return redirect()->route('home');
+        } else {
+            Auth::logout();
+            return redirect('/login')->withErrors(['email' => 'Role tidak valid.']);
         }
     }
 }

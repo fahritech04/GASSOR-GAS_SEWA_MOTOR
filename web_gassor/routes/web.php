@@ -33,6 +33,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('pemilik.block');
+Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])->name('pemilik.dashboard');
 
 // Middleware untuk blokir akses manual (direct URL)
 
@@ -72,9 +73,7 @@ Route::middleware(['block.manual.access'])->group(function () {
 
     // Route khusus pemilik
     Route::middleware(['auth', 'role:pemilik'])->group(function () {
-        Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])
-            ->middleware(['auth', 'role:pemilik'])
-            ->name('pemilik.dashboard');
+        // Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])->name('pemilik.dashboard');
         Route::get('/profile/pemilik', [ProfilePemilikController::class, 'index'])->name('profile.pemilik');
         Route::get('/editprofile/pemilik', [ProfilePemilikController::class, 'edit'])->name('editprofile.pemilik');
         Route::post('/editprofile/pemilik', [ProfilePemilikController::class, 'update'])->name('editprofile.pemilik.update');

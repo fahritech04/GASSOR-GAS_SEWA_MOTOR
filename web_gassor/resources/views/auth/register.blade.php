@@ -19,7 +19,6 @@
       </div>
       <div style="position: relative; display: flex; flex-direction: column; padding-left: 1.25rem; padding-right: 1.25rem; margin-top: 2rem">
         <h1 style="font-size: 1.5rem; line-height: 2rem; font-weight: 700">Daftar</h1>
-        <p style="margin-top: 0.5rem; color: #6b7280">Isi formulir di bawah ini untuk membuat akun</p>
       </div>
       <form method="POST" action="{{ route('register') }}" class="relative flex flex-col gap-5 px-5 mt-8">
         @csrf
@@ -29,32 +28,15 @@
         </div>
         <div class="form-col">
             <label for="password" class="text-sm font-medium">Kata Sandi</label>
+            <div style="position: relative;">
             <input type="password" id="password" name="password" placeholder="Masukkan kata sandi anda" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" style="border-radius: 12px;" required />
+            <span onclick="togglePassword()" style="position: absolute; right: 18px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                <img id="eye-icon" src="{{ asset('assets/images/icons/eye.svg') }}" alt="Show Password" style="width: 22px; height: 22px;">
+            </span>
+            </div>
         </div>
-        <div class="form-col">
-        <label for="role" class="text-sm font-medium">Daftar Sebagai</label>
-        <select id="role" name="role" class="w-full p-4 rounded-full bg-[#F5F6F8] border-none outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none" style="border-radius: 12px;" required>
-            <option value="penyewa">Penyewa</option>
-            <option value="pemilik">Pemilik</option>
-        </select>
-        </div>
+        <input type="hidden" name="role" id="role" value="{{ request('role') }}" />
         <button type="submit" class="w-full p-4 mt-4 font-bold text-white rounded-full" style="background-color: #ff801a; border-radius: 12px;">Buat Akun</button>
-        <div class="flex items-center my-4" style="gap: 12px">
-          <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
-          <p style="font-size: 0.875rem; line-height: 1.25rem; color: #9ca3af; position: relative; padding: 0 8px">atau</p>
-          <div style="flex: 1; height: 1px; background-color: #ffffff"></div>
-        </div>
-      </form>
-      {{-- Google Register Form DILUAR form utama, di bawah OR dan di atas Login --}}
-      <form id="google-register-form" method="POST" action="{{ route('google.login') }}" class="mt-2 px-5">
-        @csrf
-        <input type="hidden" name="role" id="google-register-role-input" />
-        <button type="button"
-            onclick="submitGoogleRegister()"
-            style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 12px; padding: 16px; font-weight: 500; border: 1px solid #e6a43b; border-radius: 9999px; background-color: transparent">
-            <img src="{{ asset('assets/images/icons/google.svg') }}" style="width: 20px; height: 20px border-radius: 12px;" alt="google icon" />
-            Daftar dengan Google
-        </button>
       </form>
       <p style="margin-top: 1rem; margin-bottom: 2.5rem; font-size: 0.875rem; line-height: 1.25rem; text-align: center">
         Sudah punya akun?
@@ -65,6 +47,18 @@
 
 @section('scripts')
 <script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.src = "{{ asset('assets/images/icons/eye-off.svg') }}";
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.src = "{{ asset('assets/images/icons/eye.svg') }}";
+        }
+    }
+
     function submitGoogleRegister() {
         var roleSelect = document.getElementById('role');
         var googleRoleInput = document.getElementById('google-register-role-input');
@@ -76,59 +70,23 @@
 
     @if ($errors->any())
         Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            text: '{{ $errors->first() }}',
             showConfirmButton: false,
-            timer: 3500,
+            timer: 2000,
             timerProgressBar: true,
-            width: 630,
-            heightAuto: false,
-            position: 'center',
-            background: '#fff',
-            html: `
-                <div style="display: flex; align-items: center; height: 100px;">
-                    <div>
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="24" fill="#F87171"/>
-                            <path d="M16 16L32 32M32 16L16 32" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div style="margin-left: 24px; text-align: left;">
-                        <div style="font-weight: bold; font-size: 1.25rem; color: #111827;">Oops...</div>
-                        <div style="font-size: 1rem; color: #374151; margin-top: 2px;">{{ $errors->first() }}</div>
-                    </div>
-                </div>
-            `,
-            didOpen: () => {
-                document.querySelector('.swal2-popup').style.height = '150px';
-            }
         });
     @endif
 
     @if (session('success'))
         Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('success') }}',
             showConfirmButton: false,
-            timer: 3500,
+            timer: 2000,
             timerProgressBar: true,
-            width: 630,
-            heightAuto: false,
-            position: 'center',
-            background: '#fff',
-            html: `
-                <div style="display: flex; align-items: center; height: 100px;">
-                    <div>
-                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <circle cx="24" cy="24" r="24" fill="#34D399"/>
-                            <path d="M16 24L22 30L32 18" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <div style="margin-left: 24px; text-align: left;">
-                        <div style="font-weight: bold; font-size: 1.25rem; color: #111827;">Success</div>
-                        <div style="font-size: 1rem; color: #374151; margin-top: 2px;">{{ session('success') }}</div>
-                    </div>
-                </div>
-            `,
-            didOpen: () => {
-                document.querySelector('.swal2-popup').style.height = '150px';
-            }
         });
     @endif
 </script>
