@@ -33,7 +33,7 @@
                 <div class="flex justify-center gap-4 rounded-[30px] p-4 bg-white" style="border: 1.5px solid #e6a43b">
                 <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">
                     <img src="{{ asset('assets/images/icons/total-motor.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    <span class="text-m font-bold">{{ $motorcycles->count() }}</span>
+                    <span class="text-m font-bold">{{ $totalMotor }}</span>
                     <span class="text-m text-gassor-grey">Total Motor</span>
                 </div>
                 <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">

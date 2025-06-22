@@ -14,6 +14,7 @@ class PemilikController extends Controller
     public function index()
     {
         $motorcycles = Motorcycle::where('owner_id', auth()->id())->paginate(3);
+        $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
 
         $motorcycleIds = $motorcycles->pluck('id');
 
@@ -42,14 +43,15 @@ class PemilikController extends Controller
                 return $transaction->motorcycle->price_per_day * $days;
             });
 
-        return view('pages.pemilik.dashboard', compact('motorcycles', 'transactions', 'activeOrders', 'totalIncome'));
+        return view('pages.pemilik.dashboard', compact('motorcycles', 'transactions', 'activeOrders', 'totalIncome', 'totalMotor'));
     }
 
     public function showDaftarMotor()
     {
         $motorcycles = Motorcycle::where('owner_id', auth()->id())->paginate(5);
+        $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
 
-        return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles'));
+        return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles', 'totalMotor'));
     }
 
     public function showPesanan()

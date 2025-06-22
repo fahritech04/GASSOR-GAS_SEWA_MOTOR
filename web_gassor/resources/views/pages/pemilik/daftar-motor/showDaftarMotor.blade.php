@@ -8,7 +8,7 @@
 <div id="Header" class="relative flex items-center justify-between gap-2 px-5 mt-[18px]">
     <div class="flex flex-col gap-[6px]">
         <h1 class="font-bold text-[32px] leading-[48px]">Daftar Motor Anda</h1>
-        <p class="text-gassor-grey">Tersedia {{ $motorcycles->count() }} Motor</p>
+        <p class="text-gassor-grey">Tersedia {{ $totalMotor }} Motor</p>
     </div>
     <a href="{{ route('pemilik.create-motor') }}"
     style="background-color: #000000; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block;">

@@ -2,7 +2,7 @@
 
 @section('content')
     <div id="Content-Container" class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden">
-        <div style="position: absolute; top: 0; width: 100%; height: 230px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%)"></div>
+        <div style="position: absolute; top: 0; width: 100%; height: 310px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%)"></div>
 
         <div id="TopNav" class="relative flex items-center justify-between px-5 mt-[60px]">
             <a href="{{ route('home') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
@@ -12,17 +12,17 @@
             <div class="w-12 dummy-btn"></div>
         </div>
 
-        <div class="relative flex flex-row items-center justify-center gap-4 px-5" style="margin-top: 10px;">
-            <div style="width: 90px; height: 90px; border-radius: 100%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
+        <div class="relative flex flex-col items-center justify-center gap-2 px-5" style="margin-top: 10px;">
+            <div class="shrink-0" style="width: 90px; height: 90px; border-radius: 100%; overflow: hidden; border: 4px solid white; display: flex; justify-content: center; align-items: center">
                 <img src="{{ Auth::user()->profile_image_url ? (Str::startsWith(Auth::user()->profile_image_url, 'http') ? Auth::user()->profile_image_url : asset('storage/' . Auth::user()->profile_image_url)) : asset('assets/images/photos/default_profil.jpg') }}" style="width: 100%; height: 100%; object-fit: cover" alt="profile picture" />
             </div>
-            <div class="text">
-                <p class="text-xl font-semibold">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->name }}</p>
-                <p class="text-sm text-gassor-grey">{{ Auth::user()->email }}</p>
+            <div class="text text-center">
+                <p class="text-xl font-semibold break-all">{{ Auth::user()->username ? Auth::user()->username : Auth::user()->name }}</p>
+                <p class="text-sm text-gassor-grey break-all">{{ Auth::user()->email }}</p>
             </div>
         </div>
 
-        <div class="flex flex-col gap-5 px-5 pb-40" style="margin-top: 50px">
+        <div class="flex flex-col gap-5 px-5 pb-40" style="margin-top: 60px">
             <div class="accordion group flex flex-col rounded-[30px] p-5 bg-[#F5F6F8] overflow-hidden has-[:checked]:!h-[68px] transition-all duration-300">
                 <label class="relative flex items-center justify-between">
                     <p class="text-lg font-semibold">Informasi Pribadi</p>
