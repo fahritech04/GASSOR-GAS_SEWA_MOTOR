@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <style>
-      .leaflet-map { width: 100%; height: 380px; border-radius: 18px; }
+      .leaflet-map { width: 100%; height: 500px; }
     </style>
 @endsection
 
@@ -14,11 +14,10 @@
     <div id="Content-Container" class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden">
       <div id="ForegroundFade" class="absolute top-0 w-full h-[143px] bg-[linear-gradient(180deg,#070707_0%,rgba(7,7,7,0)_100%)] z-10"></div>
       <div id="TopNavAbsolute" class="absolute top-[60px] flex items-center justify-between w-full px-5 z-10">
-        <a href="{{ route('pemilik.dashboard') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden rounded-full shrink-0 bg-white/10 backdrop-blur-sm">
-          <img src="assets/images/icons/arrow-left-transparent.svg" class="w-8 h-8" alt="icon" />
+        <a href="{{ route('pemilik.pesanan') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden rounded-full shrink-0 bg-white/10 backdrop-blur-sm">
+          <img src="{{ asset('assets/images/icons/arrow-left-transparent.svg') }}" class="w-8 h-8" alt="icon" />
         </a>
       </div>
-      <!-- Gallery: z-index paling rendah -->
       <div id="Gallery" class="swiper-gallery w-full overflow-x-hidden -mb-[38px]" style="position:relative; z-index:1;">
         <div class="row">
           <!-- Marker Circle & Polygon -->
@@ -29,10 +28,8 @@
               </div>
             </div>
           </div>
-          <!-- /Marker Circle & Polygon -->
         </div>
       </div>
-      <!-- Details: z-index paling tinggi -->
       <main id="Details" class="relative flex flex-col rounded-t-[40px] py-5 pb-[10px] gap-4 bg-white z-10" style="position:relative; z-index:10;">
         <div id="Title" class="flex items-center justify-between gap-2 px-5">
           <h1 class="font-bold text-[22px] leading-[33px]">Lokasi Kendaraan Sekarang</h1>
@@ -42,50 +39,36 @@
           <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
             <div class="flex flex-col gap-4">
               <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#E6A43B] transition-all duration-300">
-                <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden">
-                  <img src="assets/images/thumbnails/bonus-1.png" class="object-cover w-full h-full" alt="thumbnails" />
+                <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden items-center justify-center">
+                  <img src="{{ asset('storage/' . ($transaction->motorcycle->images->first()->image ?? 'default.png')) }}" class="object-cover w-full h-full" alt="icon">
                 </div>
                 <div>
-                  <p class="font-semibold">Honda Beat</p>
-                  <p class="text-sm text-gassor-grey">Super Fast • 2 Max</p>
+                  <p class="font-semibold">{{ $transaction->motorcycle->name ?? '-' }}</p>
+                  <p class="text-sm text-gassor-grey">
+                    Disewa : <span class="font-semibold">{{ $transaction->name }}</span>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="Features" class="grid grid-cols-2 gap-x-[10px] gap-y-4 px-5">
-          <div class="flex items-center gap-[6px]">
-            <img src="assets/images/icons/location.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Wilayah Bojongsoang</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="assets/images/icons/3dcube.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Kategori Matic</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="assets/images/icons/profile-2user.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">2 Max</p>
-          </div>
-          <div class="flex items-center gap-[6px]">
-            <img src="assets/images/icons/shield-tick.svg" class="w-[26px] h-[26px] flex shrink-0" alt="icon" />
-            <p class="text-gassor-grey">Privacy 100%</p>
-          </div>
+        <div class="p-2 bg-orange-100 text-orange-800 rounded mb-2 mt-[120px] mx-5">
+            <b>GPS Data (Realtime):</b>
+            <pre id="gps-json" class="text-xs">{{ json_encode($gpsData, JSON_PRETTY_PRINT) }}</pre>
         </div>
       </main>
     </div>
 @endsection
 
 @section('scripts')
-    <!-- Leaflet JS & jQuery CDN -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Swiper (optional, for gallery) -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
       // Custom icon motor
       const motorIcon = L.icon({
-        iconUrl: '{{ asset('assets/images/icons/motor.svg') }}', // pastikan file ini ada
+        iconUrl: '/assets/images/icons/motor.svg',
         iconSize:     [40, 40], // ukuran icon
         iconAnchor:   [20, 40], // titik anchor ke koordinat
         popupAnchor:  [0, -35]  // posisi popup relatif ke icon
@@ -130,6 +113,8 @@
       // Polling ke endpoint Laravel setiap 1 detik
       setInterval(() => {
         $.getJSON('/api/gps', function(data) {
+          // Tampilkan JSON di atas peta
+          document.getElementById('gps-json').textContent = JSON.stringify(data, null, 2);
           updateMarker(data);
         });
       }, 1000);

@@ -62,6 +62,10 @@
                 Motor Sudah Dikembalikan
             </button>
             </form>
+            <a href="{{ route('pemilik.pesanan.tracking', $transaction->id) }}"
+               style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #000000; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;">
+                Lihat Tracking Motor
+            </a>
         @endif
     @empty
         <p class="text-center text-gassor-grey">Belum ada pesanan terbaru.</p>

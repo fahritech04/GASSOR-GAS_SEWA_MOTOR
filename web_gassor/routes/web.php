@@ -84,7 +84,8 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/pemilik/daftar-motor/{motorcycle}/update', [PemilikController::class, 'updateMotor'])->name('pemilik.update-motor');
         Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
         Route::post('/pemilik/pesanan/{transaction}/return', [PemilikController::class, 'returnMotor'])->name('pemilik.pesanan.return');
-        // Route::get('/map', [MapController::class, 'showMap'])->name('map');
+        Route::get('/pemilik/pesanan/tracking/{id}', [MapController::class, 'showMap'])->name('pemilik.pesanan.tracking');
+        // Route::get('/map', [MapController::class, 'showMap'])->name('pemilik.pesanan.tracking');
         // Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');
         Route::get('/pemilik/laporan-keuangan', [PemilikLaporanController::class, 'index'])->name('pemilik.laporan-keuangan');
         Route::get('/pemilik/laporan-keuangan/export-excel', [PemilikLaporanController::class, 'exportExcel'])->name('pemilik.laporan-keuangan.export-excel');

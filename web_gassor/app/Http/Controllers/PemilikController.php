@@ -24,7 +24,12 @@ class PemilikController extends Controller
             ->take(3)
             ->get();
 
-        $activeOrders = $transactions->where('payment_status', 'success')->count();
+        $activeOrders = $transactions->filter(function($transaction) {
+            return (
+                strtolower($transaction->payment_status) === 'success'
+                && ($transaction->motorcycle && $transaction->motorcycle->status === 'on_going')
+            );
+        })->count();
 
         $totalIncome = $transactions
             ->where('payment_status', 'success')
