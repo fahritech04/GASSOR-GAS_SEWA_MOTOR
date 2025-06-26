@@ -334,11 +334,17 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-col">
-                                    <label class="flex items-center gap-2">
-                                        <input type="checkbox" name="is_available" value="1" {{ old('is_available', $motorcycle->is_available) ? 'checked' : '' }} style="accent-color:#e6a43b;">
-                                        <span class="form-label" style="margin-bottom:0;">Tersedia?</span>
-                                    </label>
+                                    <label class="form-label">Stok Total<span style="color: #dc3545;">*</span></label>
+                                    <input type="number" name="stock" class="form-input" value="{{ old('stock', $motorcycle->stock ?? 1) }}" min="1" required />
+                                    <small class="text-gray-500">Total unit motor yang dimiliki</small>
                                 </div>
+                                <div class="form-col">
+                                    <label class="form-label">Stok Tersedia</label>
+                                    <input type="number" name="available_stock" class="form-input" value="{{ old('available_stock', $motorcycle->available_stock ?? 1) }}" min="0" />
+                                    <small class="text-gray-500">Unit yang tersedia untuk disewa</small>
+                                </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-col">
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="has_gps" value="1" {{ old('has_gps', $motorcycle->has_gps) ? 'checked' : '' }} style="accent-color:#e6a43b;">

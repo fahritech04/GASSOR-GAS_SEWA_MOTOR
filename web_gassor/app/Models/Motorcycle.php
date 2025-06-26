@@ -19,7 +19,8 @@ class Motorcycle extends Model
         'stnk',
         'stnk_images',
         'price_per_day',
-        'is_available',
+        'stock',
+        'available_stock',
         'has_gps',
         'status'
     ];
@@ -43,6 +44,48 @@ class Motorcycle extends Model
     public function setStnkImagesAttribute($value)
     {
         $this->attributes['stnk_images'] = is_array($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : $value;
+    }
+
+    /**
+     * Cek apakah motor tersedia
+     */
+    public function isAvailable()
+    {
+        return $this->available_stock > 0;
+    }
+
+    /**
+     * Mengurangi stok yang tersedia
+     */
+    public function decreaseStock($quantity = 1)
+    {
+        if ($this->available_stock >= $quantity) {
+            $this->available_stock -= $quantity;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Menambah stok yang tersedia
+     */
+    public function increaseStock($quantity = 1)
+    {
+        if (($this->available_stock + $quantity) <= $this->stock) {
+            $this->available_stock += $quantity;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Scope untuk motor yang tersedia
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->where('available_stock', '>', 0);
     }
 
     public function motorbikeRental()

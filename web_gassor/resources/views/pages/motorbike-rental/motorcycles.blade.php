@@ -52,6 +52,10 @@
                         <h3 class="font-semibold text-lg leading-[27px]">{{ $motorcycle->name }}</h3>
                         <hr class="border-[#F1F2F6]">
                         <div class="flex items-center gap-[6px]">
+                            <img src="{{ asset('assets/images/icons/status.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                            <p class="text-sm text-gassor-grey">Stok Tersedia: {{ $motorcycle->available_stock ?? 0 }}</p>
+                        </div>
+                        <div class="flex items-center gap-[6px]">
                             <img src="{{ asset('assets/images/icons/notes.svg') }}" class="w-5 h-5 flex shrink-0"
                                 alt="icon">
                             <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>

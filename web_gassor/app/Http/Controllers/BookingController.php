@@ -6,6 +6,7 @@ use App\Http\Requests\BookingShowRequest;
 use App\Http\Requests\CustomerInformationStoreRequest;
 use App\Interfaces\MotorbikeRentalRepositoryInterface;
 use App\Interfaces\TransactionRepositoryInterface;
+use App\Services\MidtransStatusSyncService;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -32,7 +33,7 @@ class BookingController extends Controller
     public function booking(Request $request, $slug)
     {
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
-        if (! $motorcycle || ! $motorcycle->is_available) {
+        if (! $motorcycle || ! $motorcycle->isAvailable()) {
             return redirect()->back()->with('error', 'Motor sudah tidak tersedia.');
         }
         $this->transactionRepository->saveTransactionDataToSession($request->all());
@@ -198,39 +199,13 @@ class BookingController extends Controller
         if (! $transaction) {
             return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan.');
         }
-        // selalu cek status terbaru ke Midtrans jika belum success/canceled/expired/failed
+
+        // Gunakan service untuk sinkronisasi yang lebih reliable
         if (! in_array(strtolower($transaction->payment_status), ['success', 'canceled', 'expired', 'failed'])) {
-            try {
-                \Midtrans\Config::$serverKey = config('midtrans.serverKey');
-                \Midtrans\Config::$isProduction = config('midtrans.isProduction');
-                $status = \Midtrans\Transaction::status($transaction->code);
-                $midtransStatus = strtolower($status->transaction_status ?? '');
-                if ($midtransStatus === 'settlement' || $midtransStatus === 'capture') {
-                    $transaction->payment_status = 'success';
-                    $transaction->save();
-                    // Update status motor juga
-                    if ($transaction->motorcycle) {
-                        $transaction->motorcycle->is_available = false;
-                        $transaction->motorcycle->status = 'on_going';
-                        $transaction->motorcycle->save();
-                    }
-                } elseif ($midtransStatus === 'pending') {
-                    $transaction->payment_status = 'pending';
-                    $transaction->save();
-                } elseif ($midtransStatus === 'expire') {
-                    $transaction->payment_status = 'expired';
-                    $transaction->save();
-                } elseif ($midtransStatus === 'cancel') {
-                    $transaction->payment_status = 'canceled';
-                    $transaction->save();
-                } elseif ($midtransStatus === 'deny') {
-                    $transaction->payment_status = 'failed';
-                    $transaction->save();
-                }
-            } catch (\Exception $e) {
-                // ignore error, fallback ke status di database
-            }
+            $syncService = new MidtransStatusSyncService();
+            $transaction = $syncService->syncPaymentStatus($transaction);
         }
+
         $status = strtolower($transaction->payment_status);
         if ($status === 'success') {
             return redirect()->route('booking.success', ['order_id' => $orderId]);

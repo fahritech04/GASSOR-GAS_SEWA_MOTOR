@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Motorcycle;
 use App\Models\Transaction;
+use App\Services\MidtransStatusSyncService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\MotorbikeRental;
@@ -65,6 +66,27 @@ class PemilikController extends Controller
             ->latest()
             ->paginate(5);
 
+        // Auto-sync SEMUA transaksi pending untuk real-time update
+        $syncService = new MidtransStatusSyncService();
+        $syncCount = 0;
+
+        foreach ($transactions as $transaction) {
+            if (in_array($transaction->payment_status, ['pending']) && $transaction->created_at->diffInDays(now()) <= 7) {
+                $oldStatus = $transaction->payment_status;
+                $syncService->syncPaymentStatus($transaction);
+                $transaction->refresh(); // Refresh from database
+
+                if ($oldStatus !== $transaction->payment_status) {
+                    $syncCount++;
+                }
+            }
+        }
+
+        // Add success message if any status updated
+        if ($syncCount > 0) {
+            session()->flash('success', "✅ {$syncCount} status pembayaran berhasil diperbarui!");
+        }
+
         return view('pages.pemilik.pesanan.showPesanan', compact('transactions'));
     }
 
@@ -75,6 +97,10 @@ class PemilikController extends Controller
 
     public function returnMotor(Transaction $transaction)
     {
+        // Sinkronisasi status pembayaran dengan Midtrans terlebih dahulu
+        $syncService = new MidtransStatusSyncService();
+        $transaction = $syncService->syncPaymentStatus($transaction);
+
         if (
             $transaction->motorcycle &&
             $transaction->motorcycle->status === 'on_going' &&
@@ -82,7 +108,7 @@ class PemilikController extends Controller
         ) {
             $motorcycle = $transaction->motorcycle;
             $motorcycle->status = 'finished';
-            $motorcycle->is_available = 1;
+            $motorcycle->increaseStock(1);
             $motorcycle->save();
         }
         return redirect()->route('pemilik.pesanan')->with('success', 'Status motor berhasil diubah menjadi selesai.');
@@ -150,7 +176,8 @@ class PemilikController extends Controller
                         'stnk' => $motor['stnk'],
                         'stnk_images' => $stnkImages,
                         'price_per_day' => $motor['price_per_day'],
-                        'is_available' => true,
+                        'stock' => $motor['stock'] ?? 1,
+                        'available_stock' => $motor['stock'] ?? 1,
                         'status' => $motor['status'] ?? null,
                         'has_gps' => $motor['has_gps'] ?? false,
                     ]);
@@ -239,6 +266,10 @@ class PemilikController extends Controller
                 $oldBonuses[$i]->delete();
             }
         }
+        // Cek perubahan status untuk mengelola stok
+        $oldStatus = $motorcycle->status;
+        $newStatus = $request->input('status');
+
         // Update Motorcycle (Motor)
         $motorcycle->update([
             'name' => $request->input('name'),
@@ -246,10 +277,24 @@ class PemilikController extends Controller
             'vehicle_number_plate' => $request->input('vehicle_number_plate'),
             'stnk' => $request->input('stnk'),
             'price_per_day' => $request->input('price_per_day'),
-            'status' => $request->input('status'),
+            'stock' => $request->input('stock', $motorcycle->stock),
+            'available_stock' => $request->input('available_stock', $motorcycle->available_stock),
+            'status' => $newStatus,
             'has_gps' => $request->has('has_gps'),
-            'is_available' => $request->has('is_available'),
         ]);
+
+        // Jika status berubah dari 'on_going' ke 'finished', kembalikan stok
+        if ($oldStatus === 'on_going' && $newStatus === 'finished') {
+            // Cari transaksi terakhir untuk motor ini yang statusnya success
+            $transaction = Transaction::where('motorcycle_id', $motorcycle->id)
+                ->where('payment_status', 'success')
+                ->latest()
+                ->first();
+
+            if ($transaction) {
+                $motorcycle->increaseStock(1);
+            }
+        }
         // Update gambar STNK jika ada
         if ($request->hasFile('stnk_images')) {
             $stnkImages = [];
@@ -294,5 +339,43 @@ class PemilikController extends Controller
         $rental->forceDelete();
 
         return redirect()->route('pemilik.daftar-motor')->with('success', 'Rental dan semua data terkait berhasil dihapus permanen!');
+    }
+
+    /**
+     * Manual sync payment status dari Midtrans
+     */
+    public function syncPaymentStatus(Transaction $transaction)
+    {
+        $syncService = new MidtransStatusSyncService();
+        $updated = $syncService->syncPaymentStatus($transaction);
+
+        if ($updated->payment_status !== $transaction->payment_status) {
+            return redirect()->route('pemilik.pesanan')
+                ->with('success', "Status pembayaran berhasil diperbarui menjadi: {$updated->payment_status}");
+        }
+
+        return redirect()->route('pemilik.pesanan')
+            ->with('info', 'Status pembayaran sudah up-to-date');
+    }
+
+    /**
+     * AJAX endpoint check status pembayaran real-time
+     */
+    public function checkPaymentStatus(Transaction $transaction)
+    {
+        $syncService = new MidtransStatusSyncService();
+        $oldStatus = $transaction->payment_status;
+        $updated = $syncService->syncPaymentStatus($transaction);
+
+        return response()->json([
+            'success' => true,
+            'old_status' => $oldStatus,
+            'new_status' => $updated->payment_status,
+            'updated' => $oldStatus !== $updated->payment_status,
+            'motor_status' => $updated->motorcycle->status ?? null,
+            'message' => $oldStatus !== $updated->payment_status
+                ? "Status berubah dari {$oldStatus} ke {$updated->payment_status}"
+                : "Status tidak berubah ({$updated->payment_status})"
+        ]);
     }
 }

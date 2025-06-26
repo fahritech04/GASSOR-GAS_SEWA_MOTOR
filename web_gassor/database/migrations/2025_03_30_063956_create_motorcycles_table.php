@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('stnk');
             $table->json('stnk_images')->nullable();
             $table->integer('price_per_day');
-            $table->boolean('is_available');
+            $table->integer('stock')->default(1);
+            $table->integer('available_stock')->default(1);
             $table->boolean('has_gps')->default(false);
             $table->enum('status', ['on_going', 'finished'])->nullable();
             $table->softDeletes();

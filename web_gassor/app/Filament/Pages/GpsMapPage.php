@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Http\Controllers\MapController;
 use App\Models\Motorcycle;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\DB;
 
 class GpsMapPage extends Page
 {
@@ -22,8 +23,10 @@ class GpsMapPage extends Page
     {
         $controller = new MapController;
         $this->gpsData = $controller->getGps()->getData();
-        // Ambil motor yang sedang disewa
-        $this->motorcyclesWithGps = Motorcycle::where('is_available', false)->where('has_gps', true)->get();
+        // Ambil motor yang sedang disewa (stok tersedia lebih kecil dari total stok)
+        $this->motorcyclesWithGps = Motorcycle::where('available_stock', '<', DB::raw('stock'))
+            ->where('has_gps', true)
+            ->get();
     }
 
     public function getGpsData()

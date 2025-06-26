@@ -53,18 +53,18 @@ class MidtransController extends Controller
                         $transaction->update(['payment_status' => 'pending']);
                     } else {
                         $transaction->update(['payment_status' => 'success']);
-                        if ($transaction->motorcycle) {
+                        if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                            $transaction->motorcycle->decreaseStock(1);
                             $transaction->motorcycle->update([
-                                'is_available' => false,
                                 'status' => 'on_going',
                             ]);
                         }
                     }
                 } else {
                     $transaction->update(['payment_status' => 'success']);
-                    if ($transaction->motorcycle) {
+                    if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                        $transaction->motorcycle->decreaseStock(1);
                         $transaction->motorcycle->update([
-                            'is_available' => false,
                             'status' => 'on_going',
                         ]);
                     }
@@ -72,9 +72,9 @@ class MidtransController extends Controller
                 break;
             case 'settlement':
                 $transaction->update(['payment_status' => 'success']);
-                if ($transaction->motorcycle) {
+                if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                    $transaction->motorcycle->decreaseStock(1);
                     $transaction->motorcycle->update([
-                        'is_available' => false,
                         'status' => 'on_going',
                     ]);
                 }
@@ -107,7 +107,9 @@ class MidtransController extends Controller
         \Log::info('Midtrans callback processed', [
             'order_id' => $request->order_id,
             'transaction_status' => $request->transaction_status,
-            'payment_status' => $transaction->payment_status,
+            'payment_status' => $transaction->fresh()->payment_status,
+            'motor_status' => $transaction->motorcycle ? $transaction->motorcycle->fresh()->status : null,
+            'timestamp' => now()->toDateTimeString()
         ]);
 
         return response()->json(['message' => 'Callback received successfully']);

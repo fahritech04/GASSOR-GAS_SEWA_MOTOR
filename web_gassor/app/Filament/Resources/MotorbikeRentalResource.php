@@ -96,7 +96,17 @@ class MotorbikeRentalResource extends Resource
                                             ->numeric()
                                             ->prefix('IDR')
                                             ->required(),
-                                        Forms\Components\Toggle::make('is_available')
+                                        Forms\Components\TextInput::make('stock')
+                                            ->label('Stok Total')
+                                            ->numeric()
+                                            ->default(1)
+                                            ->minValue(1)
+                                            ->required(),
+                                        Forms\Components\TextInput::make('available_stock')
+                                            ->label('Stok Tersedia')
+                                            ->numeric()
+                                            ->default(1)
+                                            ->minValue(0)
                                             ->required(),
                                         Forms\Components\Toggle::make('has_gps')
                                             ->label('Ada GPS IoT?')

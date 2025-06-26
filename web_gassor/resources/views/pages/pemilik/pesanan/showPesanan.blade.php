@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+{{-- Add CSRF token for AJAX --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <div id="Background"
     class="absolute top-0 w-full h-[570px] rounded-b-[75px]"
     style="background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%);">
@@ -47,6 +50,14 @@
                 }};">
                     {{ strtoupper($transaction->payment_status) }}
                 </p>
+                @if(strtoupper($transaction->payment_status) === 'PENDING')
+                    <form method="POST" action="{{ route('pemilik.pesanan.sync', $transaction->id) }}" style="display: inline; margin-top: 4px;">
+                        @csrf
+                        <button type="submit" style="font-size: 10px; padding: 4px 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;" title="Sinkronisasi status dengan Midtrans">
+                            🔄 Sync
+                        </button>
+                    </form>
+                @endif
                 @if(strtoupper($transaction->payment_status) === 'SUCCESS' && $rentalStatusLabel)
                     <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] text-white text-center" style="background: {{ $rentalStatusColor }};">
                         {{ $rentalStatusLabel }}
@@ -100,6 +111,99 @@
         @endif
     </div>
 </section>
+
+{{-- Auto-refresh untuk transaksi pending --}}
+@php
+    $hasPendingTransactions = $transactions->where('payment_status', 'pending')->count() > 0;
+@endphp
+
+@if($hasPendingTransactions)
+<script>
+    // Auto-refresh untuk transaksi pending dengan AJAX
+    let autoRefreshInterval;
+    let pendingTransactionIds = [];
+
+    // Collect all pending transaction IDs
+    document.addEventListener('DOMContentLoaded', function() {
+        @foreach($transactions as $transaction)
+            @if($transaction->payment_status === 'pending')
+                pendingTransactionIds.push({{ $transaction->id }});
+            @endif
+        @endforeach
+
+        if (pendingTransactionIds.length > 0) {
+            startAutoRefresh();
+            showAutoRefreshNotification();
+        }
+    });
+
+    function startAutoRefresh() {
+        autoRefreshInterval = setInterval(function() {
+            checkPendingTransactions();
+        }, 15000); // Check setiap 15 detik untuk lebih responsive
+    }
+
+    function checkPendingTransactions() {
+        pendingTransactionIds.forEach(transactionId => {
+            fetch(`/pemilik/pesanan/${transactionId}/check-status`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.updated) {
+                    console.log(`🎉 Status updated for transaction ${transactionId}:`, data.message);
+
+                    // Reload halaman jika ada update
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            })
+            .catch(error => {
+                console.log('Error checking status:', error);
+            });
+        });
+    }
+
+    function showAutoRefreshNotification() {
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+            <div id="auto-refresh-notification" style="position: fixed; bottom: 20px; right: 20px; background: #3498db; color: white; padding: 10px 15px; border-radius: 8px; font-size: 12px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                🔄 Auto-check status aktif (${pendingTransactionIds.length} transaksi pending)
+                <button onclick="stopAutoRefresh()" style="margin-left: 10px; background: transparent; border: 1px solid white; color: white; padding: 2px 6px; border-radius: 4px; cursor: pointer;">Stop</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        // Hide notification after 5 seconds
+        setTimeout(() => {
+            const notif = document.getElementById('auto-refresh-notification');
+            if (notif) {
+                notif.style.opacity = '0.5';
+            }
+        }, 5000);
+    }
+
+    function stopAutoRefresh() {
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+        }
+        const notif = document.getElementById('auto-refresh-notification');
+        if (notif) {
+            notif.style.display = 'none';
+        }
+    }
+
+    // Stop auto-refresh when user navigates away
+    window.addEventListener('beforeunload', function() {
+        stopAutoRefresh();
+    });
+</script>
+@endif
 
 @include('includes.navigation_pemilik')
 @endsection

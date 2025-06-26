@@ -288,13 +288,12 @@
                                     <input type="number" name="motorcycles[0][price_per_day]" class="form-input" style="padding-left:60px;" placeholder="50000" required />
                                 </div>
                             </div>
+                            <div>
+                                <label class="form-label">Stok Motor<span style="color: #dc3545;">*</span></label>
+                                <input type="number" name="motorcycles[0][stock]" class="form-input" placeholder="1" min="1" value="1" required />
+                                <small class="text-gray-500">Berapa banyak unit motor ini yang tersedia</small>
+                            </div>
                             <div class="form-row">
-                                <div class="form-col">
-                                    <label class="flex items-center gap-2">
-                                        <input type="checkbox" name="motorcycles[0][is_available]" value="1" checked style="accent-color:#e6a43b;">
-                                        <span class="form-label" style="margin-bottom:0;">Tersedia?</span>
-                                    </label>
-                                </div>
                                 <div class="form-col">
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="motorcycles[0][has_gps]" value="1" style="accent-color:#e6a43b;">
@@ -483,14 +482,12 @@
                                 style="padding-left:60px;" placeholder="50000" required />
                         </div>
                     </div>
+                    <div>
+                        <label class="form-label">Stok Motor<span style="color: #dc3545;">*</span></label>
+                        <input type="number" name="motorcycles[${idx}][stock]" class="form-input" placeholder="1" min="1" value="1" required />
+                        <small class="text-gray-500">Berapa banyak unit motor ini yang tersedia</small>
+                    </div>
                     <div class="form-row">
-                        <div class="form-col">
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" name="motorcycles[${idx}][is_available]" value="1" checked
-                                    style="accent-color:#e6a43b;">
-                                <span class="form-label" style="margin-bottom:0;">Tersedia?</span>
-                            </label>
-                        </div>
                         <div class="form-col">
                             <label class="flex items-center gap-2">
                                 <input type="checkbox" name="motorcycles[${idx}][has_gps]" value="1"

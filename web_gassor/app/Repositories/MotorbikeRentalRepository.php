@@ -84,7 +84,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     {
         return MotorbikeRental::with([
             'motorcycles' => function ($q) {
-                $q->where('is_available', true);
+                $q->where('available_stock', '>', 0);
             },
             'motorcycles.images', 'city', 'category',
         ])

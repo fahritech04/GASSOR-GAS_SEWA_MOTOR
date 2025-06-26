@@ -7,17 +7,15 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Sync payment status setiap 30 menit untuk transaksi pending
+        $schedule->command('midtrans:sync-status')
+                 ->everyThirtyMinutes()
+                 ->withoutOverlapping()
+                 ->appendOutputTo(storage_path('logs/midtrans-sync.log'));
     }
 
-    /**
-     * Register the commands for the application.
-     */
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');

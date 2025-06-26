@@ -84,6 +84,8 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/pemilik/daftar-motor/{motorcycle}/update', [PemilikController::class, 'updateMotor'])->name('pemilik.update-motor');
         Route::get('/pemilik/pesanan', [PemilikController::class, 'showPesanan'])->name('pemilik.pesanan');
         Route::post('/pemilik/pesanan/{transaction}/return', [PemilikController::class, 'returnMotor'])->name('pemilik.pesanan.return');
+        Route::post('/pemilik/pesanan/{transaction}/sync', [PemilikController::class, 'syncPaymentStatus'])->name('pemilik.pesanan.sync');
+        Route::get('/pemilik/pesanan/{transaction}/check-status', [PemilikController::class, 'checkPaymentStatus'])->name('pemilik.pesanan.check-status');
         Route::get('/pemilik/pesanan/tracking/{id}', [MapController::class, 'showMap'])->name('pemilik.pesanan.tracking');
         // Route::get('/map', [MapController::class, 'showMap'])->name('pemilik.pesanan.tracking');
         // Route::get('/api/gps', [MapController::class, 'getGps'])->name('api.gps');

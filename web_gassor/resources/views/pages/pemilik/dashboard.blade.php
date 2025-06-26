@@ -74,7 +74,7 @@
                                     <p class="font-semibold">{{ $motorcycle->name }}</p>
                                     <div class="flex items-center gap-2 text-sm text-gassor-grey">
                                         <img src="{{ asset('assets/images/icons/status.svg') }}" class="w-4 h-4" alt="status" />
-                                        <span>{{ $motorcycle->is_available ? 'Tersedia' : 'Tidak Tersedia' }}</span>
+                                        <span>Stok: {{ $motorcycle->available_stock ?? 0 }}/{{ $motorcycle->stock ?? 1 }}</span>
                                     </div>
                                     <p class="text-sm text-gassor-grey">Harga • Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}/hari</p>
                                 </div>
