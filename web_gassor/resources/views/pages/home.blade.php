@@ -33,12 +33,17 @@
         </h1>
     </div>
 
-    @auth
-    <a href="{{ route('profile.penyewa') }}"
-        class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white">
-        <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="icon">
-    </a>
-    @endauth
+    <div class="flex items-center gap-2">
+        <a href="https://wa.me/6285942572814" target="_blank" rel="noopener" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
+            <img src="{{ asset('assets/images/icons/whatsapp.svg') }}" class="w-[28px] h-[28px]" alt="contact person" />
+        </a>
+        @auth
+        <a href="{{ route('profile.penyewa') }}"
+            class="w-12 h-12 flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-white">
+            <img src="{{ asset('assets/images/icons/profile-2user.svg') }}" class="w-[28px] h-[28px]" alt="Profile">
+        </a>
+        @endauth
+    </div>
 </div>
 <div id="Categories" class="swiper w-full overflow-x-hidden mt-[30px]">
     <div class="swiper-wrapper">
@@ -54,7 +59,7 @@
                     </div>
                     <div class="flex flex-col gap-[2px]">
                         <h3 class="font-semibold">{{ $category->name }}</h3>
-                        <p class="text-sm text-gassor-grey">{{ $category->motorbikeRentals->count() }} Motor</p>
+                        <p class="text-sm text-gassor-grey">{{ $category->motorcycles_count }} Motor</p>
                     </div>
                 </div>
             </a>
@@ -65,13 +70,7 @@
 </div>
 <section id="Popular" class="flex flex-col gap-4">
     <div class="flex items-center justify-between px-5">
-        <h2 class="font-bold">Motor Populer</h2>
-        {{-- <a href="#">
-            <div class="flex items-center gap-2">
-                <span>Semua</span>
-                <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-            </div>
-        </a> --}}
+        <h2 class="font-bold">Rental Populer</h2>
     </div>
     <div class="swiper w-full overflow-x-hidden">
         <div class="swiper-wrapper">
@@ -88,12 +87,12 @@
                             <h3 class="font-semibold text-lg leading-[27px] line-clamp-2 min-h-[54px]">{{ $motorbikeRental->name }}</h3>
                             <hr class="border-[#F1F2F6]">
                             <div class="flex items-center gap-[6px]">
-                                <img src="assets/images/icons/location.svg" class="w-5 h-5 flex shrink-0"
+                                <img src="{{ asset('assets/images/icons/location.svg') }}" class="w-5 h-5 flex shrink-0"
                                     alt="icon">
                                 <p class="text-sm text-gassor-grey">{{ $motorbikeRental->city->name }}</p>
                             </div>
                             <div class="flex items-center gap-[6px]">
-                                <img src="assets/images/icons/3dcube.svg" class="w-5 h-5 flex shrink-0"
+                                <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                                     alt="icon">
                                 <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
                             </div>
@@ -109,12 +108,6 @@
 <section id="Cities" class="flex flex-col p-5 gap-4 bg-[#F5F6F8] mt-[30px]">
     <div class="flex items-center justify-between">
         <h2 class="font-bold">Sesuai Wilayah</h2>
-        {{-- <a href="#">
-            <div class="flex items-center gap-2">
-                <span>Semua</span>
-                <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-            </div>
-        </a> --}}
     </div>
     <div class="grid grid-cols-2 gap-4">
         @foreach ($cities as $city)
@@ -128,7 +121,7 @@
                 </div>
                 <div class="flex flex-col gap-[2px]">
                     <h3 class="font-semibold">{{ $city->name }}</h3>
-                    <p class="text-sm text-gassor-grey">{{ $city->motorbikeRentals->count() }} Motor</p>
+                    <p class="text-sm text-gassor-grey">{{ $city->motorcycles_count }} Motor</p>
                 </div>
             </div>
         </a>
@@ -138,32 +131,38 @@
 <section id="Best" class="flex flex-col gap-4 px-5 mt-[30px]">
     <div class="flex items-center justify-between">
         <h2 class="font-bold">Semua Jenis Motor</h2>
-        {{-- <a href="#">
-            <div class="flex items-center gap-2">
-                <span>Semua</span>
-                <img src="assets/images/icons/arrow-right.svg" class="w-6 h-6 flex shrink-0" alt="icon">
-            </div>
-        </a> --}}
     </div>
     <div class="flex flex-col gap-4">
-        @foreach ($motorbikeRentals as $motorbikeRental)
-        <a href="{{ route('motor.show', $motorbikeRental->slug) }}" class="card">
+        @foreach ($motorcycles as $motorcycle)
+        <a href="{{ route('motor.show', $motorcycle->motorbikeRental->slug) }}" class="card">
             <div
                 class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300">
                 <div class="flex w-[120px] h-[183px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
-                    <img src="{{ asset('storage/' . $motorbikeRental->thumbnail) }}" class="w-full h-full object-cover" alt="icon">
+                    @if($motorcycle->images->count() > 0)
+                        <img src="{{ asset('storage/' . $motorcycle->images->first()->image) }}" class="w-full h-full object-cover" alt="motorcycle image">
+                    @else
+                        <img src="{{ asset('storage/' . $motorcycle->motorbikeRental->thumbnail) }}" class="w-full h-full object-cover" alt="motorcycle image">
+                    @endif
                 </div>
                 <div class="flex flex-col gap-3 w-full">
-                    <h3 class="font-semibold text-lg leading-[27px] line-clamp-2 min-h-[54px]">{{ $motorbikeRental->name }}</h3>
+                    <h3 class="font-semibold text-lg leading-[27px] line-clamp-2 min-h-[54px]">{{ $motorcycle->name }}</h3>
                     <hr class="border-[#F1F2F6]">
                     <div class="flex items-center gap-[6px]">
-                        <img src="assets/images/icons/location.svg" class="w-5 h-5 flex shrink-0" alt="icon">
-                        <p class="text-sm text-gassor-grey">{{ $motorbikeRental->city->name }}</p>
+                        <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                        <p class="text-sm text-gassor-grey">Rental : {{ $motorcycle->motorbikeRental->name }}</p>
                     </div>
                     <div class="flex items-center gap-[6px]">
-                        <img src="assets/images/icons/3dcube.svg" class="w-5 h-5 flex shrink-0"
+                        <img src="{{ asset('assets/images/icons/location.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                        <p class="text-sm text-gassor-grey">Wilayah {{ $motorcycle->motorbikeRental->city->name }}</p>
+                    </div>
+                    <div class="flex items-center gap-[6px]">
+                        <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                             alt="icon">
-                        <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
+                        <p class="text-sm text-gassor-grey">Kategori {{ $motorcycle->motorbikeRental->category->name }}</p>
+                    </div>
+                    <div class="flex items-center gap-[6px]">
+                        <img src="{{ asset('assets/images/icons/receipt-text.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
+                        <p class="text-sm font-semibold text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}/hari</p>
                     </div>
                     <hr class="border-[#F1F2F6]">
                 </div>

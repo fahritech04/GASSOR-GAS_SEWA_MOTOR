@@ -8,6 +8,8 @@ interface MotorbikeRentalRepositoryInterface
 
     public function getAllMotorcycles($search = null, $city = null, $category = null);
 
+    public function getAllMotorcyclesForHome($limit = 10);
+
     public function getPopularMotorbikeRentals($limit = 5);
 
     public function getMotorbikeRentalByCitySlug($slug);
@@ -17,4 +19,8 @@ interface MotorbikeRentalRepositoryInterface
     public function getMotorbikeRentalBySlug($slug);
 
     public function getMotorbikeRentalMotorcycleById($id);
+
+    public function getMotorcyclesByCitySlug($slug);
+
+    public function getMotorcyclesByCategorySlug($slug);
 }

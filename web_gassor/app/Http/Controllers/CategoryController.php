@@ -22,8 +22,9 @@ class CategoryController extends Controller
     public function show($slug)
     {
         $motorbikeRentals = $this->motorbikeRentalRepository->getMotorbikeRentalByCategorySlug($slug);
+        $motorcycles = $this->motorbikeRentalRepository->getMotorcyclesByCategorySlug($slug);
         $category = $this->categoryRepository->getCategoryBySlug($slug);
 
-        return view('pages.category.show', compact('motorbikeRentals', 'category'));
+        return view('pages.category.show', compact('motorbikeRentals', 'motorcycles', 'category'));
     }
 }

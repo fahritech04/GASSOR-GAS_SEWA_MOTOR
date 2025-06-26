@@ -116,4 +116,30 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
         return $query->get();
     }
+
+    public function getAllMotorcyclesForHome($limit = 10)
+    {
+        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
+            ->where('available_stock', '>', 0)
+            ->take($limit)
+            ->get();
+    }
+
+    public function getMotorcyclesByCitySlug($slug)
+    {
+        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
+            ->whereHas('motorbikeRental.city', function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            })
+            ->get();
+    }
+
+    public function getMotorcyclesByCategorySlug($slug)
+    {
+        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
+            ->whereHas('motorbikeRental.category', function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            })
+            ->get();
+    }
 }

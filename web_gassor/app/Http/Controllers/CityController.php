@@ -22,8 +22,9 @@ class CityController extends Controller
     public function show($slug)
     {
         $motorbikeRentals = $this->motorbikeRentalRepository->getMotorbikeRentalByCitySlug($slug);
+        $motorcycles = $this->motorbikeRentalRepository->getMotorcyclesByCitySlug($slug);
         $city = $this->cityRepository->getCityBySlug($slug);
 
-        return view('pages.city.show', compact('motorbikeRentals', 'city'));
+        return view('pages.city.show', compact('motorbikeRentals', 'motorcycles', 'city'));
     }
 }

@@ -30,7 +30,8 @@ class HomeController extends Controller
         $popularMotorbikeRentals = $this->motorbikeRentalRepository->getPopularMotorbikeRentals();
         $cities = $this->cityRepository->getAllCities();
         $motorbikeRentals = $this->motorbikeRentalRepository->getAllMotorbikeRentals();
+        $motorcycles = $this->motorbikeRentalRepository->getAllMotorcyclesForHome();
 
-        return view('pages.home', compact('categories', 'popularMotorbikeRentals', 'cities', 'motorbikeRentals'));
+        return view('pages.home', compact('categories', 'popularMotorbikeRentals', 'cities', 'motorbikeRentals', 'motorcycles'));
     }
 }

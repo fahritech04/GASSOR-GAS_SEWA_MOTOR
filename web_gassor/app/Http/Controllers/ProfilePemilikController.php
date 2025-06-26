@@ -25,17 +25,17 @@ class ProfilePemilikController extends Controller
     {
         $user = Auth::user();
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
-            'tempat_lahir' => 'required|string|max:255',
+            'name' => 'required|string|max:500',
+            'username' => 'required|string|max:500',
+            'email' => 'required|email|max:500|unique:users,email,'.$user->id,
+            'tempat_lahir' => 'required|string|max:500',
             'tanggal_lahir' => 'required|date',
             'phone' => 'required|string|max:20',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
             'remove_profile_image' => 'nullable|in:0,1',
-            'ktp_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'sim_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'ktm_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'ktp_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
+            'sim_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
+            'ktm_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048',
         ]);
 
         // Username Unik

@@ -20,4 +20,14 @@ class City extends Model
     {
         return $this->hasMany(MotorbikeRental::class);
     }
+
+    public function motorcycles()
+    {
+        return $this->hasManyThrough(Motorcycle::class, MotorbikeRental::class);
+    }
+
+    public function getMotorcyclesCountAttribute()
+    {
+        return $this->motorcycles()->count();
+    }
 }

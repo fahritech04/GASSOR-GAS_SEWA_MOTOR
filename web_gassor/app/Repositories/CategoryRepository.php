@@ -9,7 +9,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function getAllCategories()
     {
-        return Category::all();
+        return Category::withCount('motorcycles')->get();
     }
 
     public function getCategoryBySlug($slug)
