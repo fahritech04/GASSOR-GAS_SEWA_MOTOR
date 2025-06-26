@@ -14,7 +14,9 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
         $query = MotorbikeRental::query();
 
         if ($search) {
-            $query->where('name', 'like', '%'.$search.'%');
+            $query->whereHas('motorcycles', function (Builder $query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%');
+            });
         }
 
         if ($city) {
@@ -90,5 +92,28 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
         ])
             ->where('slug', $slug)
             ->firstOrFail();
+    }
+
+    public function getAllMotorcycles($search = null, $city = null, $category = null)
+    {
+        $query = Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images']);
+
+        if ($search) {
+            $query->where('name', 'like', '%'.$search.'%');
+        }
+
+        if ($city) {
+            $query->whereHas('motorbikeRental.city', function (Builder $query) use ($city) {
+                $query->where('slug', $city);
+            });
+        }
+
+        if ($category) {
+            $query->whereHas('motorbikeRental.category', function (Builder $query) use ($category) {
+                $query->where('slug', $category);
+            });
+        }
+
+        return $query->get();
     }
 }

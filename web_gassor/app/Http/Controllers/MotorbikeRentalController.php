@@ -32,6 +32,19 @@ class MotorbikeRentalController extends Controller
         return view('pages.motorbike-rental.show', compact('motorbikeRental'));
     }
 
+    public function showMotorcycle($id)
+    {
+        $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($id);
+
+        if (!$motorcycle) {
+            abort(404);
+        }
+
+        $motorcycle->load(['motorbikeRental.city', 'motorbikeRental.category', 'images']);
+
+        return view('pages.motorbike-rental.motorcycle-detail', compact('motorcycle'));
+    }
+
     // public function motorcycles($slug)
     // {
     //     $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
@@ -57,8 +70,8 @@ class MotorbikeRentalController extends Controller
 
     public function findResults(Request $request)
     {
-        $motorbikeRentals = $this->motorbikeRentalRepository->getAllMotorbikeRentals($request->search, $request->city, $request->category);
+        $motorcycles = $this->motorbikeRentalRepository->getAllMotorcycles($request->search, $request->city, $request->category);
 
-        return view('pages.motorbike-rental.index', compact('motorbikeRentals'));
+        return view('pages.motorbike-rental.index', compact('motorcycles'));
     }
 }
