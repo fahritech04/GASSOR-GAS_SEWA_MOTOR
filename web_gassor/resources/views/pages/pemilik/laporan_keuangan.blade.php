@@ -78,8 +78,8 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge bg-secondary px-3 py-2 fw-bold">
-                                    {{ ucfirst($trx->payment_status) }}
+                                <span class="badge bg-success px-3 py-2 fw-bold">
+                                    SELESAI
                                 </span>
                             </td>
                         </tr>

@@ -35,13 +35,12 @@ class PemilikController extends Controller
 
         $totalIncome = $transactions
             ->where('payment_status', 'success')
+            ->filter(function ($transaction) {
+                return $transaction->motorcycle && $transaction->motorcycle->status === 'finished';
+            })
             ->sum(function ($transaction) {
-                // Hitung durasi hari sewa
-                $start = \Carbon\Carbon::parse($transaction->start_date);
-                $end = \Carbon\Carbon::parse($transaction->end_date);
-                $days = $start->diffInDays($end) ?: 1; // minimal 1 hari
-
-                return $transaction->motorcycle->price_per_day * $days;
+                // Gunakan total_amount yang sudah dihitung saat booking
+                return $transaction->total_amount;
             });
 
         return view('pages.pemilik.dashboard', compact('motorcycles', 'transactions', 'activeOrders', 'totalIncome', 'totalMotor'));

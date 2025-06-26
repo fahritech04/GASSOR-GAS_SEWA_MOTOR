@@ -75,6 +75,7 @@
                 <th>Penyewa</th>
                 <th>Harga</th>
                 <th>Status Pembayaran</th>
+                <th>Status Sewa</th>
             </tr>
         </thead>
         <tbody>
@@ -85,6 +86,7 @@
                 <td>{{ $trx['Penyewa'] }}</td>
                 <td>Rp {{ number_format($trx['Harga'], 0, ',', '.') }}</td>
                 <td>{{ strtoupper($trx['Status Pembayaran']) }}</td>
+                <td>{{ $trx['Status Sewa'] }}</td>
             </tr>
             @endforeach
         </tbody>

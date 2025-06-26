@@ -31,9 +31,11 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
     public function collection()
     {
         $date = Carbon::parse($this->tanggal);
-        $query = Transaction::whereHas('motorcycle', function ($q) {
-            $q->where('owner_id', $this->user->id);
-        });
+        $query = Transaction::where('payment_status', 'success')
+            ->whereHas('motorcycle', function ($q) {
+                $q->where('owner_id', $this->user->id)
+                  ->where('status', 'finished');
+            });
         if ($this->filter === 'harian') {
             $query->whereDate('start_date', $date);
         } elseif ($this->filter === 'mingguan') {
@@ -59,19 +61,20 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                 'Penyewa' => $trx->name,
                 'Harga' => $trx->total_amount,
                 'Status Pembayaran' => $trx->payment_status,
+                'Status Sewa' => 'SELESAI',
             ];
         });
     }
 
     public function headings(): array
     {
-        return ['Tanggal', 'Motor', 'Penyewa', 'Harga', 'Status Pembayaran'];
+        return ['Tanggal', 'Motor', 'Penyewa', 'Harga', 'Status Pembayaran', 'Status Sewa'];
     }
 
     public function styles(Worksheet $sheet)
     {
         // Header style
-        $sheet->getStyle('A1:E1')->applyFromArray([
+        $sheet->getStyle('A1:F1')->applyFromArray([
             'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
             'fill' => [
                 'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
@@ -82,7 +85,7 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
         ]);
         // Border all
         $highestRow = $sheet->getHighestRow();
-        $sheet->getStyle('A1:E'.$highestRow)->applyFromArray([
+        $sheet->getStyle('A1:F'.$highestRow)->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
@@ -103,18 +106,18 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 // Auto width
-                foreach (range('A', 'E') as $col) {
+                foreach (range('A', 'F') as $col) {
                     $event->sheet->getDelegate()->getColumnDimension($col)->setAutoSize(true);
                 }
                 // Add summary below table
                 $row = $event->sheet->getHighestRow() + 2;
-                $event->sheet->setCellValue('C'.$row, 'Total Pendapatan:');
-                $event->sheet->setCellValue('D'.$row, $this->summary['total_income'] ?? 0);
-                $event->sheet->getStyle('C'.$row.':D'.$row)->applyFromArray([
+                $event->sheet->setCellValue('D'.$row, 'Total Pendapatan:');
+                $event->sheet->setCellValue('E'.$row, $this->summary['total_income'] ?? 0);
+                $event->sheet->getStyle('D'.$row.':E'.$row)->applyFromArray([
                     'font' => ['bold' => true],
                     'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT],
                 ]);
-                $event->sheet->getStyle('D'.$row)
+                $event->sheet->getStyle('E'.$row)
                     ->getNumberFormat()
                     ->setFormatCode('#,##0');
             },
