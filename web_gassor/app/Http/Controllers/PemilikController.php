@@ -53,9 +53,7 @@ class PemilikController extends Controller
         $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
 
         return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles', 'totalMotor'));
-    }
-
-    public function showPesanan()
+    }    public function showPesanan()
     {
         $ownerId = auth()->id();
         $transactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
@@ -63,6 +61,7 @@ class PemilikController extends Controller
                 $query->where('owner_id', $ownerId);
             })
             ->orderByRaw("FIELD(payment_status, 'pending', 'success') DESC")
+            ->orderBy('id', 'desc') // Tambah order by ID untuk konsistensi
             ->latest()
             ->paginate(5);
 
@@ -87,6 +86,22 @@ class PemilikController extends Controller
             session()->flash('success', "✅ {$syncCount} status pembayaran berhasil diperbarui!");
         }
 
+        // Debug info - log unique transactions per motor
+        $motorcycleGroups = $transactions->groupBy('motorcycle_id');
+        \Log::info('Pesanan page loaded', [
+            'owner_id' => $ownerId,
+            'total_transactions' => $transactions->count(),
+            'unique_motorcycles' => $motorcycleGroups->count(),
+            'motorcycle_groups' => $motorcycleGroups->map(function($group, $motorcycleId) {
+                return [
+                    'motorcycle_id' => $motorcycleId,
+                    'motorcycle_name' => $group->first()->motorcycle->name ?? 'Unknown',
+                    'transaction_count' => $group->count(),
+                    'transaction_ids' => $group->pluck('id')->toArray()
+                ];
+            })
+        ]);
+
         return view('pages.pemilik.pesanan.showPesanan', compact('transactions'));
     }
 
@@ -97,21 +112,73 @@ class PemilikController extends Controller
 
     public function returnMotor(Transaction $transaction)
     {
+        // Validasi ownership - pastikan motor milik user yang login
+        if ($transaction->motorcycle->owner_id !== auth()->id()) {
+            \Log::warning('Unauthorized return attempt', [
+                'user_id' => auth()->id(),
+                'transaction_id' => $transaction->id,
+                'motorcycle_owner' => $transaction->motorcycle->owner_id
+            ]);
+            return redirect()->route('pemilik.pesanan')->with('error', 'Anda tidak memiliki akses untuk motor ini.');
+        }
+
         // Sinkronisasi status pembayaran dengan Midtrans terlebih dahulu
         $syncService = new MidtransStatusSyncService();
         $transaction = $syncService->syncPaymentStatus($transaction);
 
+        // Log kondisi sebelum proses
+        \Log::info('Return motor process started', [
+            'transaction_id' => $transaction->id,
+            'motorcycle_id' => $transaction->motorcycle->id,
+            'motorcycle_name' => $transaction->motorcycle->name,
+            'current_motor_status' => $transaction->motorcycle->status,
+            'payment_status' => $transaction->payment_status,
+            'customer_name' => $transaction->name
+        ]);
+
+        // Validasi kondisi return
         if (
             $transaction->motorcycle &&
             $transaction->motorcycle->status === 'on_going' &&
             strtoupper($transaction->payment_status) === 'SUCCESS'
         ) {
             $motorcycle = $transaction->motorcycle;
+            $oldStatus = $motorcycle->status;
+            $oldAvailableStock = $motorcycle->available_stock;
+
+            // Update status dan stok
             $motorcycle->status = 'finished';
-            $motorcycle->increaseStock(1);
+            $stockIncreased = $motorcycle->increaseStock(1);
             $motorcycle->save();
+
+            // Log hasil
+            \Log::info('Motor returned successfully', [
+                'transaction_id' => $transaction->id,
+                'motorcycle_id' => $motorcycle->id,
+                'motorcycle_name' => $motorcycle->name,
+                'status_changed' => "{$oldStatus} -> {$motorcycle->status}",
+                'stock_changed' => "{$oldAvailableStock} -> {$motorcycle->available_stock}",
+                'stock_increase_success' => $stockIncreased,
+                'customer_name' => $transaction->name
+            ]);
+
+            return redirect()->route('pemilik.pesanan')->with('success',
+                "✅ Motor {$motorcycle->name} telah dikembalikan oleh {$transaction->name}. Stok tersedia: {$motorcycle->available_stock}/{$motorcycle->stock}");
+        } else {
+            // Log kondisi gagal
+            \Log::warning('Return motor failed - conditions not met', [
+                'transaction_id' => $transaction->id,
+                'motorcycle_exists' => $transaction->motorcycle ? 'yes' : 'no',
+                'motor_status' => $transaction->motorcycle->status ?? 'null',
+                'payment_status' => $transaction->payment_status,
+                'expected_motor_status' => 'on_going',
+                'expected_payment_status' => 'SUCCESS'
+            ]);
+
+            return redirect()->route('pemilik.pesanan')->with('error',
+                'Motor tidak dapat dikembalikan. Status: ' . ($transaction->motorcycle->status ?? 'unknown') .
+                ', Payment: ' . $transaction->payment_status);
         }
-        return redirect()->route('pemilik.pesanan')->with('success', 'Status motor berhasil diubah menjadi selesai.');
     }
 
     public function storeMotor(Request $request)

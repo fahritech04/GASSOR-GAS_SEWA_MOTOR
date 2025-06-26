@@ -17,14 +17,27 @@
 <section id="Result" class="relative flex flex-col gap-4 px-5 mt-5 mb-9">
     <h2 class="font-bold text-lg mb-2">Pesanan yang dimiliki {{ auth()->user()->name }}</h2>
     @forelse ($transactions as $transaction)
-        <div class="bonus-card flex items-center justify-between rounded-[22px] border border-[#000000] p-[10px] gap-3 mb-3 bg-white">
+        @php
+            $rentalStatus = $transaction->motorcycle->status ?? null;
+            $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
+            $rentalStatusColor = $rentalStatus === 'on_going' ? '#E6A43B' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
+            $borderColor = $rentalStatus === 'on_going' ? '#E6A43B' : '#000000';
+        @endphp
+
+        <div class="bonus-card flex items-center justify-between rounded-[22px] border-2 p-[10px] gap-3 mb-3 bg-white"
+             data-transaction-id="{{ $transaction->id }}"
+             style="border-color: {{ $borderColor }};">
             <div>
-                <p class="font-semibold">{{ $transaction->motorcycle->name ?? '-' }}</p>
+                <p class="font-semibold">
+                    {{ $transaction->motorcycle->name ?? '-' }}
+                    {{-- <span class="text-xs text-gray-500">(ID: #{{ $transaction->id }})</span> --}}
+                </p>
                 <p class="text-sm text-gassor-grey">
                     Disewa : <span class="font-semibold">{{ $transaction->name }}</span>
                 </p>
-                {{-- <p class="text-sm text-gassor-grey">
-                    Tanggal : {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }}
+                {{-- <p class="text-xs text-gray-500">
+                    Motor ID: {{ $transaction->motorcycle_id }} |
+                    Plat: {{ $transaction->motorcycle->vehicle_number_plate ?? '-' }}
                 </p> --}}
                 <p class="text-sm text-gassor-grey" style="text-align:left">
                     Mulai : {{ $transaction->start_date ? (\Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') . ($transaction->start_time ? ' - ' . (strlen($transaction->start_time) === 5 ? $transaction->start_time : (\Carbon\Carbon::createFromFormat('H:i:s', $transaction->start_time)->format('H:i'))) . ' WIB' : '')) : '-' }}
@@ -33,11 +46,6 @@
                 </p>
             </div>
             <div class="flex flex-col items-end gap-2 justify-center h-full">
-                @php
-                    $rentalStatus = $transaction->motorcycle->status ?? null;
-                    $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
-                    $rentalStatusColor = $rentalStatus === 'on_going' ? '#E6A43B' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
-                @endphp
                 <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
                     match(strtoupper($transaction->payment_status)) {
                         'SUCCESS' => '#27ae60',
@@ -54,7 +62,7 @@
                     <form method="POST" action="{{ route('pemilik.pesanan.sync', $transaction->id) }}" style="display: inline; margin-top: 4px;">
                         @csrf
                         <button type="submit" style="font-size: 10px; padding: 4px 8px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;" title="Sinkronisasi status dengan Midtrans">
-                            🔄 Sync
+                            Sync
                         </button>
                     </form>
                 @endif
@@ -66,17 +74,23 @@
             </div>
         </div>
         @if($rentalStatus === 'on_going' && strtoupper($transaction->payment_status) === 'SUCCESS')
-            <form method="POST" action="{{ route('pemilik.pesanan.return', $transaction->id) }}">
-                @csrf
-                <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
-            onmouseover="this.style.borderColor='#E6A43B'" onmouseout="this.style.borderColor='#fff'">
-                Motor Sudah Dikembalikan
-            </button>
-            </form>
-            <a href="{{ route('pemilik.pesanan.tracking', $transaction->id) }}"
-               style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #000000; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;">
-                Lihat Tracking Motor
-            </a>
+            <div class="mt-2 p-2 bg-gray-50 rounded-lg">
+                {{-- <p class="text-xs text-gray-600 mb-2">
+                    Debug: Transaction #{{ $transaction->id }} | Motor: {{ $transaction->motorcycle->name ?? '-' }} | Status: {{ $rentalStatus }}
+                </p> --}}
+                <form method="POST" action="{{ route('pemilik.pesanan.return', $transaction->id) }}" id="return-form-{{ $transaction->id }}">
+                    @csrf
+                    <button type="button" onclick="confirmReturn({{ $transaction->id }}, '{{ addslashes($transaction->motorcycle->name ?? '') }}', '{{ addslashes($transaction->name) }}')"
+                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
+                            onmouseover="this.style.borderColor='#E6A43B'" onmouseout="this.style.borderColor='#fff'">
+                        Motor Sudah Dikembalikan
+                    </button>
+                </form>
+                <a href="{{ route('pemilik.pesanan.tracking', $transaction->id) }}"
+                   style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #000000; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer; margin-top: 8px;">
+                    Lihat Tracking Motor
+                </a>
+            </div>
         @endif
     @empty
         <p class="text-center text-gassor-grey">Belum ada pesanan terbaru.</p>
@@ -204,6 +218,26 @@
     });
 </script>
 @endif
+
+<script>
+// SweetAlert confirmation for return motor
+function confirmReturn(transactionId, motorName, customerName) {
+    Swal.fire({
+        icon: 'question',
+        title: 'Konfirmasi Pengembalian',
+        text: `Apakah motor ${motorName} sudah dikembalikan oleh ${customerName}?`,
+        showCancelButton: true,
+        confirmButtonColor: '#27ae60',
+        cancelButtonColor: '#95a5a6',
+        confirmButtonText: 'Ya, Sudah Dikembalikan',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('return-form-' + transactionId).submit();
+        }
+    });
+}
+</script>
 
 @include('includes.navigation_pemilik')
 @endsection
