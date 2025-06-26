@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         // ]);
 
         $owners = [];
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 4; $i++) {
             $owners[] = [
                 'name' => 'Pemilik '.$i,
                 'username' => 'pemilik'.$i,
@@ -31,8 +31,8 @@ class UserSeeder extends Seeder
                 'role' => 'pemilik',
                 'profile_image_url' => null,
                 'tempat_lahir' => 'Kota '.$i,
-                'tanggal_lahir' => '1990-01-0'.$i,
-                'phone' => '0812345678'.$i,
+                'tanggal_lahir' => '2004-01-0'.$i,
+                'phone' => '6285174309823'.$i,
             ];
         }
 
