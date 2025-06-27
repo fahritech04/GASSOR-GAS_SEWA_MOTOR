@@ -53,7 +53,16 @@
           </div>
         </div>
         <div class="p-2 bg-orange-100 text-orange-800 rounded mb-2 mt-[120px] mx-5">
-            <b>GPS Data (Realtime):</b>
+            <div class="flex justify-between items-center mb-2">
+                <b>GPS Tracking</b>
+                <div class="flex items-center gap-2">
+                    <span id="connection-status" class="flex items-center gap-1 text-xs">
+                        <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                        Menghubungkan...
+                    </span>
+                    <span id="last-update" class="text-xs text-gray-600"></span>
+                </div>
+            </div>
             <pre id="gps-json" class="text-xs">{{ json_encode($gpsData, JSON_PRETTY_PRINT) }}</pre>
         </div>
       </main>
@@ -66,27 +75,41 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <script>
-      // Custom icon motor
       const motorIcon = L.icon({
         iconUrl: '/assets/images/icons/motor.svg',
-        iconSize:     [40, 40], // ukuran icon
-        iconAnchor:   [20, 40], // titik anchor ke koordinat
-        popupAnchor:  [0, -35]  // posisi popup relatif ke icon
+        iconSize:     [40, 40],
+        iconAnchor:   [20, 40],
+        popupAnchor:  [0, -35]
       });
 
-      // Inisialisasi map tanpa zoomControl
       let map = L.map('shapeMap', { zoomControl: false }).setView([-6.2, 106.8], 13);
       let marker;
 
-      // Tambahkan zoomControl di kanan atas
       L.control.zoom({ position: 'topright' }).addTo(map);
 
-      // Load map layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
-      // Fungsi update marker
+      function updateConnectionStatus(isConnected, error = null) {
+        const statusElement = document.getElementById('connection-status');
+        const lastUpdateElement = document.getElementById('last-update');
+
+        if (statusElement) {
+          if (isConnected) {
+            statusElement.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Terhubung';
+          } else {
+            statusElement.innerHTML = '<span class="w-2 h-2 bg-red-500 rounded-full"></span> Terputus';
+          }
+        }
+
+        if (lastUpdateElement && isConnected) {
+          const now = new Date();
+          lastUpdateElement.textContent = `Diperbarui: ${now.toLocaleTimeString()}`;
+        }
+      }
+
+      // Update marker
       function updateMarker(data) {
         if (!data || !data.latitude || !data.longitude) return;
 
@@ -110,13 +133,27 @@
         }
       }
 
-      // Polling ke endpoint Laravel setiap 1 detik
+      // Polling sederhana ke endpoint Laravel setiap 2 detik
       setInterval(() => {
-        $.getJSON('/api/gps', function(data) {
-          // Tampilkan JSON di atas peta
-          document.getElementById('gps-json').textContent = JSON.stringify(data, null, 2);
-          updateMarker(data);
-        });
-      }, 1000);
+        $.getJSON('/api/gps')
+          .done(function(data) {
+            // Update status koneksi menjadi connected
+            updateConnectionStatus(true);
+
+            // Tampilkan JSON di atas peta
+            document.getElementById('gps-json').textContent = JSON.stringify(data, null, 2);
+            updateMarker(data);
+          })
+          .fail(function(xhr, status, error) {
+            console.error('Terjadi kesalahan saat mengambil data GPS:', error);
+            console.log('Response:', xhr.responseText);
+
+            // Update status koneksi menjadi disconnected
+            updateConnectionStatus(false, error);
+
+            // Tampilkan pesan error di UI
+            document.getElementById('gps-json').textContent = 'Error: ' + error + ' - Check console for details';
+          });
+      }, 2000);
     </script>
 @endsection

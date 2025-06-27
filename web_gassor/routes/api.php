@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\MidtransController;
+use App\Http\Controllers\MapController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,11 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('/midtrans-callback', [MidtransController::class, 'callback']);
+
+// Route untuk GPS data
+Route::get('/gps', [MapController::class, 'getGps']);
+
+// Test route
+Route::get('/test-gps', function() {
+    return response()->json(['test' => 'GPS API working', 'timestamp' => now()]);
+});
