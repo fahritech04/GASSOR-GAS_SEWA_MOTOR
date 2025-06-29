@@ -19,30 +19,34 @@ class PemilikController extends Controller
 
         $motorcycleIds = $motorcycles->pluck('id');
 
-        $transactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
+        // Get recent transactions for display (limit 3)
+        $recentTransactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
             ->whereIn('motorcycle_id', $motorcycleIds)
             ->latest()
             ->orderByRaw("FIELD(payment_status, 'pending', 'success') DESC")
             ->take(3)
             ->get();
 
-        $activeOrders = $transactions->filter(function ($transaction) {
-            return
-                strtolower($transaction->payment_status) === 'success'
-                && ($transaction->motorcycle && $transaction->motorcycle->status === 'on_going');
+        // Get all successful transactions for calculations
+        $allTransactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
+            ->whereIn('motorcycle_id', $motorcycleIds)
+            ->where('payment_status', 'success')
+            ->get();
+
+        $activeOrders = $allTransactions->filter(function ($transaction) {
+            return $transaction->rental_status === 'on_going'; // Use per-transaction rental status
         })->count();
 
-        $totalIncome = $transactions
-            ->where('payment_status', 'success')
+        $totalIncome = $allTransactions
             ->filter(function ($transaction) {
-                return $transaction->motorcycle && $transaction->motorcycle->status === 'finished';
+                return $transaction->rental_status === 'finished'; // Use per-transaction rental status
             })
             ->sum(function ($transaction) {
                 // Gunakan total_amount yang sudah dihitung saat booking
                 return $transaction->total_amount;
             });
 
-        return view('pages.pemilik.dashboard', compact('motorcycles', 'transactions', 'activeOrders', 'totalIncome', 'totalMotor'));
+        return view('pages.pemilik.dashboard', compact('motorcycles', 'recentTransactions', 'activeOrders', 'totalIncome', 'totalMotor'));
     }
 
     public function showDaftarMotor()
@@ -132,32 +136,36 @@ class PemilikController extends Controller
             'transaction_id' => $transaction->id,
             'motorcycle_id' => $transaction->motorcycle->id,
             'motorcycle_name' => $transaction->motorcycle->name,
-            'current_motor_status' => $transaction->motorcycle->status,
+            'current_rental_status' => $transaction->rental_status ?? 'null',
             'payment_status' => $transaction->payment_status,
             'customer_name' => $transaction->name,
         ]);
 
-        // Validasi kondisi return
+        // Validasi kondisi return - cek rental_status transaksi individu
+        // rental_status belum finished dan payment_status success
         if (
             $transaction->motorcycle &&
-            $transaction->motorcycle->status === 'on_going' &&
+            in_array($transaction->rental_status, ['on_going', null]) && // Allow null for backward compatibility
+            $transaction->rental_status !== 'finished' && // Prevent returning already finished transactions
             strtoupper($transaction->payment_status) === 'SUCCESS'
         ) {
             $motorcycle = $transaction->motorcycle;
-            $oldStatus = $motorcycle->status;
+            $oldRentalStatus = $transaction->rental_status;
             $oldAvailableStock = $motorcycle->available_stock;
 
-            // Update status dan stok
-            $motorcycle->status = 'finished';
+            // Update rental status transaksi individual menjadi finished
+            $transaction->rental_status = 'finished';
+            $transaction->save();
+
+            // Increase available stock for this specific motorcycle
             $stockIncreased = $motorcycle->increaseStock(1);
-            $motorcycle->save();
 
             // Log hasil
             \Log::info('Motor returned successfully', [
                 'transaction_id' => $transaction->id,
                 'motorcycle_id' => $motorcycle->id,
                 'motorcycle_name' => $motorcycle->name,
-                'status_changed' => "{$oldStatus} -> {$motorcycle->status}",
+                'rental_status_changed' => "{$oldRentalStatus} -> {$transaction->rental_status}",
                 'stock_changed' => "{$oldAvailableStock} -> {$motorcycle->available_stock}",
                 'stock_increase_success' => $stockIncreased,
                 'customer_name' => $transaction->name,
@@ -166,19 +174,29 @@ class PemilikController extends Controller
             return redirect()->route('pemilik.pesanan')->with('success',
                 "✅ Motor {$motorcycle->name} telah dikembalikan oleh {$transaction->name}. Stok tersedia: {$motorcycle->available_stock}/{$motorcycle->stock}");
         } else {
-            // Log kondisi gagal
+            // Log kondisi gagal dengan lebih detail
+            $reason = 'Unknown';
+            if (!$transaction->motorcycle) {
+                $reason = 'Motor tidak ditemukan';
+            } elseif ($transaction->rental_status === 'finished') {
+                $reason = 'Motor sudah dikembalikan sebelumnya';
+            } elseif (!in_array($transaction->rental_status, ['on_going', null])) {
+                $reason = 'Status rental tidak valid untuk pengembalian';
+            } elseif (strtoupper($transaction->payment_status) !== 'SUCCESS') {
+                $reason = 'Pembayaran belum berhasil';
+            }
+
             \Log::warning('Return motor failed - conditions not met', [
                 'transaction_id' => $transaction->id,
                 'motorcycle_exists' => $transaction->motorcycle ? 'yes' : 'no',
-                'motor_status' => $transaction->motorcycle->status ?? 'null',
+                'rental_status' => $transaction->rental_status ?? 'null',
                 'payment_status' => $transaction->payment_status,
-                'expected_motor_status' => 'on_going',
-                'expected_payment_status' => 'SUCCESS',
+                'reason' => $reason,
             ]);
 
             return redirect()->route('pemilik.pesanan')->with('error',
-                'Motor tidak dapat dikembalikan. Status: '.($transaction->motorcycle->status ?? 'unknown').
-                ', Payment: '.$transaction->payment_status);
+                "❌ Motor tidak dapat dikembalikan. Alasan: {$reason}. Status rental: ".
+                ($transaction->rental_status ?? 'unknown').', Payment: '.$transaction->payment_status);
         }
     }
 

@@ -100,7 +100,7 @@
             </div>
             <div id="Bonus-Tab" class="flex flex-col gap-5 tab-content">
                 <div class="flex flex-col gap-4">
-                    @forelse($transactions as $transaction)
+                    @forelse($recentTransactions as $transaction)
                         <div class="bonus-card flex items-center justify-between rounded-[22px] border border-[#000000] p-[10px] gap-3">
                             <div>
                                 <p class="font-semibold">{{ $transaction->motorcycle->name ?? '-' }}</p>
@@ -111,18 +111,42 @@
                                     Tanggal: {{ \Carbon\Carbon::parse($transaction->start_date)->isoFormat('D MMMM YYYY') }}
                                 </p>
                             </div>
-                            <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
-                                match(strtoupper($transaction->payment_status)) {
-                                    'SUCCESS' => '#27ae60',
-                                    'FAILED' => '#eb5757',
-                                    'CANCELED' => '#bdbdbd',
-                                    'PENDING' => '#E6A43B',
-                                    'EXPIRED' => '#9b51e0',
-                                    default => '#828282',
-                                }
-                            }};">
-                                {{ strtoupper($transaction->payment_status) }}
-                            </p>
+                            <div class="flex flex-col items-end gap-1">
+                                <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
+                                    match(strtoupper($transaction->payment_status)) {
+                                        'SUCCESS' => '#27ae60',
+                                        'FAILED' => '#eb5757',
+                                        'CANCELED' => '#bdbdbd',
+                                        'PENDING' => '#E6A43B',
+                                        'EXPIRED' => '#9b51e0',
+                                        default => '#828282',
+                                    }
+                                }};">
+                                    {{ strtoupper($transaction->payment_status) }}
+                                </p>
+                                @if($transaction->payment_status === 'success')
+                                    @php
+                                        $rentalStatus = $transaction->rental_status ?? 'pending';
+                                        $statusLabel = match($rentalStatus) {
+                                            'pending' => 'MENUNGGU',
+                                            'on_going' => 'BERJALAN',
+                                            'finished' => 'SELESAI',
+                                            'cancelled' => 'BATAL',
+                                            default => 'UNKNOWN'
+                                        };
+                                        $statusColor = match($rentalStatus) {
+                                            'pending' => '#3498db',
+                                            'on_going' => '#E6A43B',
+                                            'finished' => '#27ae60',
+                                            'cancelled' => '#95a5a6',
+                                            default => '#828282'
+                                        };
+                                    @endphp
+                                    <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] text-white text-center" style="background: {{ $statusColor }};">
+                                        {{ $statusLabel }}
+                                    </p>
+                                @endif
+                            </div>
                         </div>
                     @empty
                         <p class="text-center text-gassor-grey">Belum ada pesanan terbaru.</p>

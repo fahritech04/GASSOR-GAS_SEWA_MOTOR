@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->enum('payment_method', ['down_payment', 'full_payment'])->nullable();
             $table->string('payment_status')->nullable();
+            $table->enum('rental_status', ['pending', 'on_going', 'finished', 'cancelled'])->default('pending');
             $table->date('start_date');
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();

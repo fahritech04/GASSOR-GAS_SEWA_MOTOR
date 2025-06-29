@@ -23,13 +23,6 @@ class BookingController extends Controller
         $this->transactionRepository = $transactionRepository;
     }
 
-    // public function booking(Request $request, $slug)
-    // {
-    //     $this->transactionRepository->saveTransactionDataToSession($request->all());
-
-    //     return redirect()->route('booking.information', $slug);
-    // }
-
     public function booking(Request $request, $slug)
     {
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
@@ -185,10 +178,13 @@ class BookingController extends Controller
         if (! $transaction || ! in_array(strtolower($transaction->payment_status), ['failed', 'expired', 'pending'])) {
             return redirect()->back()->with('error', 'Transaksi tidak valid untuk dibatalkan.');
         }
-        $transaction->payment_status = 'canceled';
-        $transaction->save();
 
-        // jika motor perlu di-set available lagi, tambah di sini
+        // Update both payment and rental status
+        $transaction->update([
+            'payment_status' => 'canceled',
+            'rental_status' => 'cancelled'
+        ]);
+
         return redirect()->route('check-booking')->with('success', 'Pesanan berhasil dibatalkan.');
     }
 

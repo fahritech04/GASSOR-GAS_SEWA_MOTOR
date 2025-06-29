@@ -29,9 +29,23 @@
                         </div>
                         <div class="flex flex-col items-end gap-2 justify-center h-full">
                             @php
-                                $rentalStatus = $transaction->motorcycle->status ?? null;
-                                $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
-                                $rentalStatusColor = $rentalStatus === 'on_going' ? '#E6A43B' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
+                                $rentalStatus = $transaction->rental_status ?? 'pending';
+
+                                if ($transaction->payment_status === 'success') {
+                                    if ($rentalStatus === 'finished') {
+                                        $rentalStatusLabel = 'SELESAI';
+                                        $rentalStatusColor = '#27ae60';
+                                    } elseif ($rentalStatus === 'on_going') {
+                                        $rentalStatusLabel = 'SEDANG BERJALAN';
+                                        $rentalStatusColor = '#E6A43B';
+                                    } else {
+                                        $rentalStatusLabel = 'MENUNGGU KONFIRMASI';
+                                        $rentalStatusColor = '#3498db';
+                                    }
+                                } else {
+                                    $rentalStatusLabel = null;
+                                    $rentalStatusColor = '#828282';
+                                }
                             @endphp
                             <p class="rounded-full p-[6px_12px] font-bold text-xs leading-[18px] break-all text-white text-center" style="background: {{
                                 match(strtoupper($transaction->payment_status)) {

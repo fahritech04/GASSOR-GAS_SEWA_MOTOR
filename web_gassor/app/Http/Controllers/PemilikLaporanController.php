@@ -18,9 +18,9 @@ class PemilikLaporanController extends Controller
 
         // Query dasar transaksi milik pemilik - hanya success dan finished
         $query = Transaction::where('payment_status', 'success')
+            ->where('rental_status', 'finished') // Use rental_status per transaction
             ->whereHas('motorcycle', function ($q) use ($user) {
-                $q->where('owner_id', $user->id)
-                    ->where('status', 'finished');
+                $q->where('owner_id', $user->id);
             });
 
         // Filter berdasarkan pilihan

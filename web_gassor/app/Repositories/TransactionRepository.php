@@ -52,6 +52,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $data['code'] = $this->generateTransactionCode();
         $data['payment_status'] = 'pending';
+        $data['rental_status'] = 'pending';
         $data['transaction_date'] = now();
         $data['motorbike_rental_id'] = $motorcycle->motorbike_rental_id;
 

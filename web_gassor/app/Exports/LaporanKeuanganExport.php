@@ -32,9 +32,9 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
     {
         $date = Carbon::parse($this->tanggal);
         $query = Transaction::where('payment_status', 'success')
+            ->where('rental_status', 'finished') // Use rental_status per transaction
             ->whereHas('motorcycle', function ($q) {
-                $q->where('owner_id', $this->user->id)
-                    ->where('status', 'finished');
+                $q->where('owner_id', $this->user->id);
             });
         if ($this->filter === 'harian') {
             $query->whereDate('start_date', $date);
@@ -61,7 +61,13 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                 'Penyewa' => $trx->name,
                 'Harga' => $trx->total_amount,
                 'Status Pembayaran' => $trx->payment_status,
-                'Status Sewa' => 'SELESAI',
+                'Status Sewa' => match($trx->rental_status ?? 'pending') {
+                    'pending' => 'MENUNGGU',
+                    'on_going' => 'SEDANG BERJALAN',
+                    'finished' => 'SELESAI',
+                    'cancelled' => 'DIBATALKAN',
+                    default => 'TIDAK DIKETAHUI'
+                },
             ];
         });
     }

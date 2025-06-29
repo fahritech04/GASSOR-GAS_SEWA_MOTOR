@@ -55,30 +55,27 @@ class MidtransController extends Controller
                         $transaction->update(['payment_status' => 'pending']);
                     } else {
                         $transaction->update(['payment_status' => 'success']);
-                        if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                        // Only update stock and status if not already processed
+                        if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
                             $transaction->motorcycle->decreaseStock(1);
-                            $transaction->motorcycle->update([
-                                'status' => 'on_going',
-                            ]);
+                            $transaction->update(['rental_status' => 'on_going']);
                         }
                     }
                 } else {
                     $transaction->update(['payment_status' => 'success']);
-                    if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                    // Only update stock and status if not already processed
+                    if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
                         $transaction->motorcycle->decreaseStock(1);
-                        $transaction->motorcycle->update([
-                            'status' => 'on_going',
-                        ]);
+                        $transaction->update(['rental_status' => 'on_going']);
                     }
                 }
                 break;
             case 'settlement':
                 $transaction->update(['payment_status' => 'success']);
-                if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+                // Only update stock and status if not already processed
+                if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
                     $transaction->motorcycle->decreaseStock(1);
-                    $transaction->motorcycle->update([
-                        'status' => 'on_going',
-                    ]);
+                    $transaction->update(['rental_status' => 'on_going']);
                 }
                 $twilio->messages
                     ->create(
@@ -97,9 +94,17 @@ class MidtransController extends Controller
                 break;
             case 'expire':
                 $transaction->update(['payment_status' => 'expired']);
+                // Update rental status to cancelled if payment expires
+                if ($transaction->rental_status === 'pending') {
+                    $transaction->update(['rental_status' => 'cancelled']);
+                }
                 break;
             case 'cancel':
                 $transaction->update(['payment_status' => 'canceled']);
+                // Update rental status to cancelled if payment is cancelled
+                if ($transaction->rental_status === 'pending') {
+                    $transaction->update(['rental_status' => 'cancelled']);
+                }
                 break;
             default:
                 $transaction->update(['payment_status' => 'unknown']);

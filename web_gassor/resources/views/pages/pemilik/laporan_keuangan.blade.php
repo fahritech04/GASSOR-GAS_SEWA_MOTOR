@@ -73,13 +73,30 @@
                             <td>{{ $trx->name }}</td>
                             <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                             <td>
-                                <span class="badge {{ $trx->payment_status == 'paid' ? 'bg-success' : 'bg-warning text-dark' }} px-3 py-2 fw-bold">
+                                <span class="badge {{ $trx->payment_status == 'success' ? 'bg-success' : 'bg-warning text-dark' }} px-3 py-2 fw-bold">
                                     {{ strtoupper($trx->payment_status) }}
                                 </span>
                             </td>
                             <td>
-                                <span class="badge bg-success px-3 py-2 fw-bold">
-                                    SELESAI
+                                @php
+                                    $rentalStatus = $trx->rental_status ?? 'pending';
+                                    $statusLabel = match($rentalStatus) {
+                                        'pending' => 'MENUNGGU',
+                                        'on_going' => 'SEDANG BERJALAN',
+                                        'finished' => 'SELESAI',
+                                        'cancelled' => 'DIBATALKAN',
+                                        default => 'TIDAK DIKETAHUI'
+                                    };
+                                    $statusClass = match($rentalStatus) {
+                                        'pending' => 'bg-warning text-dark',
+                                        'on_going' => 'bg-primary',
+                                        'finished' => 'bg-success',
+                                        'cancelled' => 'bg-secondary',
+                                        default => 'bg-secondary'
+                                    };
+                                @endphp
+                                <span class="badge {{ $statusClass }} px-3 py-2 fw-bold">
+                                    {{ $statusLabel }}
                                 </span>
                             </td>
                         </tr>

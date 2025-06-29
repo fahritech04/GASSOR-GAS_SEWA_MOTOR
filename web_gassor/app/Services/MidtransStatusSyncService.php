@@ -86,15 +86,33 @@ class MidtransStatusSyncService
      */
     private function handleSuccessfulPayment(Transaction $transaction)
     {
-        if ($transaction->motorcycle && $transaction->motorcycle->status !== 'on_going') {
+        if ($transaction->motorcycle) {
             $motorcycle = $transaction->motorcycle;
-            $motorcycle->decreaseStock(1);
-            $motorcycle->update(['status' => 'on_going']);
 
-            Log::info('Status motor diperbarui menjadi on_going', [
-                'motorcycle_id' => $motorcycle->id,
-                'transaction_code' => $transaction->code,
-            ]);
+            // Only update if rental_status is not already finished or on_going
+            if (!in_array($transaction->rental_status, ['finished', 'on_going'])) {
+                // Decrease available stock
+                $stockDecreased = $motorcycle->decreaseStock(1);
+
+                // Update transaction rental status to on_going
+                $transaction->update(['rental_status' => 'on_going']);
+
+                Log::info('Status transaksi dan stok motor diperbarui', [
+                    'motorcycle_id' => $motorcycle->id,
+                    'transaction_id' => $transaction->id,
+                    'transaction_code' => $transaction->code,
+                    'stock_decreased' => $stockDecreased,
+                    'new_available_stock' => $motorcycle->available_stock,
+                    'rental_status' => 'on_going',
+                ]);
+            } else {
+                Log::info('Skip stock/status update - transaction already processed', [
+                    'motorcycle_id' => $motorcycle->id,
+                    'transaction_id' => $transaction->id,
+                    'transaction_code' => $transaction->code,
+                    'current_rental_status' => $transaction->rental_status,
+                ]);
+            }
         }
     }
 

@@ -18,10 +18,25 @@
     <h2 class="font-bold text-lg mb-2">Pesanan yang dimiliki {{ auth()->user()->name }}</h2>
     @forelse ($transactions as $transaction)
         @php
-            $rentalStatus = $transaction->motorcycle->status ?? null;
-            $rentalStatusLabel = $rentalStatus === 'on_going' ? 'SEDANG BERJALAN' : ($rentalStatus === 'finished' ? 'SELESAI' : null);
-            $rentalStatusColor = $rentalStatus === 'on_going' ? '#E6A43B' : ($rentalStatus === 'finished' ? '#bdbdbd' : '#828282');
-            $borderColor = $rentalStatus === 'on_going' ? '#E6A43B' : '#000000';
+            $rentalStatus = $transaction->rental_status ?? 'pending';
+
+            if ($transaction->payment_status === 'success') {
+                if ($rentalStatus === 'finished') {
+                    $rentalStatusLabel = 'SELESAI';
+                    $rentalStatusColor = '#27ae60';
+                } elseif ($rentalStatus === 'on_going') {
+                    $rentalStatusLabel = 'SEDANG BERJALAN';
+                    $rentalStatusColor = '#E6A43B';
+                } else {
+                    $rentalStatusLabel = 'MENUNGGU KONFIRMASI';
+                    $rentalStatusColor = '#3498db';
+                }
+            } else {
+                $rentalStatusLabel = null;
+                $rentalStatusColor = '#828282';
+            }
+
+            $borderColor = ($rentalStatus === 'on_going' && $transaction->payment_status === 'success') ? '#E6A43B' : '#000000';
         @endphp
 
         <div class="bonus-card flex items-center justify-between rounded-[22px] border-2 p-[10px] gap-3 mb-3 bg-white"
@@ -76,7 +91,7 @@
         @if($rentalStatus === 'on_going' && strtoupper($transaction->payment_status) === 'SUCCESS')
             <div class="mt-2 p-2 bg-gray-50 rounded-lg">
                 {{-- <p class="text-xs text-gray-600 mb-2">
-                    Debug: Transaction #{{ $transaction->id }} | Motor: {{ $transaction->motorcycle->name ?? '-' }} | Status: {{ $rentalStatus }}
+                    Status: {{ ucfirst($rentalStatus) }} - Transaksi #{{ $transaction->id }}
                 </p> --}}
                 <form method="POST" action="{{ route('pemilik.pesanan.return', $transaction->id) }}" id="return-form-{{ $transaction->id }}">
                     @csrf
@@ -90,6 +105,12 @@
                    style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #000000; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer; margin-top: 8px;">
                     Lihat Tracking Motor
                 </a>
+            </div>
+        @elseif($rentalStatus === 'finished' && strtoupper($transaction->payment_status) === 'SUCCESS')
+            <div class="mt-2 p-2 bg-green-50 rounded-lg">
+                <p class="text-xs text-green-600 text-center">
+                    ✅ Motor sudah dikembalikan pada transaksi ini
+                </p>
             </div>
         @endif
     @empty
@@ -220,7 +241,6 @@
 @endif
 
 <script>
-// SweetAlert confirmation for return motor
 function confirmReturn(transactionId, motorName, customerName) {
     Swal.fire({
         icon: 'question',

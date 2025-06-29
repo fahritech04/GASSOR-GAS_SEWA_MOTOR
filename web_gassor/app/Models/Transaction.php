@@ -19,6 +19,7 @@ class Transaction extends Model
         'phone_number',
         'payment_method',
         'payment_status',
+        'rental_status',
         'start_date',
         'start_time',
         'duration',
