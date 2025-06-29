@@ -43,6 +43,15 @@ class TransactionResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('payment_status')
                     ->required(),
+                Forms\Components\Select::make('rental_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'on_going' => 'On Going',
+                        'finished' => 'Finished',
+                        'cancelled' => 'Cancelled',
+                    ])
+                    ->default('pending')
+                    ->required(),
                 Forms\Components\DatePicker::make('start_date')
                     ->required(),
                 Forms\Components\TextInput::make('duration')
@@ -67,6 +76,15 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('payment_method'),
                 Tables\Columns\TextColumn::make('payment_status'),
+                Tables\Columns\TextColumn::make('rental_status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'on_going' => 'info',
+                        'finished' => 'success',
+                        'cancelled' => 'danger',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('total_amount'),
                 Tables\Columns\TextColumn::make('transaction_date'),
             ])

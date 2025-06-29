@@ -29,27 +29,24 @@ class GpsMapPage extends Page
         $controller = new MapController;
         $this->gpsData = $controller->getGps()->getData();
 
-        // Ambil motor yang sedang disewa (stok tersedia lebih kecil dari total stok)
-        $this->motorcyclesWithGps = Motorcycle::with(['owner'])
-            ->where('available_stock', '<', DB::raw('stock'))
-            ->where('has_gps', true)
+        // Ambil semua transaksi aktif dengan motor yang memiliki GPS
+        $this->activeTransactions = Transaction::with(['motorcycle.owner'])
+            ->whereHas('motorcycle', function ($query) {
+                $query->where('has_gps', true);
+            })
+            ->whereIn('payment_status', ['success', 'paid', 'SUCCESS', 'PAID'])
+            ->where('rental_status', 'on_going')
             ->get();
 
-        // Ambil transaksi aktif untuk setiap motor
-        $today = now()->format('Y-m-d');
-        $motorIds = $this->motorcyclesWithGps->pluck('id')->toArray();
-
-        if (! empty($motorIds)) {
-            $this->activeTransactions = Transaction::whereIn('motorcycle_id', $motorIds)
-                ->whereIn('payment_status', ['success', 'paid', 'SUCCESS', 'PAID'])
-                ->where('start_date', '<=', $today)
-                ->where(function ($query) use ($today) {
-                    $query->whereRaw('DATE_ADD(start_date, INTERVAL duration DAY) >= ?', [$today])
-                        ->orWhereNull('duration');
-                })
-                ->get()
-                ->keyBy('motorcycle_id');
-        }
+        $this->motorcyclesWithGps = $this->activeTransactions
+            ->map(function ($transaction) {
+                $motorcycle = $transaction->motorcycle;
+                $motorcycle->renter_name = $transaction->name;
+                $motorcycle->transaction_id = $transaction->id;
+                return $motorcycle;
+            })
+            ->unique('id')
+            ->values();
 
         // Jika ada parameter id, ambil data transaction
         if ($id) {
@@ -71,6 +68,11 @@ class GpsMapPage extends Page
 
     public function getActiveTransactionForMotor($motorcycleId)
     {
-        return $this->activeTransactions[$motorcycleId] ?? null;
+        return $this->activeTransactions->where('motorcycle_id', $motorcycleId)->first();
+    }
+
+    public function getActiveTransactions()
+    {
+        return $this->activeTransactions;
     }
 }

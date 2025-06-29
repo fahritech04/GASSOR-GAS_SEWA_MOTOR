@@ -24,7 +24,6 @@ return new class extends Migration
             $table->integer('stock')->default(1);
             $table->integer('available_stock')->default(1);
             $table->boolean('has_gps')->default(false);
-            $table->enum('status', ['on_going', 'finished'])->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

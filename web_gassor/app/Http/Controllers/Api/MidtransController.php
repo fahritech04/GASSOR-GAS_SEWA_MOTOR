@@ -115,7 +115,7 @@ class MidtransController extends Controller
             'order_id' => $request->order_id,
             'transaction_status' => $request->transaction_status,
             'payment_status' => $transaction->fresh()->payment_status,
-            'motor_status' => $transaction->motorcycle ? $transaction->motorcycle->fresh()->status : null,
+            'rental_status' => $transaction->fresh()->rental_status,
             'timestamp' => now()->toDateTimeString(),
         ]);
 

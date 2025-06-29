@@ -22,7 +22,6 @@ class Motorcycle extends Model
         'stock',
         'available_stock',
         'has_gps',
-        'status',
     ];
 
     protected $casts = [

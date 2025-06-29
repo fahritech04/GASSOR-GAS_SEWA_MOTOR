@@ -28,22 +28,19 @@
             <pre id="gps-data-display" class="text-xs">Memuat data GPS...</pre>
         </div>
     @endif
-    @if(isset($this->motorcyclesWithGps) && count($this->motorcyclesWithGps))
+    @if(isset($this->activeTransactions) && count($this->activeTransactions) > 0)
         <div class="p-2 bg-blue-100 text-white-800 rounded mb-2">
-            <b>Motor (Lagi Disewa & Ada GPS IoT):</b>
+            <b>Motor Sedang Disewa (Ada GPS IoT):</b>
             <ul class="text-xs list-disc pl-4">
-                @foreach($this->motorcyclesWithGps as $motor)
+                @foreach($this->activeTransactions as $transaction)
+                    @php $motor = $transaction->motorcycle; @endphp
                     <li>
-                        <b>{{ $motor->name }}</b> - {{ $motor->vehicle_number_plate }} (Kategori {{ $motor->motorcycle_type }})
+                        <b>{{ $motor->name }}</b> - {{ $motor->vehicle_number_plate }} ({{ $motor->motorcycle_type }})
                         @if($motor->owner)
                             <br><small class="text-white-600">Pemilik: {{ $motor->owner->name ?? '-' }}</small>
                         @endif
-                        @php
-                            $activeTransaction = $this->getActiveTransactionForMotor($motor->id);
-                        @endphp
-                        @if($activeTransaction)
-                            <br><small class="text-white-600">Disewa oleh: {{ $activeTransaction->name ?? '-' }}</small>
-                        @endif
+                        <br><small class="text-white-600">Disewa oleh: {{ $transaction->name ?? '-' }}</small>
+                        <br><small class="text-gray-500">ID Transaksi: #{{ $transaction->id }}</small>
                     </li>
                 @endforeach
             </ul>
@@ -131,6 +128,8 @@
           const popup = `
             <strong>${motor.name}</strong><br>
             Plat: ${motor.vehicle_number_plate}<br>
+            Penyewa: ${motor.renter_name || '-'}<br>
+            ID Transaksi: #${motor.transaction_id || '-'}<br>
             Lat: ${motor.latitude}<br>
             Lng: ${motor.longitude}<br>
             Speed: ${motor.speed_kmph ?? '-'} km/h<br>
@@ -145,8 +144,14 @@
         }
       }
 
-      // Ambil data motor dari blade (PHP ke JS)
-      let motorcyclesWithGps = @json($this->motorcyclesWithGps);
+      // Ambil data transaksi aktif dari blade (PHP ke JS)
+      let activeTransactions = @json($this->activeTransactions);
+      let motorcyclesWithGps = activeTransactions.map(function(transaction) {
+        let motor = transaction.motorcycle;
+        motor.renter_name = transaction.name;
+        motor.transaction_id = transaction.id;
+        return motor;
+      });
 
       // Update status koneksi
       function updateConnectionStatus(isConnected, error = null) {

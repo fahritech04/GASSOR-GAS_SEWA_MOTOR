@@ -264,7 +264,6 @@ class PemilikController extends Controller
                         'price_per_day' => $motor['price_per_day'],
                         'stock' => $motor['stock'] ?? 1,
                         'available_stock' => $motor['stock'] ?? 1,
-                        'status' => $motor['status'] ?? null,
                         'has_gps' => $motor['has_gps'] ?? false,
                     ]);
                     // Simpan gambar motor ke motorcycle_images
@@ -354,11 +353,8 @@ class PemilikController extends Controller
                 $oldBonuses[$i]->delete();
             }
         }
-        // Cek perubahan status untuk mengelola stok
-        $oldStatus = $motorcycle->status;
-        $newStatus = $request->input('status');
 
-        // Update Motorcycle (Motor)
+        // Update Motorcycle (Motor) - removed status field
         $motorcycle->update([
             'name' => $request->input('name'),
             'motorcycle_type' => $request->input('motorcycle_type'),
@@ -367,22 +363,9 @@ class PemilikController extends Controller
             'price_per_day' => $request->input('price_per_day'),
             'stock' => $request->input('stock', $motorcycle->stock),
             'available_stock' => $request->input('available_stock', $motorcycle->available_stock),
-            'status' => $newStatus,
             'has_gps' => $request->has('has_gps'),
         ]);
 
-        // Jika status berubah dari 'on_going' ke 'finished', kembalikan stok
-        if ($oldStatus === 'on_going' && $newStatus === 'finished') {
-            // Cari transaksi terakhir untuk motor ini yang statusnya success
-            $transaction = Transaction::where('motorcycle_id', $motorcycle->id)
-                ->where('payment_status', 'success')
-                ->latest()
-                ->first();
-
-            if ($transaction) {
-                $motorcycle->increaseStock(1);
-            }
-        }
         // Update gambar STNK jika ada
         if ($request->hasFile('stnk_images')) {
             $stnkImages = [];
@@ -465,7 +448,7 @@ class PemilikController extends Controller
             'old_status' => $oldStatus,
             'new_status' => $updated->payment_status,
             'updated' => $oldStatus !== $updated->payment_status,
-            'motor_status' => $updated->motorcycle->status ?? null,
+            'rental_status' => $updated->rental_status ?? null,
             'message' => $oldStatus !== $updated->payment_status
                 ? "Status berubah dari {$oldStatus} ke {$updated->payment_status}"
                 : "Status tidak berubah ({$updated->payment_status})",
