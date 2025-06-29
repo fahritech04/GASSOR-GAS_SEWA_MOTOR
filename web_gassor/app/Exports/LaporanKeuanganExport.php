@@ -34,7 +34,7 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
         $query = Transaction::where('payment_status', 'success')
             ->whereHas('motorcycle', function ($q) {
                 $q->where('owner_id', $this->user->id)
-                  ->where('status', 'finished');
+                    ->where('status', 'finished');
             });
         if ($this->filter === 'harian') {
             $query->whereDate('start_date', $date);

@@ -26,6 +26,6 @@ Route::post('/midtrans-callback', [MidtransController::class, 'callback']);
 Route::get('/gps', [MapController::class, 'getGps']);
 
 // Test route
-Route::get('/test-gps', function() {
+Route::get('/test-gps', function () {
     return response()->json(['test' => 'GPS API working', 'timestamp' => now()]);
 });

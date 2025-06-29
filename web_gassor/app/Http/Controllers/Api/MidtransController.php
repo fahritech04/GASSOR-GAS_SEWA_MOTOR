@@ -21,6 +21,7 @@ class MidtransController extends Controller
                 'expected' => $hashedKey,
                 'received' => $request->signature_key,
             ]);
+
             return response()->json(['message' => 'Invalid signature key'], 403);
         }
 
@@ -30,6 +31,7 @@ class MidtransController extends Controller
 
         if (! $transaction) {
             \Log::warning('Midtrans callback transaction not found', ['order_id' => $orderId]);
+
             return response()->json(['message' => 'Transaction not found'], 404);
         }
 
@@ -109,7 +111,7 @@ class MidtransController extends Controller
             'transaction_status' => $request->transaction_status,
             'payment_status' => $transaction->fresh()->payment_status,
             'motor_status' => $transaction->motorcycle ? $transaction->motorcycle->fresh()->status : null,
-            'timestamp' => now()->toDateTimeString()
+            'timestamp' => now()->toDateTimeString(),
         ]);
 
         return response()->json(['message' => 'Callback received successfully']);

@@ -24,7 +24,7 @@ class MidtransStatusSyncService
             Log::info('Sinkronkan status pembayaran dari Midtrans', [
                 'order_id' => $transaction->code,
                 'old_status' => $transaction->payment_status,
-                'midtrans_status' => $midtransStatus
+                'midtrans_status' => $midtransStatus,
             ]);
 
             // Map status Midtrans ke status internal
@@ -43,7 +43,7 @@ class MidtransStatusSyncService
                 Log::info('Status pembayaran diperbarui', [
                     'order_id' => $transaction->code,
                     'from' => $oldPaymentStatus,
-                    'to' => $newPaymentStatus
+                    'to' => $newPaymentStatus,
                 ]);
             }
 
@@ -52,7 +52,7 @@ class MidtransStatusSyncService
         } catch (\Exception $e) {
             Log::error('Gagal menyinkronkan status pembayaran dari Midtrans', [
                 'order_id' => $transaction->code,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return $transaction;
@@ -93,7 +93,7 @@ class MidtransStatusSyncService
 
             Log::info('Status motor diperbarui menjadi on_going', [
                 'motorcycle_id' => $motorcycle->id,
-                'transaction_code' => $transaction->code
+                'transaction_code' => $transaction->code,
             ]);
         }
     }

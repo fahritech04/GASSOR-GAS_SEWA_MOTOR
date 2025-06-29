@@ -11,9 +11,9 @@ class Kernel extends ConsoleKernel
     {
         // Sync payment status setiap 30 menit untuk transaksi pending
         $schedule->command('midtrans:sync-status')
-                 ->everyThirtyMinutes()
-                 ->withoutOverlapping()
-                 ->appendOutputTo(storage_path('logs/midtrans-sync.log'));
+            ->everyThirtyMinutes()
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/midtrans-sync.log'));
     }
 
     protected function commands(): void

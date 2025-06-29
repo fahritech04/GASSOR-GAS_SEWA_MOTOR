@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Http;
 
 class MapController extends Controller
 {

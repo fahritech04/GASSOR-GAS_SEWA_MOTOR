@@ -202,7 +202,7 @@ class BookingController extends Controller
 
         // Gunakan service untuk sinkronisasi yang lebih reliable
         if (! in_array(strtolower($transaction->payment_status), ['success', 'canceled', 'expired', 'failed'])) {
-            $syncService = new MidtransStatusSyncService();
+            $syncService = new MidtransStatusSyncService;
             $transaction = $syncService->syncPaymentStatus($transaction);
         }
 

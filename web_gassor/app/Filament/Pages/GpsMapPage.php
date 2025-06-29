@@ -39,13 +39,13 @@ class GpsMapPage extends Page
         $today = now()->format('Y-m-d');
         $motorIds = $this->motorcyclesWithGps->pluck('id')->toArray();
 
-        if (!empty($motorIds)) {
+        if (! empty($motorIds)) {
             $this->activeTransactions = Transaction::whereIn('motorcycle_id', $motorIds)
                 ->whereIn('payment_status', ['success', 'paid', 'SUCCESS', 'PAID'])
                 ->where('start_date', '<=', $today)
-                ->where(function($query) use ($today) {
+                ->where(function ($query) use ($today) {
                     $query->whereRaw('DATE_ADD(start_date, INTERVAL duration DAY) >= ?', [$today])
-                          ->orWhereNull('duration');
+                        ->orWhereNull('duration');
                 })
                 ->get()
                 ->keyBy('motorcycle_id');

@@ -36,7 +36,7 @@ class MotorbikeRentalController extends Controller
     {
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($id);
 
-        if (!$motorcycle) {
+        if (! $motorcycle) {
             abort(404);
         }
 

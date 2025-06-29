@@ -20,7 +20,7 @@ class PemilikLaporanController extends Controller
         $query = Transaction::where('payment_status', 'success')
             ->whereHas('motorcycle', function ($q) use ($user) {
                 $q->where('owner_id', $user->id)
-                  ->where('status', 'finished');
+                    ->where('status', 'finished');
             });
 
         // Filter berdasarkan pilihan

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bonus;
+use App\Models\MotorbikeRental;
 use App\Models\Motorcycle;
 use App\Models\Transaction;
 use App\Services\MidtransStatusSyncService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\MotorbikeRental;
-use App\Models\Bonus;
+use Illuminate\Support\Facades\Auth;
 
 class PemilikController extends Controller
 {
@@ -26,11 +26,10 @@ class PemilikController extends Controller
             ->take(3)
             ->get();
 
-        $activeOrders = $transactions->filter(function($transaction) {
-            return (
+        $activeOrders = $transactions->filter(function ($transaction) {
+            return
                 strtolower($transaction->payment_status) === 'success'
-                && ($transaction->motorcycle && $transaction->motorcycle->status === 'on_going')
-            );
+                && ($transaction->motorcycle && $transaction->motorcycle->status === 'on_going');
         })->count();
 
         $totalIncome = $transactions
@@ -52,7 +51,9 @@ class PemilikController extends Controller
         $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
 
         return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles', 'totalMotor'));
-    }    public function showPesanan()
+    }
+
+    public function showPesanan()
     {
         $ownerId = auth()->id();
         $transactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
@@ -65,7 +66,7 @@ class PemilikController extends Controller
             ->paginate(5);
 
         // Auto-sync SEMUA transaksi pending untuk real-time update
-        $syncService = new MidtransStatusSyncService();
+        $syncService = new MidtransStatusSyncService;
         $syncCount = 0;
 
         foreach ($transactions as $transaction) {
@@ -91,14 +92,14 @@ class PemilikController extends Controller
             'owner_id' => $ownerId,
             'total_transactions' => $transactions->count(),
             'unique_motorcycles' => $motorcycleGroups->count(),
-            'motorcycle_groups' => $motorcycleGroups->map(function($group, $motorcycleId) {
+            'motorcycle_groups' => $motorcycleGroups->map(function ($group, $motorcycleId) {
                 return [
                     'motorcycle_id' => $motorcycleId,
                     'motorcycle_name' => $group->first()->motorcycle->name ?? 'Unknown',
                     'transaction_count' => $group->count(),
-                    'transaction_ids' => $group->pluck('id')->toArray()
+                    'transaction_ids' => $group->pluck('id')->toArray(),
                 ];
-            })
+            }),
         ]);
 
         return view('pages.pemilik.pesanan.showPesanan', compact('transactions'));
@@ -116,13 +117,14 @@ class PemilikController extends Controller
             \Log::warning('Unauthorized return attempt', [
                 'user_id' => auth()->id(),
                 'transaction_id' => $transaction->id,
-                'motorcycle_owner' => $transaction->motorcycle->owner_id
+                'motorcycle_owner' => $transaction->motorcycle->owner_id,
             ]);
+
             return redirect()->route('pemilik.pesanan')->with('error', 'Anda tidak memiliki akses untuk motor ini.');
         }
 
         // Sinkronisasi status pembayaran dengan Midtrans terlebih dahulu
-        $syncService = new MidtransStatusSyncService();
+        $syncService = new MidtransStatusSyncService;
         $transaction = $syncService->syncPaymentStatus($transaction);
 
         // Log kondisi sebelum proses
@@ -132,7 +134,7 @@ class PemilikController extends Controller
             'motorcycle_name' => $transaction->motorcycle->name,
             'current_motor_status' => $transaction->motorcycle->status,
             'payment_status' => $transaction->payment_status,
-            'customer_name' => $transaction->name
+            'customer_name' => $transaction->name,
         ]);
 
         // Validasi kondisi return
@@ -158,7 +160,7 @@ class PemilikController extends Controller
                 'status_changed' => "{$oldStatus} -> {$motorcycle->status}",
                 'stock_changed' => "{$oldAvailableStock} -> {$motorcycle->available_stock}",
                 'stock_increase_success' => $stockIncreased,
-                'customer_name' => $transaction->name
+                'customer_name' => $transaction->name,
             ]);
 
             return redirect()->route('pemilik.pesanan')->with('success',
@@ -171,12 +173,12 @@ class PemilikController extends Controller
                 'motor_status' => $transaction->motorcycle->status ?? 'null',
                 'payment_status' => $transaction->payment_status,
                 'expected_motor_status' => 'on_going',
-                'expected_payment_status' => 'SUCCESS'
+                'expected_payment_status' => 'SUCCESS',
             ]);
 
             return redirect()->route('pemilik.pesanan')->with('error',
-                'Motor tidak dapat dikembalikan. Status: ' . ($transaction->motorcycle->status ?? 'unknown') .
-                ', Payment: ' . $transaction->payment_status);
+                'Motor tidak dapat dikembalikan. Status: '.($transaction->motorcycle->status ?? 'unknown').
+                ', Payment: '.$transaction->payment_status);
         }
     }
 
@@ -262,7 +264,8 @@ class PemilikController extends Controller
 
             return redirect()->route('pemilik.daftar-motor')->with('success', 'Data berhasil disimpan!');
         } catch (\Throwable $e) {
-            $fullError = $e->getMessage() . ' | FILE: ' . $e->getFile() . ' | LINE: ' . $e->getLine() . ' | TRACE: ' . $e->getTraceAsString();
+            $fullError = $e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine().' | TRACE: '.$e->getTraceAsString();
+
             return back()->withInput()->with('error', $fullError);
         }
     }
@@ -274,6 +277,7 @@ class PemilikController extends Controller
             abort(403);
         }
         $motorbikeRental = $motorcycle->motorbikeRental()->with('bonuses')->first();
+
         return view('pages.pemilik.daftar-motor.editMotor', compact('motorcycle', 'motorbikeRental'));
     }
 
@@ -383,12 +387,17 @@ class PemilikController extends Controller
                 ]);
             }
         }
+
         return redirect()->route('pemilik.daftar-motor')->with('success', 'Data motor & rental berhasil diupdate!');
     }
 
     public function destroyRental($motorbike_rental_id)
     {
-        $rental = MotorbikeRental::withTrashed()->with(['motorcycles.images' => function($q){$q->withTrashed();}, 'bonuses' => function($q){$q->withTrashed();}])->findOrFail($motorbike_rental_id);
+        $rental = MotorbikeRental::withTrashed()->with(['motorcycles.images' => function ($q) {
+            $q->withTrashed();
+        }, 'bonuses' => function ($q) {
+            $q->withTrashed();
+        }])->findOrFail($motorbike_rental_id);
 
         // Hapus semua gambar motor
         foreach ($rental->motorcycles as $motorcycle) {
@@ -412,7 +421,7 @@ class PemilikController extends Controller
      */
     public function syncPaymentStatus(Transaction $transaction)
     {
-        $syncService = new MidtransStatusSyncService();
+        $syncService = new MidtransStatusSyncService;
         $updated = $syncService->syncPaymentStatus($transaction);
 
         if ($updated->payment_status !== $transaction->payment_status) {
@@ -429,7 +438,7 @@ class PemilikController extends Controller
      */
     public function checkPaymentStatus(Transaction $transaction)
     {
-        $syncService = new MidtransStatusSyncService();
+        $syncService = new MidtransStatusSyncService;
         $oldStatus = $transaction->payment_status;
         $updated = $syncService->syncPaymentStatus($transaction);
 
@@ -441,7 +450,7 @@ class PemilikController extends Controller
             'motor_status' => $updated->motorcycle->status ?? null,
             'message' => $oldStatus !== $updated->payment_status
                 ? "Status berubah dari {$oldStatus} ke {$updated->payment_status}"
-                : "Status tidak berubah ({$updated->payment_status})"
+                : "Status tidak berubah ({$updated->payment_status})",
         ]);
     }
 }

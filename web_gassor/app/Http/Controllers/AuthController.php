@@ -27,6 +27,7 @@ class AuthController extends Controller
         if (! $request->has('role') || ! in_array($request->role, ['penyewa', 'pemilik'])) {
             return redirect()->route('select-role');
         }
+
         return view('auth.register');
     }
 
@@ -122,6 +123,7 @@ class AuthController extends Controller
             $googleUser = Socialite::driver('google')->user();
         } catch (\Exception $e) {
             session()->forget('google_role');
+
             return redirect('/login')->withErrors(['email' => 'Gagal login dengan Google.']);
         }
 
@@ -165,6 +167,7 @@ class AuthController extends Controller
             return redirect()->route('home');
         } else {
             Auth::logout();
+
             return redirect('/login')->withErrors(['email' => 'Role tidak valid.']);
         }
     }

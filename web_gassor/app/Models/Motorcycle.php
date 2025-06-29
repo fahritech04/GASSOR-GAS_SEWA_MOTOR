@@ -22,7 +22,7 @@ class Motorcycle extends Model
         'stock',
         'available_stock',
         'has_gps',
-        'status'
+        'status',
     ];
 
     protected $casts = [
@@ -62,8 +62,10 @@ class Motorcycle extends Model
         if ($this->available_stock >= $quantity) {
             $this->available_stock -= $quantity;
             $this->save();
+
             return true;
         }
+
         return false;
     }
 
@@ -75,8 +77,10 @@ class Motorcycle extends Model
         if (($this->available_stock + $quantity) <= $this->stock) {
             $this->available_stock += $quantity;
             $this->save();
+
             return true;
         }
+
         return false;
     }
 
