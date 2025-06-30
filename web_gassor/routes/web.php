@@ -68,6 +68,7 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/check-booking', [BookingController::class, 'show'])->name('check-booking.show');
         Route::post('/check-booking/{code}/retry-payment', [BookingController::class, 'retryPayment'])->name('booking.retry-payment');
         Route::post('/check-booking/{code}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
+        Route::get('/history-booking', [BookingController::class, 'history'])->name('history-booking');
         Route::get('/booking-status', [BookingController::class, 'paymentStatus'])->name('booking.status');
     });
 

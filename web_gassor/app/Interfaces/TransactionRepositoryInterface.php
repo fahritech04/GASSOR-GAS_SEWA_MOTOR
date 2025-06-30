@@ -17,4 +17,8 @@ interface TransactionRepositoryInterface
     public function getLatestTransactionsByOwner($ownerId, $limit = 10);
 
     public function getTransactionsByUser($userId);
+
+    public function getActiveTransactionsByUser($userId);
+
+    public function getHistoryTransactionsByUser($userId);
 }

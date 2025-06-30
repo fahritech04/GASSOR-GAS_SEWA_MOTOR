@@ -115,13 +115,26 @@ class BookingController extends Controller
 
     public function check()
     {
-        // Ambil transaksi milik user yang sedang login (atau tampilkan kosong jika guest)
+        // Transaksi milik user yang login (tampilkan kosong jika guest)
         $transactions = [];
         if (auth()->check()) {
-            $transactions = $this->transactionRepository->getTransactionsByUser(auth()->user()->id);
+            // Tampilkan transaksi payment_status success, rental_status on_going
+            $transactions = $this->transactionRepository->getActiveTransactionsByUser(auth()->user()->id);
         }
 
         return view('pages.booking.check-booking', compact('transactions'));
+    }
+
+    public function history()
+    {
+        // History transaksi user yang login (tampilkan kosong jika guest)
+        $transactions = [];
+        if (auth()->check()) {
+            // Tampilkan transaksi kecuali payment_status success,rental_status on_going
+            $transactions = $this->transactionRepository->getHistoryTransactionsByUser(auth()->user()->id);
+        }
+
+        return view('pages.booking.history-booking', compact('transactions'));
     }
 
     public function show(BookingShowRequest $request)

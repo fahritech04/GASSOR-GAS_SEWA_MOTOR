@@ -99,10 +99,52 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function getTransactionsByUser($userId)
     {
-        // Ambil transaksi berdasarkan nama/email user (penyewa)
-        return Transaction::with(['motorcycle'])
-            ->where('email', auth()->user()->email)
-            ->orWhere('name', auth()->user()->name)
+        // Transaksi berdasarkan nama/email user (penyewa)
+        return Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
+            ->where(function ($query) {
+                $query->where('email', auth()->user()->email)
+                      ->orWhere('name', auth()->user()->name);
+            })
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    public function getActiveTransactionsByUser($userId)
+    {
+        // Transaksi aktif (payment_status success + rental_status on_going) dan pending
+        $query = Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
+            ->where(function ($query) {
+                $query->where('email', auth()->user()->email)
+                      ->orWhere('name', auth()->user()->name);
+            })
+            ->where(function ($query) {
+                $query->where(function ($subQuery) {
+                    // Payment success dan rental on_going
+                    $subQuery->where('payment_status', 'success')
+                             ->where('rental_status', 'on_going');
+                })->orWhere('payment_status', 'pending');
+            })
+            ->orderByDesc('created_at');
+
+        return $query->get();
+    }
+
+    public function getHistoryTransactionsByUser($userId)
+    {
+        // History transaksi (kecuali payment_status success + rental_status on_going dan pending)
+        return Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
+            ->where(function ($query) {
+                $query->where('email', auth()->user()->email)
+                      ->orWhere('name', auth()->user()->name);
+            })
+            ->where(function ($query) {
+                $query->where('payment_status', '!=', 'pending')
+                      ->where('payment_status', '!=', 'success')
+                      ->orWhere(function ($subQuery) {
+                          $subQuery->where('payment_status', 'success')
+                                   ->where('rental_status', '!=', 'on_going');
+                      });
+            })
             ->orderByDesc('created_at')
             ->get();
     }

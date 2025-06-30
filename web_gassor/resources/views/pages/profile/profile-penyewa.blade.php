@@ -75,13 +75,13 @@
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
-                    {{-- <a href="#" class="flex items-center justify-between">
+                    <a href="{{ route('history-booking') }}" class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Ganti Kata Sandi</p>
+                            <p class="text-gassor-grey">Riwayat Pemesanan</p>
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a> --}}
+                    </a>
                 </div>
             </div>
 

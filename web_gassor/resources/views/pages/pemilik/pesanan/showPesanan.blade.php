@@ -28,8 +28,8 @@
                     $rentalStatusLabel = 'SEDANG BERJALAN';
                     $rentalStatusColor = '#E6A43B';
                 } else {
-                    $rentalStatusLabel = 'MENUNGGU KONFIRMASI';
-                    $rentalStatusColor = '#3498db';
+                    $rentalStatusLabel = null;
+                    $rentalStatusColor = '#828282';
                 }
             } else {
                 $rentalStatusLabel = null;
