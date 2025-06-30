@@ -26,7 +26,17 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function saveTransaction($data)
     {
+        // Validasi data yang diperlukan
+        if (!isset($data['motorcycle_id']) || empty($data['motorcycle_id'])) {
+            throw new \Exception('Motorcycle ID is required but missing from transaction data');
+        }
+
         $motorcycle = Motorcycle::find($data['motorcycle_id']);
+
+        if (!$motorcycle) {
+            throw new \Exception('Motorcycle not found with ID: ' . $data['motorcycle_id']);
+        }
+
         $data = $this->prepareTransactionData($data, $motorcycle);
 
         // Add motorbike_rental_id from the motorcycle

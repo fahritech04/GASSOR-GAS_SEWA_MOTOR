@@ -200,9 +200,111 @@
 @endsection
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('assets/js/accodion.js') }}"></script>
 <script>
     // Hanya satu metode pembayaran, update langsung harga total
     document.getElementById('price').innerHTML = document.getElementById('fullPaymentPrice').textContent;
+
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#E6A43B',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops! Ada Masalah',
+            text: '{{ session('error') }}',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#EB5757',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        });
+    @endif
+
+    // Handle form submission dengan validasi tambahan
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Konfirmasi pembayaran dengan SweetAlert2
+        Swal.fire({
+            icon: 'question',
+            title: 'Konfirmasi Pembayaran',
+            html: `
+                <div style="text-align: left; margin: 20px 0;">
+                    <p><strong>Motor:</strong> {{ $motorcycle->name ?? '-' }}</p>
+                    <p><strong>Durasi:</strong> {{ $transaction['duration'] ?? '-' }} hari</p>
+                    <p><strong>Total:</strong> Rp {{ number_format(($motorcycle->price_per_day ?? 0) * ($transaction['duration'] ?? 1), 0, ',', '.') }}</p>
+                </div>
+                <p style="margin-top: 15px;">Anda akan diarahkan ke halaman pembayaran Midtrans. Lanjutkan?</p>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Bayar Sekarang',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#E6A43B',
+            cancelButtonColor: '#95A5A6',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold',
+                cancelButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Disable tombol submit untuk mencegah double click
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+
+                // Tampilkan loading dengan SweetAlert2
+                Swal.fire({
+                    title: 'Memproses Pembayaran...',
+                    html: 'Mohon tunggu, Anda akan diarahkan ke halaman pembayaran',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form setelah konfirmasi
+                e.target.submit();
+
+                // Re-enable setelah 10 detik jika tidak redirect
+                setTimeout(function() {
+                    submitBtn.disabled = false;
+                    Swal.close();
+                }, 10000);
+            }
+        });
+    });
+
+    // Jika user kembali dari halaman lain (Midtrans), cek data
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+            // Halaman dimuat dari cache (user menekan back button)
+            console.log('User returned to checkout page');
+        }
+    });
 </script>
 @endsection

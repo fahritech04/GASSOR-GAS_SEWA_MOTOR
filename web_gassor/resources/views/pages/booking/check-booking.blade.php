@@ -4,6 +4,7 @@
 <div style="position: absolute; top: 0; width: 100%; height: 430px; border-bottom-left-radius: 75px; border-bottom-right-radius: 75px; background: linear-gradient(180deg, #e6a43b 0%, #e6a43b 100%)"></div>
 <div class="relative flex flex-col gap-[30px] my-[60px] px-5">
     <h1 class="font-bold text-[30px] leading-[45px] text-center">Rincian<br>Pemesanan Aktif</h1>
+
     @forelse ($transactions as $transaction)
         <div class="w-full mb-4">
             <form action="{{ route('check-booking.show') }}" method="POST" class="w-full">
@@ -70,17 +71,19 @@
             </form>
             @if(strtoupper($transaction->payment_status) === 'PENDING')
                 <div style="display: flex; gap: 16px; margin-top: 32px; margin-bottom: 8px;">
-                    <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" style="flex: 1;">
+                    <form action="{{ route('booking.retry-payment', $transaction->code) }}" method="POST" style="flex: 1;" class="retry-payment-form">
                         @csrf
-                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
-                        onmouseover="this.style.borderColor='#E6A43B'" onmouseout="this.style.borderColor='#fff'">
+                        <button type="submit" onclick="confirmRetryPayment(event, this.form)" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #27ae60; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: all 0.3s ease; cursor: pointer;"
+                        onmouseover="this.style.backgroundColor='#239C56'; this.style.transform='translateY(-2px)'"
+                        onmouseout="this.style.backgroundColor='#27ae60'; this.style.transform='translateY(0)'">
                             Bayar Ulang
                         </button>
                     </form>
-                    <form action="{{ route('booking.cancel', $transaction->code) }}" method="POST" style="flex: 1;">
+                    <form action="{{ route('booking.cancel', $transaction->code) }}" method="POST" style="flex: 1;" class="cancel-form">
                         @csrf
-                        <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #EB5757; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: border 0.2s, box-shadow 0.2s; cursor: pointer;"
-                        onmouseover="this.style.borderColor='#EB5757'" onmouseout="this.style.borderColor='#fff'">
+                        <button type="submit" onclick="confirmCancel(event, this.form)" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 0; background: #EB5757; color: #fff; font-weight: bold; font-size: 1rem; box-shadow: none; transition: all 0.3s ease; cursor: pointer;"
+                        onmouseover="this.style.backgroundColor='#E74C3C'; this.style.transform='translateY(-2px)'"
+                        onmouseout="this.style.backgroundColor='#EB5757'; this.style.transform='translateY(0)'">
                             Batalkan
                         </button>
                     </form>
@@ -95,4 +98,123 @@
 </div>
 
 @include('includes.navigation')
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#E6A43B',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops! Ada Masalah',
+            text: '{{ session('error') }}',
+            confirmButtonText: 'Mengerti',
+            confirmButtonColor: '#EB5757',
+            background: '#ffffff',
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        });
+    @endif
+
+    // Konfirmasi pembatalan pesanan
+    function confirmCancel(event, form) {
+        event.preventDefault();
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Konfirmasi Pembatalan',
+            text: 'Apakah Anda yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Batalkan',
+            cancelButtonText: 'Tidak',
+            confirmButtonColor: '#EB5757',
+            cancelButtonColor: '#95A5A6',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold',
+                cancelButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilkan loading
+                Swal.fire({
+                    title: 'Membatalkan Pesanan...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form pembatalan
+                form.submit();
+            }
+        });
+    }
+
+    // Konfirmasi pembayaran ulang
+    function confirmRetryPayment(event, form) {
+        event.preventDefault();
+
+        Swal.fire({
+            icon: 'question',
+            title: 'Konfirmasi Pembayaran',
+            text: 'Anda akan diarahkan ke halaman pembayaran. Lanjutkan?',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Bayar Sekarang',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#27AE60',
+            cancelButtonColor: '#95A5A6',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-lg shadow-lg',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold',
+                cancelButton: 'rounded-full px-6 py-2 font-bold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilkan loading
+                Swal.fire({
+                    title: 'Mengarahkan ke Pembayaran...',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Submit form retry payment
+                form.submit();
+            }
+        });
+    }
+</script>
 @endsection
