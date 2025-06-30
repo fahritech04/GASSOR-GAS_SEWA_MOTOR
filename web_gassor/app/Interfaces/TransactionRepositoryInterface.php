@@ -20,5 +20,5 @@ interface TransactionRepositoryInterface
 
     public function getActiveTransactionsByUser($userId);
 
-    public function getHistoryTransactionsByUser($userId);
+    public function getHistoryTransactionsByUser($userId, $paymentStatusFilter = null);
 }

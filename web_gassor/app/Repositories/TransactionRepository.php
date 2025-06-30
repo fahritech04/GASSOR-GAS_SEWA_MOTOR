@@ -139,23 +139,31 @@ class TransactionRepository implements TransactionRepositoryInterface
         return $query->get();
     }
 
-    public function getHistoryTransactionsByUser($userId)
+    public function getHistoryTransactionsByUser($userId, $paymentStatusFilter = null)
     {
-        // History transaksi (kecuali payment_status success + rental_status on_going dan pending)
-        return Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
+        // History transaksi user yang login
+        $query = Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
             ->where(function ($query) {
                 $query->where('email', auth()->user()->email)
                       ->orWhere('name', auth()->user()->name);
-            })
-            ->where(function ($query) {
+            });
+
+        if ($paymentStatusFilter) {
+            $query->where('payment_status', $paymentStatusFilter);
+        } else {
+            // Jika tidak ada filter, tampilkan history (kecuali payment_status success + rental_status on_going dan pending)
+            $query->where(function ($query) {
                 $query->where('payment_status', '!=', 'pending')
-                      ->where('payment_status', '!=', 'success')
-                      ->orWhere(function ($subQuery) {
-                          $subQuery->where('payment_status', 'success')
-                                   ->where('rental_status', '!=', 'on_going');
+                      ->where(function ($subQuery) {
+                          $subQuery->where('payment_status', '!=', 'success')
+                                   ->orWhere(function ($innerQuery) {
+                                       $innerQuery->where('payment_status', 'success')
+                                              ->where('rental_status', '!=', 'on_going');
+                                   });
                       });
-            })
-            ->orderByDesc('created_at')
-            ->get();
+            });
+        }
+
+        return $query->orderByDesc('created_at')->get();
     }
 }
