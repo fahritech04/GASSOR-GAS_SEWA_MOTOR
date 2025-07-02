@@ -35,11 +35,10 @@ class TransactionResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('phone_number')
                     ->required(),
-                Forms\Components\Select::make('payment_method')
-                    ->options([
-                        'down_payment' => 'Down Payment',
-                        'full_payment' => 'Full Payment',
-                    ])
+                Forms\Components\TextInput::make('payment_method')
+                    ->default('full_payment')
+                    ->disabled()
+                    ->dehydrated(true)
                     ->required(),
                 Forms\Components\TextInput::make('payment_status')
                     ->required(),
@@ -70,12 +69,27 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code'),
-                Tables\Columns\TextColumn::make('motorbikeRental.name'),
-                Tables\Columns\TextColumn::make('motorcycle.name'),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('payment_method'),
-                Tables\Columns\TextColumn::make('payment_status'),
+                Tables\Columns\TextColumn::make('code')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('motorbikeRental.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('motorcycle.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'success' => 'success',
+                        'pending' => 'warning',
+                        'failed' => 'danger',
+                        'canceled' => 'gray',
+                        'expired' => 'danger',
+                        'refunded' => 'info',
+                        'partial' => 'warning',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('rental_status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -84,13 +98,77 @@ class TransactionResource extends Resource
                         'finished' => 'success',
                         'cancelled' => 'danger',
                         default => 'gray',
-                    }),
-                Tables\Columns\TextColumn::make('total_amount'),
-                Tables\Columns\TextColumn::make('transaction_date'),
+                    })
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('total_amount')
+                    ->searchable()
+                    ->sortable()
+                    ->money('IDR'),
+                Tables\Columns\TextColumn::make('transaction_date')
+                    ->searchable()
+                    ->sortable()
+                    ->date(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->options([
+                        'success' => 'Success',
+                        'pending' => 'Pending',
+                        'failed' => 'Failed',
+                        'canceled' => 'Canceled',
+                        'expired' => 'Expired',
+                        'refunded' => 'Refunded',
+                        'partial' => 'Partial Payment',
+                    ]),
+                Tables\Filters\SelectFilter::make('rental_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'on_going' => 'On Going',
+                        'finished' => 'Finished',
+                        'cancelled' => 'Cancelled',
+                    ]),
+                Tables\Filters\Filter::make('transaction_date')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')
+                            ->label('From Date'),
+                        Forms\Components\DatePicker::make('until')
+                            ->label('Until Date'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn ($query, $date) => $query->whereDate('transaction_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn ($query, $date) => $query->whereDate('transaction_date', '<=', $date),
+                            );
+                    }),
+                Tables\Filters\Filter::make('total_amount')
+                    ->form([
+                        Forms\Components\TextInput::make('min_amount')
+                            ->label('Min Amount')
+                            ->numeric()
+                            ->prefix('IDR'),
+                        Forms\Components\TextInput::make('max_amount')
+                            ->label('Max Amount')
+                            ->numeric()
+                            ->prefix('IDR'),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when(
+                                $data['min_amount'],
+                                fn ($query, $amount) => $query->where('total_amount', '>=', $amount),
+                            )
+                            ->when(
+                                $data['max_amount'],
+                                fn ($query, $amount) => $query->where('total_amount', '<=', $amount),
+                            );
+                    }),
             ])
+            ->defaultSort('transaction_date', 'desc')
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

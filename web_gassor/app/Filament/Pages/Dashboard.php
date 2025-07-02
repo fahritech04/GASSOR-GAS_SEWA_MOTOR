@@ -28,17 +28,12 @@ class Dashboard extends BaseDashboard
         ];
     }
 
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            \App\Filament\Widgets\StatsOverview::class,
-        ];
-    }
-
     protected function getFooterWidgets(): array
     {
         return [
             \App\Filament\Widgets\RevenueChart::class,
+            \App\Filament\Widgets\MonthlyComparisonChart::class,
+            \App\Filament\Widgets\DailyTransactionChart::class,
             \App\Filament\Widgets\PopularMotorcyclesChart::class,
             \App\Filament\Widgets\PopularMotorbikeRentalsChart::class,
             \App\Filament\Widgets\UserRegistrationChart::class,
