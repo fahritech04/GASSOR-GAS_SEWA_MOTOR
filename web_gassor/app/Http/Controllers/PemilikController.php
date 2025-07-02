@@ -331,7 +331,7 @@ class PemilikController extends Controller
                 'category_id' => 'required|exists:categories,id',
                 'description' => 'required|string',
                 'address' => 'required|string',
-                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
             ]);
 
             $motorbikeRentalData = [
@@ -390,8 +390,8 @@ class PemilikController extends Controller
             'price_per_day' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
             'available_stock' => 'required|integer|min:0',
-            'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
         ]);
 
         // Update Motorcycle (Motor) - menghapus bidang status

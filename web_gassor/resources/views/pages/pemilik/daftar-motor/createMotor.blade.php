@@ -359,10 +359,19 @@
                             <div>
                                 <label class="form-label">STNK (Depan & Belakang)<span style="color: #dc3545;">*</span></label>
                                 <div class="upload-area" onclick="document.getElementById('stnk_images_0').click()">
-                                    <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                                    <input type="file" id="stnk_images_0" name="motorcycles[0][stnk_images][]" accept="image/*" multiple style="display: none;" onchange="previewMultipleImages(event, 'stnk_preview_0')" required/>
+                                    <span>Pilih dari Galeri</span>
+                                    <input type="file" id="stnk_images_0" name="motorcycles[0][stnk_images][]" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(event, 'stnk_preview_0', 'stnk_images_0')" />
                                 </div>
-                                <div id="stnk_preview_0" style="display: none;"></div>
+                                <div class="upload-area" onclick="captureFromCamera('stnk_preview_0', 'stnk_images_0')" style="margin-top: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border-color: #666866;">
+                                    <span>Ambil dari Kamera</span>
+                                    <input type="file" id="stnk_camera_0" accept="image/*" capture="environment" style="display: none;" onchange="handleCameraCapture(event, 'stnk_preview_0', 'stnk_images_0')" />
+                                </div>
+                                <div id="stnk_preview_0" style="display: none; margin-top: 10px;">
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="stnk_preview_container_0"></div>
+                                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                                        <strong>Tips:</strong> Untuk kamera HP, ambil foto satu per satu. Klik "Ambil dari Kamera" lagi untuk foto berikutnya.
+                                    </p>
+                                </div>
                             </div>
                             <div>
                                 <label class="form-label">Harga per Hari<span style="color: #dc3545;">*</span></label>
@@ -387,10 +396,19 @@
                             <div>
                                 <label class="form-label">Gambar Motor<span style="color: #dc3545;">*</span></label>
                                 <div class="upload-area" onclick="document.getElementById('motor_images_0').click()">
-                                    <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                                    <input type="file" id="motor_images_0" name="motorcycles[0][images][]" accept="image/*" multiple style="display: none;" onchange="previewMultipleImages(event, 'motor_preview_0')" required/>
+                                    <span>Pilih dari Galeri</span>
+                                    <input type="file" id="motor_images_0" name="motorcycles[0][images][]" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(event, 'motor_preview_0', 'motor_images_0')" />
                                 </div>
-                                <div id="motor_preview_0" style="display: none;"></div>
+                                <div class="upload-area" onclick="captureFromCamera('motor_preview_0', 'motor_images_0')" style="margin-top: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border-color: #666866;">
+                                    <span>Ambil dari Kamera</span>
+                                    <input type="file" id="motor_camera_0" accept="image/*" capture="environment" style="display: none;" onchange="handleCameraCapture(event, 'motor_preview_0', 'motor_images_0')" />
+                                </div>
+                                <div id="motor_preview_0" style="display: none; margin-top: 10px;">
+                                    <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="motor_preview_container_0"></div>
+                                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                                        <strong>Tips:</strong> Untuk kamera HP, ambil foto satu per satu. Klik "Ambil dari Kamera" lagi untuk foto berikutnya.
+                                    </p>
+                                </div>
                             </div>
                             <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                         </div>
@@ -457,27 +475,93 @@
         preview.innerHTML = '';
         preview.style.display = 'none';
     }
-    // Gambar banyak preview hapus
-    function previewMultipleImages(event, previewId) {
-        const input = event.target;
-        const preview = document.getElementById(previewId);
-        preview.innerHTML = '';
-        if (input.files) {
-            Array.from(input.files).forEach((file, idx) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const wrapper = document.createElement('div');
-                    wrapper.style.position = 'relative';
-                    wrapper.style.display = 'inline-block';
-                    wrapper.style.marginRight = '8px';
-                    wrapper.innerHTML = `<img class='image-preview' src='${e.target.result}' alt='Preview'><button type='button' class='remove-btn' style='position:absolute;top:0;right:0;padding:2px 8px;font-size:12px;' onclick='removeMultiImage(this, "${input.id}", ${idx}, "${previewId}")'>×</button>`;
-                    preview.appendChild(wrapper);
-                    preview.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
-            });
-            input._files = Array.from(input.files);
+    // Fungsi untuk menangani multiple files dari galeri
+    function handleMultipleFiles(event, previewId, inputId) {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const preview = document.getElementById(previewId);
+            const container = document.getElementById(previewId.replace('_preview_', '_preview_container_'));
+            const existingFiles = getExistingFiles(inputId);
+            const allFiles = [...existingFiles, ...Array.from(files)];
+            updatePreview(container, allFiles, inputId, previewId);
+            updateInputFiles(inputId, allFiles);
+            preview.style.display = 'block';
         }
+    }
+    // Fungsi untuk capture dari kamera (satu foto)
+    function captureFromCamera(previewId, inputId) {
+        const cameraInput = document.getElementById(inputId.replace('images', 'camera'));
+        cameraInput.click();
+    }
+    // Fungsi untuk menangani hasil capture kamera
+    function handleCameraCapture(event, previewId, inputId) {
+        const file = event.target.files[0];
+        if (file) {
+            const preview = document.getElementById(previewId);
+            const container = document.getElementById(previewId.replace('_preview_', '_preview_container_'));
+            const existingFiles = getExistingFiles(inputId);
+            const allFiles = [...existingFiles, file];
+            updatePreview(container, allFiles, inputId, previewId);
+            updateInputFiles(inputId, allFiles);
+            preview.style.display = 'block';
+            event.target.value = '';
+        }
+    }
+    // Fungsi untuk mendapatkan files yang sudah ada
+    function getExistingFiles(inputId) {
+        const input = document.getElementById(inputId);
+        return input._allFiles || [];
+    }
+    // Fungsi untuk update input files
+    function updateInputFiles(inputId, allFiles) {
+        const input = document.getElementById(inputId);
+        const dt = new DataTransfer();
+
+        allFiles.forEach(file => {
+            dt.items.add(file);
+        });
+
+        input.files = dt.files;
+        input._allFiles = allFiles;
+    }
+    // Fungsi untuk update preview container
+    function updatePreview(container, allFiles, inputId, previewId) {
+        container.innerHTML = '';
+
+        allFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'inline-block';
+                wrapper.style.marginRight = '8px';
+                wrapper.innerHTML = `
+                    <img src="${e.target.result}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid #e6a43b;" alt="Preview">
+                    <button type="button" onclick="removeFileFromCollection(${index}, '${inputId}', '${previewId}')"
+                            style="position:absolute;top:-5px;right:-5px;background:#dc3545;color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">×</button>
+                `;
+                container.appendChild(wrapper);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    // Fungsi untuk menghapus file dari koleksi
+    function removeFileFromCollection(index, inputId, previewId) {
+        const existingFiles = getExistingFiles(inputId);
+        existingFiles.splice(index, 1);
+
+        const container = document.getElementById(previewId.replace('_preview_', '_preview_container_'));
+        updatePreview(container, existingFiles, inputId, previewId);
+        updateInputFiles(inputId, existingFiles);
+
+        if (existingFiles.length === 0) {
+            document.getElementById(previewId).style.display = 'none';
+        }
+    }
+    // Gambar banyak preview hapus (function lama - untuk backward compatibility)
+    function previewMultipleImages(event, previewId) {
+        const inputId = event.target.id;
+        handleMultipleFiles(event, previewId, inputId);
     }
     // Hapus satu gambar dari input banyak gambar
     function removeMultiImage(btn, inputId, idx, previewId) {
@@ -559,13 +643,25 @@
                     </div>
                     <div>
                         <label class="form-label">STNK (Depan & Belakang)<span style="color: #dc3545;">*</span></label>
+
+                        {{-- Upload area untuk file browser --}}
                         <div class="upload-area" onclick="document.getElementById('stnk_images_${idx}').click()">
-                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                            <input type="file" id="stnk_images_${idx}" name="motorcycles[${idx}][stnk_images][]"
-                                accept="image/*" multiple style="display: none;"
-                                onchange="previewMultipleImages(event, 'stnk_preview_${idx}')" required />
+                            <span>Pilih dari Galeri</span>
+                            <input type="file" id="stnk_images_${idx}" name="motorcycles[${idx}][stnk_images][]" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(event, 'stnk_preview_${idx}', 'stnk_images_${idx}')" />
                         </div>
-                        <div id="stnk_preview_${idx}" style="display: none;"></div>
+
+                        {{-- Upload area untuk kamera --}}
+                        <div class="upload-area" onclick="captureFromCamera('stnk_preview_${idx}', 'stnk_images_${idx}')" style="margin-top: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border-color: #4ade80;">
+                            <span>Ambil dari Kamera</span>
+                            <input type="file" id="stnk_camera_${idx}" accept="image/*" capture="environment" style="display: none;" onchange="handleCameraCapture(event, 'stnk_preview_${idx}', 'stnk_images_${idx}')" />
+                        </div>
+
+                        <div id="stnk_preview_${idx}" style="display: none; margin-top: 10px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="stnk_preview_container_${idx}"></div>
+                            <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                                <strong>Tips:</strong> Untuk kamera HP, ambil foto satu per satu. Klik "Ambil dari Kamera" lagi untuk foto berikutnya.
+                            </p>
+                        </div>
                     </div>
                     <div>
                         <label class="form-label">Harga per Hari<span style="color: #dc3545;">*</span></label>
@@ -591,13 +687,25 @@
                     </div>
                     <div>
                         <label class="form-label">Gambar Motor<span style="color: #dc3545;">*</span></label>
+
+                        {{-- Upload area untuk file browser --}}
                         <div class="upload-area" onclick="document.getElementById('motor_images_${idx}').click()">
-                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                            <input type="file" id="motor_images_${idx}" name="motorcycles[${idx}][images][]"
-                                accept="image/*" multiple style="display: none;"
-                                onchange="previewMultipleImages(event, 'motor_preview_${idx}')" required/>
+                            <span>Pilih dari Galeri</span>
+                            <input type="file" id="motor_images_${idx}" name="motorcycles[${idx}][images][]" accept="image/*" multiple style="display: none;" onchange="handleMultipleFiles(event, 'motor_preview_${idx}', 'motor_images_${idx}')" />
                         </div>
-                        <div id="motor_preview_${idx}" style="display: none;"></div>
+
+                        {{-- Upload area untuk kamera --}}
+                        <div class="upload-area" onclick="captureFromCamera('motor_preview_${idx}', 'motor_images_${idx}')" style="margin-top: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border-color: #4ade80;">
+                            <span>Ambil dari Kamera</span>
+                            <input type="file" id="motor_camera_${idx}" accept="image/*" capture="environment" style="display: none;" onchange="handleCameraCapture(event, 'motor_preview_${idx}', 'motor_images_${idx}')" />
+                        </div>
+
+                        <div id="motor_preview_${idx}" style="display: none; margin-top: 10px;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="motor_preview_container_${idx}"></div>
+                            <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                                <strong>Tips:</strong> Untuk kamera HP, ambil foto satu per satu. Klik "Ambil dari Kamera" lagi untuk foto berikutnya.
+                            </p>
+                        </div>
                     </div>
                     <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                 </div>

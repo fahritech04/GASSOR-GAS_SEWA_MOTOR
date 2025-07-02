@@ -12,7 +12,7 @@
     </div>
     <a href="{{ route('pemilik.create-motor') }}"
     style="background-color: #000000; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block;">
-        + Tambah Motor
+        Tambah
     </a>
 </div>
 <section id="Result" class="relative flex flex-col gap-4 px-5 mt-5 mb-9">
@@ -22,7 +22,7 @@
             <a href="#" class="btn-hapus-rental"
                data-id="{{ $motorcycles->first()->motorbike_rental_id }}"
                style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center; font-size: 14px;">
-                Hapus Semua Motor
+                Hapus Semua
             </a>
             <form id="form-hapus-rental-{{ $motorcycles->first()->motorbike_rental_id }}" action="{{ route('pemilik.destroy-rental', $motorcycles->first()->motorbike_rental_id) }}" method="POST" style="display:none;">
                 @csrf
@@ -46,13 +46,13 @@
             <div class="flex flex-col gap-2 w-full">
                 <a href="{{ route('pemilik.edit-motor', $motorcycle->id) }}"
                 style="background-color: #e6a43b; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
-                    Edit Motor
+                    Edit
                 </a>
                 <a href="#" class="btn-hapus-motor"
                    data-id="{{ $motorcycle->id }}"
                    data-name="{{ $motorcycle->name }}"
                    style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
-                    Hapus Motor Ini
+                    Hapus
                 </a>
                 <form id="form-hapus-motor-{{ $motorcycle->id }}" action="{{ route('pemilik.destroy-motor', $motorcycle->id) }}" method="POST" style="display:none;">
                     @csrf
