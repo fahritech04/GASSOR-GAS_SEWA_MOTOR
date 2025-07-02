@@ -16,9 +16,21 @@
     </a>
 </div>
 <section id="Result" class="relative flex flex-col gap-4 px-5 mt-5 mb-9">
-    <h2 class="font-bold text-lg mb-2">Motor yang dimiliki {{ auth()->user()->name }}</h2>
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="font-bold text-lg">Motor yang dimiliki {{ auth()->user()->name }}</h2>
+        @if($motorcycles->count() > 0)
+            <a href="#" class="btn-hapus-rental"
+               data-id="{{ $motorcycles->first()->motorbike_rental_id }}"
+               style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center; font-size: 14px;">
+                Hapus Semua Motor
+            </a>
+            <form id="form-hapus-rental-{{ $motorcycles->first()->motorbike_rental_id }}" action="{{ route('pemilik.destroy-rental', $motorcycles->first()->motorbike_rental_id) }}" method="POST" style="display:none;">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endif
+    </div>
     @forelse ($motorcycles as $motorcycle)
-        {{-- <div class="card flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300" style="cursor:pointer" onclick="window.location='{{ route('pemilik.edit-motor', $motorcycle->id) }}'"> --}}
         <div class="card flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300 w-full max-w-[600px] items-center min-h-[140px]">
             <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden items-center justify-center">
                 <img src="{{ asset('storage/' . ($motorcycle->images->first()->image ?? 'default.png')) }}" class="object-cover w-full h-full" alt="icon">
@@ -36,12 +48,13 @@
                 style="background-color: #e6a43b; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
                     Edit Motor
                 </a>
-                <a href="#" class="btn-hapus-rental"
-                   data-id="{{ $motorcycle->motorbike_rental_id }}"
+                <a href="#" class="btn-hapus-motor"
+                   data-id="{{ $motorcycle->id }}"
+                   data-name="{{ $motorcycle->name }}"
                    style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
-                    Hapus Motor
+                    Hapus Motor Ini
                 </a>
-                <form id="form-hapus-rental-{{ $motorcycle->motorbike_rental_id }}" action="{{ route('pemilik.destroy-rental', $motorcycle->motorbike_rental_id) }}" method="POST" style="display:none;">
+                <form id="form-hapus-motor-{{ $motorcycle->id }}" action="{{ route('pemilik.destroy-motor', $motorcycle->id) }}" method="POST" style="display:none;">
                     @csrf
                     @method('DELETE')
                 </form>
@@ -53,14 +66,11 @@
     <div class="mt-4 flex justify-center">
         @if ($motorcycles->hasPages())
             <nav style="display: flex; gap: 4px; align-items: center;" aria-label="Pagination">
-                {{-- Halaman Sebelumnya --}}
                 @if ($motorcycles->onFirstPage())
                     <span style="padding: 6px 14px; border-radius: 8px; background: #e5e5e5; color: #aaa; font-weight: bold; border: 1px solid #e5e5e5; cursor: not-allowed;">&laquo;</span>
                 @else
                     <a href="{{ $motorcycles->previousPageUrl() }}" style="padding: 6px 14px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">&laquo;</a>
                 @endif
-
-                {{-- halaman angka --}}
                 @foreach ($motorcycles->getUrlRange(1, $motorcycles->lastPage()) as $page => $url)
                     @if ($page == $motorcycles->currentPage())
                         <span style="padding: 6px 12px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000;">{{ $page }}</span>
@@ -68,8 +78,6 @@
                         <a href="{{ $url }}" style="padding: 6px 12px; border-radius: 8px; background: #fff; color: #000; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">{{ $page }}</a>
                     @endif
                 @endforeach
-
-                {{-- Halaman Selanjutnya --}}
                 @if ($motorcycles->hasMorePages())
                     <a href="{{ $motorcycles->nextPageUrl() }}" style="padding: 6px 14px; border-radius: 8px; background: #000000; color: #fff; font-weight: bold; border: 1px solid #000; text-decoration: none; transition: background 0.2s;">&raquo;</a>
                 @else
@@ -86,24 +94,72 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.querySelectorAll('.btn-hapus-rental').forEach(function(btn) {
+@if (session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: {!! json_encode(session('success')) !!},
+        confirmButtonColor: '#e6a43b',
+        timer: 4000,
+        timerProgressBar: true,
+        showConfirmButton: true
+    });
+@endif
+
+@if (session('error'))
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: {!! json_encode(session('error')) !!},
+        confirmButtonColor: '#eb5757',
+        timer: 5000,
+        timerProgressBar: true,
+        showConfirmButton: true
+    });
+@endif
+
+document.querySelectorAll('.btn-hapus-motor').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
-        var rentalId = btn.getAttribute('data-id');
+        var motorId = btn.getAttribute('data-id');
+        var motorName = btn.getAttribute('data-name');
+
         Swal.fire({
-            title: 'Yakin ingin menghapus rental dan semua motor terkait?',
-            text: 'Semua data motor, gambar, dan bonus akan dihapus permanen!',
+            title: 'Hapus Motor "' + motorName + '"?',
+            text: 'Motor ini akan dihapus dari rental Anda. Jika ini motor terakhir dalam rental, maka rental juga akan ikut terhapus.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#eb5757',
+            confirmButtonColor: '#ff9800',
             cancelButtonColor: '#aaa',
-            confirmButtonText: 'Ya, hapus!',
+            confirmButtonText: 'Ya, hapus motor ini!',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('form-hapus-rental-' + rentalId).submit();
+                document.getElementById('form-hapus-motor-' + motorId).submit();
             }
         });
+    });
+});
+
+document.querySelector('.btn-hapus-rental')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    var rentalId = this.getAttribute('data-id');
+
+    Swal.fire({
+        title: 'Hapus SEMUA Motor dalam Rental Ini?',
+        text: 'PERHATIAN: Seluruh rental beserta SEMUA motor, gambar, dan bonus akan dihapus permanen!',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#eb5757',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Ya, hapus semuanya!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        focusCancel: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('form-hapus-rental-' + rentalId).submit();
+        }
     });
 });
 </script>

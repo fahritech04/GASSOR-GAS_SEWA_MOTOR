@@ -153,20 +153,14 @@
             <p class="font-semibold">Edit Motor</p>
             <div class="dummy-btn w-12"></div>
         </div>
-        @if(session('error'))
-            <div style="background:#ffdddd;color:#a94442;padding:16px;border-radius:8px;margin-bottom:16px;">
-                <b>Error:</b> {{ session('error') }}
-            </div>
-        @endif
         <form method="POST" action="{{ route('pemilik.update-motor', $motorcycle->id) }}" enctype="multipart/form-data" class="flex flex-col">
             @csrf
-            <!-- Tab Navigation -->
             <div class="tab-buttons">
                 <button type="button" class="tab-button active" onclick="showTab('informasi-umum')">Informasi Umum</button>
                 <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
                 <button type="button" class="tab-button" onclick="showTab('motor')">Motor</button>
             </div>
-            <!-- Tab 1: Informasi Umum -->
+            <!-- Tab Informasi Umum -->
             <div id="informasi-umum" class="tab-content active">
                 <div class="flex flex-col gap-4">
                     <div>
@@ -183,7 +177,7 @@
                     </div>
                     <div>
                         <label class="form-label">Nama <span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="name" id="rental-name" class="form-input" value="{{ old('name', $motorbikeRental->name ?? '') }}" required oninput="generateSlug()" />
+                        <input type="text" name="rental_name" id="rental-name" class="form-input" value="{{ old('rental_name', $motorbikeRental->name ?? '') }}" required oninput="generateSlug()" />
                     </div>
                     <div>
                         <label class="form-label">Slug <span style="color: #dc3545;">*</span></label>
@@ -219,7 +213,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Tab 2: Bonus Sewa -->
+            <!-- Tab Bonus Sewa -->
             <div id="bonus-sewa" class="tab-content">
                 <div id="bonus-container">
                     @php $bonusCount = 0; @endphp
@@ -278,7 +272,7 @@
                 </div>
                 <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
             </div>
-            <!-- Tab 3: Motor -->
+            <!-- Tab Motor -->
             <div id="motor" class="tab-content">
                 <div id="motor-container">
                     <div class="motor-item">
@@ -292,7 +286,7 @@
                             <div class="form-row">
                                 <div class="form-col">
                                     <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="name" class="form-input" value="{{ old('name', $motorcycle->name) }}" required />
+                                    <input type="text" name="motorcycle_name" class="form-input" value="{{ old('motorcycle_name', $motorcycle->name) }}" required />
                                 </div>
                                 <div class="form-col">
                                     <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
@@ -352,13 +346,6 @@
                                     </label>
                                 </div>
                             </div>
-                            {{-- <div>
-                                <label class="form-label">Status<span style="color: #dc3545;">*</span></label>
-                                <select name="status" class="form-select" required>
-                                    <option value="on_going" @if(old('status', $motorcycle->status)==='on_going') selected @endif>Sedang Berjalan</option>
-                                    <option value="finished" @if(old('status', $motorcycle->status)==='finished') selected @endif>Selesai</option>
-                                </select>
-                            </div> --}}
                             <div>
                                 <label class="form-label">Gambar Motor (upload baru untuk ganti semua)</label>
                                 <div class="upload-area" onclick="document.getElementById('motor_images_0').click()">
@@ -378,8 +365,8 @@
                         </div>
                     </div>
                 </div>
+                <button type="button" class="add-btn" onclick="addMotor()">Tambah Motor</button>
             </div>
-            <!-- Submit Buttons -->
             <div class="flex gap-3 mt-8 mb-2">
                 <button type="button" class="gassor-btn-secondary" onclick="window.history.back()">Batal</button>
                 <button type="submit" class="gassor-btn-primary">Update</button>
@@ -392,7 +379,49 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let bonusCount = {{ isset($bonusCount) ? $bonusCount : 1 }};
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: {!! json_encode(session('error')) !!},
+            confirmButtonColor: '#eb5757',
+            timer: 5000,
+            timerProgressBar: true,
+            showConfirmButton: true
+        });
+    @endif
+
+    @if($errors->any())
+        @php
+            $errorList = '';
+            foreach($errors->all() as $error) {
+                $errorList .= '• ' . $error . '\n';
+            }
+        @endphp
+        Swal.fire({
+            icon: 'warning',
+            title: 'Validation Errors',
+            text: {!! json_encode($errorList) !!},
+            confirmButtonColor: '#e6a43b',
+            timer: 8000,
+            timerProgressBar: true,
+            showConfirmButton: true
+        });
+    @endif
+
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: {!! json_encode(session('success')) !!},
+            confirmButtonColor: '#e6a43b',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: true
+        });
+    @endif
+
+    let bonusCount = {{ isset($motorbikeRental) && $motorbikeRental->bonuses ? count($motorbikeRental->bonuses) : 1 }};
     let motorCount = 1;
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -480,6 +509,93 @@
     }
     function removeBonus(btn) {
         btn.closest('.bonus-item').remove();
+    }
+    function addMotor() {
+        const container = document.getElementById('motor-container');
+        const idx = motorCount;
+        const userId = {{ auth()->id() }};
+        const userName = "{{ auth()->user()->name }}";
+        const motorHtml = `
+            <div class="motor-item">
+                <div class="flex flex-col gap-4">
+                    <div>
+                        <label class="form-label">Pemilik<span style="color: #dc3545;">*</span></label>
+                        <select name="motorcycles[${idx}][owner_id]" class="form-select" required readonly>
+                            <option value="${userId}">${userName}</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="motorcycles[${idx}][name]" class="form-input" placeholder="Contoh: Scoopy 125cc" required />
+                        </div>
+                        <div class="form-col">
+                            <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="motorcycles[${idx}][motorcycle_type]" class="form-input" placeholder="Contoh: matic" required />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label class="form-label">Nomor Polisi<span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="motorcycles[${idx}][vehicle_number_plate]" class="form-input" placeholder="Contoh: D 1234 XYZ" required />
+                        </div>
+                        <div class="form-col">
+                            <label class="form-label">STNK<span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="motorcycles[${idx}][stnk]" class="form-input" placeholder="Contoh: 12345678" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">STNK (Depan & Belakang)<span style="color: #dc3545;">*</span></label>
+                        <div class="upload-area" onclick="document.getElementById('stnk_images_${idx}').click()">
+                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                            <input type="file" id="stnk_images_${idx}" name="motorcycles[${idx}][stnk_images][]" accept="image/*" multiple style="display: none;" onchange="previewMultipleImages(event, 'stnk_preview_${idx}')" required />
+                        </div>
+                        <div id="stnk_preview_${idx}" style="display: none;"></div>
+                    </div>
+                    <div>
+                        <label class="form-label">Harga per Hari<span style="color: #dc3545;">*</span></label>
+                        <div class="relative">
+                            <span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#e6a43b;font-weight:bold;">Rp</span>
+                            <input type="number" name="motorcycles[${idx}][price_per_day]" class="form-input" style="padding-left:60px;" placeholder="50000" required />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label class="form-label">Stok Total<span style="color: #dc3545;">*</span></label>
+                            <input type="number" name="motorcycles[${idx}][stock]" class="form-input" placeholder="1" min="1" value="1" required />
+                            <small class="text-gray-500">Total unit motor yang dimiliki</small>
+                        </div>
+                        <div class="form-col">
+                            <label class="form-label">Stok Tersedia</label>
+                            <input type="number" name="motorcycles[${idx}][available_stock]" class="form-input" placeholder="1" min="0" value="1" />
+                            <small class="text-gray-500">Unit yang tersedia untuk disewa</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="motorcycles[${idx}][has_gps]" value="1" style="accent-color:#e6a43b;">
+                                <span class="form-label" style="margin-bottom:0;">Ada GPS IoT?</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Gambar Motor<span style="color: #dc3545;">*</span></label>
+                        <div class="upload-area" onclick="document.getElementById('motor_images_${idx}').click()">
+                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                            <input type="file" id="motor_images_${idx}" name="motorcycles[${idx}][images][]" accept="image/*" multiple style="display: none;" onchange="previewMultipleImages(event, 'motor_preview_${idx}')" required />
+                        </div>
+                        <div id="motor_preview_${idx}" style="display: none;"></div>
+                    </div>
+                    <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', motorHtml);
+        motorCount++;
+    }
+    function removeMotor(btn) {
+        btn.closest('.motor-item').remove();
     }
     function generateSlug() {
         const name = document.getElementById('rental-name').value;

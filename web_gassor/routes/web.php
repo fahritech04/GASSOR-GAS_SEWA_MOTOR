@@ -36,7 +36,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('pem
 Route::get('/pemilik/dashboard', [PemilikController::class, 'index'])->name('pemilik.dashboard');
 
 // Middleware untuk blokir akses manual (direct URL)
-
 Route::middleware(['block.manual.access'])->group(function () {
     Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show')->middleware('pemilik.block');
     Route::get('/city/{slug}', [CityController::class, 'show'])->name('city.show')->middleware('pemilik.block');
@@ -94,6 +93,7 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::get('/pemilik/laporan-keuangan/export-excel', [PemilikLaporanController::class, 'exportExcel'])->name('pemilik.laporan-keuangan.export-excel');
         Route::get('/pemilik/laporan-keuangan/export-pdf', [PemilikLaporanController::class, 'exportPdf'])->name('pemilik.laporan-keuangan.export-pdf');
         Route::delete('/pemilik/daftar-motor/hapus-rental/{motorbike_rental}', [PemilikController::class, 'destroyRental'])->name('pemilik.destroy-rental');
+        Route::delete('/pemilik/daftar-motor/hapus-motor/{motorcycle}', [PemilikController::class, 'destroyMotor'])->name('pemilik.destroy-motor');
     });
 });
 

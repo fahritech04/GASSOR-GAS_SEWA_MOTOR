@@ -16,10 +16,8 @@ class PemilikController extends Controller
     {
         $motorcycles = Motorcycle::where('owner_id', auth()->id())->paginate(3);
         $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
-
         $motorcycleIds = $motorcycles->pluck('id');
 
-        // Get recent transactions for display (limit 3)
         $recentTransactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
             ->whereIn('motorcycle_id', $motorcycleIds)
             ->latest()
@@ -27,19 +25,18 @@ class PemilikController extends Controller
             ->take(3)
             ->get();
 
-        // Get all successful transactions for calculations
         $allTransactions = Transaction::with(['motorcycle', 'motorcycle.owner'])
             ->whereIn('motorcycle_id', $motorcycleIds)
             ->where('payment_status', 'success')
             ->get();
 
         $activeOrders = $allTransactions->filter(function ($transaction) {
-            return $transaction->rental_status === 'on_going'; // Use per-transaction rental status
+            return $transaction->rental_status === 'on_going';
         })->count();
 
         $totalIncome = $allTransactions
             ->filter(function ($transaction) {
-                return $transaction->rental_status === 'finished'; // Use per-transaction rental status
+                return $transaction->rental_status === 'finished';
             })
             ->sum(function ($transaction) {
                 // Gunakan total_amount yang sudah dihitung saat booking
@@ -65,7 +62,7 @@ class PemilikController extends Controller
                 $query->where('owner_id', $ownerId);
             })
             ->orderByRaw("FIELD(payment_status, 'pending', 'success') DESC")
-            ->orderBy('id', 'desc') // Tambah order by ID untuk konsistensi
+            ->orderBy('id', 'desc')
             ->latest()
             ->paginate(5);
 
@@ -85,12 +82,11 @@ class PemilikController extends Controller
             }
         }
 
-        // Add success message if any status updated
         if ($syncCount > 0) {
             session()->flash('success', "✅ {$syncCount} status pembayaran berhasil diperbarui!");
         }
 
-        // Debug info - log unique transactions per motor
+        // Debug info transaksi per motor
         $motorcycleGroups = $transactions->groupBy('motorcycle_id');
         \Log::info('Pesanan page loaded', [
             'owner_id' => $ownerId,
@@ -111,12 +107,21 @@ class PemilikController extends Controller
 
     public function createMotor()
     {
-        return view('pages.pemilik.daftar-motor.createMotor');
+        // Cek apakah user sudah memiliki motor atau rental yang ada
+        $existingMotorcycles = Motorcycle::where('owner_id', auth()->id())->with('motorbikeRental')->get();
+        $hasExistingRental = $existingMotorcycles->isNotEmpty();
+
+        $existingRental = null;
+        if ($hasExistingRental) {
+            $existingRental = $existingMotorcycles->first()->motorbikeRental;
+        }
+
+        return view('pages.pemilik.daftar-motor.createMotor', compact('hasExistingRental', 'existingRental'));
     }
 
     public function returnMotor(Transaction $transaction)
     {
-        // Validasi ownership - pastikan motor milik user yang login
+        // Validasi ownership pastikan motor milik user yang login
         if ($transaction->motorcycle->owner_id !== auth()->id()) {
             \Log::warning('Unauthorized return attempt', [
                 'user_id' => auth()->id(),
@@ -127,11 +132,10 @@ class PemilikController extends Controller
             return redirect()->route('pemilik.pesanan')->with('error', 'Anda tidak memiliki akses untuk motor ini.');
         }
 
-        // Sinkronisasi status pembayaran dengan Midtrans terlebih dahulu
+        // Sinkronisasi status pembayaran dengan Midtrans
         $syncService = new MidtransStatusSyncService;
         $transaction = $syncService->syncPaymentStatus($transaction);
 
-        // Log kondisi sebelum proses
         \Log::info('Return motor process started', [
             'transaction_id' => $transaction->id,
             'motorcycle_id' => $transaction->motorcycle->id,
@@ -141,12 +145,12 @@ class PemilikController extends Controller
             'customer_name' => $transaction->name,
         ]);
 
-        // Validasi kondisi return - cek rental_status transaksi individu
+        // Validasi kondisi return cek rental_status transaksi individu
         // rental_status belum finished dan payment_status success
         if (
             $transaction->motorcycle &&
-            in_array($transaction->rental_status, ['on_going', null]) && // Allow null for backward compatibility
-            $transaction->rental_status !== 'finished' && // Prevent returning already finished transactions
+            in_array($transaction->rental_status, ['on_going', null]) &&
+            $transaction->rental_status !== 'finished' &&
             strtoupper($transaction->payment_status) === 'SUCCESS'
         ) {
             $motorcycle = $transaction->motorcycle;
@@ -157,10 +161,8 @@ class PemilikController extends Controller
             $transaction->rental_status = 'finished';
             $transaction->save();
 
-            // Increase available stock for this specific motorcycle
             $stockIncreased = $motorcycle->increaseStock(1);
 
-            // Log hasil
             \Log::info('Motor returned successfully', [
                 'transaction_id' => $transaction->id,
                 'motorcycle_id' => $motorcycle->id,
@@ -174,7 +176,6 @@ class PemilikController extends Controller
             return redirect()->route('pemilik.pesanan')->with('success',
                 "✅ Motor {$motorcycle->name} telah dikembalikan oleh {$transaction->name}. Stok tersedia: {$motorcycle->available_stock}/{$motorcycle->stock}");
         } else {
-            // Log kondisi gagal dengan lebih detail
             $reason = 'Unknown';
             if (!$transaction->motorcycle) {
                 $reason = 'Motor tidak ditemukan';
@@ -195,7 +196,7 @@ class PemilikController extends Controller
             ]);
 
             return redirect()->route('pemilik.pesanan')->with('error',
-                "❌ Motor tidak dapat dikembalikan. Alasan: {$reason}. Status rental: ".
+                "Motor tidak dapat dikembalikan. Alasan: {$reason}. Status rental: ".
                 ($transaction->rental_status ?? 'unknown').', Payment: '.$transaction->payment_status);
         }
     }
@@ -203,29 +204,43 @@ class PemilikController extends Controller
     public function storeMotor(Request $request)
     {
         try {
-            $validated = $request->validate([
-                'thumbnail' => 'required|image',
-                'name' => 'required|string',
-                'slug' => 'required|string|unique:motorbike_rentals,slug',
-                'city_id' => 'required|exists:cities,id',
-                'category_id' => 'required|exists:categories,id',
-                'description' => 'required|string',
-                'address' => 'required|string',
-            ]);
+            $useExistingRental = $request->has('use_existing_rental') && $request->use_existing_rental == '1';
 
-            $thumbnailPath = $request->file('thumbnail')->store('motorbike_rental', 'public');
+            if ($useExistingRental && $request->has('existing_rental_id')) {
+                $rental = MotorbikeRental::findOrFail($request->existing_rental_id);
 
-            // Simpan motorbike rental
-            $rental = MotorbikeRental::create([
-                'name' => $request->name,
-                'slug' => $request->slug,
-                'thumbnail' => $thumbnailPath,
-                'city_id' => $request->city_id,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'address' => $request->address,
-                'contact' => Auth::user()->phone ?? '',
-            ]);
+                $userMotorcycles = Motorcycle::where('owner_id', auth()->id())
+                    ->where('motorbike_rental_id', $rental->id)
+                    ->exists();
+
+                if (!$userMotorcycles) {
+                    throw new \Exception('Anda tidak memiliki akses ke rental ini.');
+                }
+            } else {
+                $validated = $request->validate([
+                    'thumbnail' => 'required|image',
+                    'name' => 'required|string',
+                    'slug' => 'required|string|unique:motorbike_rentals,slug',
+                    'city_id' => 'required|exists:cities,id',
+                    'category_id' => 'required|exists:categories,id',
+                    'description' => 'required|string',
+                    'address' => 'required|string',
+                ]);
+
+                $thumbnailPath = $request->file('thumbnail')->store('motorbike_rental', 'public');
+
+                // Simpan motorbike rental
+                $rental = MotorbikeRental::create([
+                    'name' => $request->name,
+                    'slug' => $request->slug,
+                    'thumbnail' => $thumbnailPath,
+                    'city_id' => $request->city_id,
+                    'category_id' => $request->category_id,
+                    'description' => $request->description,
+                    'address' => $request->address,
+                    'contact' => Auth::user()->phone ?? '',
+                ]);
+            }
 
             // Simpan bonus
             if ($request->has('bonuses')) {
@@ -279,7 +294,11 @@ class PemilikController extends Controller
                 }
             }
 
-            return redirect()->route('pemilik.daftar-motor')->with('success', 'Data berhasil disimpan!');
+            $message = $useExistingRental
+                ? 'Motor berhasil ditambahkan ke rental yang sudah ada!'
+                : 'Data rental dan motor berhasil disimpan!';
+
+            return redirect()->route('pemilik.daftar-motor')->with('success', $message);
         } catch (\Throwable $e) {
             $fullError = $e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine().' | TRACE: '.$e->getTraceAsString();
 
@@ -289,7 +308,6 @@ class PemilikController extends Controller
 
     public function editMotor(Motorcycle $motorcycle)
     {
-        // hanya owner yang bisa edit
         if ($motorcycle->owner_id !== auth()->id()) {
             abort(403);
         }
@@ -303,11 +321,21 @@ class PemilikController extends Controller
         if ($motorcycle->owner_id !== auth()->id()) {
             abort(403);
         }
-        // Update MotorbikeRental (Informasi Umum)
+
         $motorbikeRental = $motorcycle->motorbikeRental;
         if ($motorbikeRental) {
+            $validated = $request->validate([
+                'rental_name' => 'required|string|max:255',
+                'slug' => 'required|string|max:255|unique:motorbike_rentals,slug,' . $motorbikeRental->id,
+                'city_id' => 'required|exists:cities,id',
+                'category_id' => 'required|exists:categories,id',
+                'description' => 'required|string',
+                'address' => 'required|string',
+                'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
             $motorbikeRentalData = [
-                'name' => $request->input('name'),
+                'name' => $request->input('rental_name'),
                 'slug' => $request->input('slug'),
                 'city_id' => $request->input('city_id'),
                 'category_id' => $request->input('category_id'),
@@ -354,9 +382,21 @@ class PemilikController extends Controller
             }
         }
 
-        // Update Motorcycle (Motor) - removed status field
+        $motorcycleValidated = $request->validate([
+            'motorcycle_name' => 'required|string|max:255',
+            'motorcycle_type' => 'required|string|max:255',
+            'vehicle_number_plate' => 'required|string|max:255',
+            'stnk' => 'required|string|max:255',
+            'price_per_day' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:1',
+            'available_stock' => 'required|integer|min:0',
+            'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Update Motorcycle (Motor) - menghapus bidang status
         $motorcycle->update([
-            'name' => $request->input('name'),
+            'name' => $request->input('motorcycle_name'),
             'motorcycle_type' => $request->input('motorcycle_type'),
             'vehicle_number_plate' => $request->input('vehicle_number_plate'),
             'stnk' => $request->input('stnk'),
@@ -389,6 +429,42 @@ class PemilikController extends Controller
             }
         }
 
+        // Tambah motorcycles baru jika ada
+        if ($request->has('motorcycles')) {
+            foreach ($request->motorcycles as $motor) {
+                $stnkImages = [];
+                if (isset($motor['stnk_images'])) {
+                    foreach ($motor['stnk_images'] as $img) {
+                        $stnkImages[] = $img->store('stnk', 'public');
+                    }
+                }
+                // Simpan data motor baru
+                $newMotorcycle = Motorcycle::create([
+                    'owner_id' => auth()->id(),
+                    'motorbike_rental_id' => $motorbikeRental->id,
+                    'name' => $motor['name'],
+                    'motorcycle_type' => $motor['motorcycle_type'],
+                    'vehicle_number_plate' => $motor['vehicle_number_plate'],
+                    'stnk' => $motor['stnk'],
+                    'stnk_images' => $stnkImages,
+                    'price_per_day' => $motor['price_per_day'],
+                    'stock' => $motor['stock'] ?? 1,
+                    'available_stock' => $motor['available_stock'] ?? $motor['stock'] ?? 1,
+                    'has_gps' => isset($motor['has_gps']) ? true : false,
+                ]);
+                // Simpan gambar motor ke motorcycle_images
+                if (isset($motor['images'])) {
+                    foreach ($motor['images'] as $img) {
+                        $imgPath = $img->store('motorcycles', 'public');
+                        \App\Models\MotorcycleImage::create([
+                            'motorcycle_id' => $newMotorcycle->id,
+                            'image' => $imgPath,
+                        ]);
+                    }
+                }
+            }
+        }
+
         return redirect()->route('pemilik.daftar-motor')->with('success', 'Data motor & rental berhasil diupdate!');
     }
 
@@ -400,25 +476,22 @@ class PemilikController extends Controller
             $q->withTrashed();
         }])->findOrFail($motorbike_rental_id);
 
-        // Hapus semua gambar motor
         foreach ($rental->motorcycles as $motorcycle) {
             foreach ($motorcycle->images as $img) {
                 $img->forceDelete();
             }
             $motorcycle->forceDelete();
         }
-        // Hapus semua bonus
         foreach ($rental->bonuses as $bonus) {
             $bonus->forceDelete();
         }
-        // Hapus rental
         $rental->forceDelete();
 
         return redirect()->route('pemilik.daftar-motor')->with('success', 'Rental dan semua data terkait berhasil dihapus permanen!');
     }
 
     /**
-     * Manual sync payment status dari Midtrans
+     * Sinkronisasi status pembayaran manual dari Midtrans
      */
     public function syncPaymentStatus(Transaction $transaction)
     {
@@ -453,5 +526,49 @@ class PemilikController extends Controller
                 ? "Status berubah dari {$oldStatus} ke {$updated->payment_status}"
                 : "Status tidak berubah ({$updated->payment_status})",
         ]);
+    }
+
+    public function destroyMotor(Motorcycle $motorcycle)
+    {
+        if ($motorcycle->owner_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus motor ini.');
+        }
+
+        // Cek apakah motor sedang dalam transaksi aktif
+        $activeTransactions = Transaction::where('motorcycle_id', $motorcycle->id)
+            ->whereIn('payment_status', ['pending', 'success'])
+            ->where('rental_status', '!=', 'finished')
+            ->count();
+
+        if ($activeTransactions > 0) {
+            return redirect()->route('pemilik.daftar-motor')
+                ->with('error', 'Motor tidak dapat dihapus karena sedang dalam transaksi aktif.');
+        }
+
+        $motorName = $motorcycle->name;
+        $rental = $motorcycle->motorbikeRental;
+
+        foreach ($motorcycle->images as $img) {
+            $img->delete();
+        }
+
+        $motorcycle->delete();
+
+        // Cek apakah masih ada motor lain di rental ini
+        $remainingMotors = Motorcycle::where('motorbike_rental_id', $rental->id)->count();
+
+        if ($remainingMotors == 0) {
+            // Jika tidak ada motor lagi, hapus rental beserta bonus
+            foreach ($rental->bonuses as $bonus) {
+                $bonus->delete();
+            }
+            $rental->delete();
+
+            return redirect()->route('pemilik.daftar-motor')
+                ->with('success', "Motor '{$motorName}' berhasil dihapus. Rental juga dihapus karena tidak ada motor yang tersisa.");
+        }
+
+        return redirect()->route('pemilik.daftar-motor')
+            ->with('success', "Motor '{$motorName}' berhasil dihapus.");
     }
 }

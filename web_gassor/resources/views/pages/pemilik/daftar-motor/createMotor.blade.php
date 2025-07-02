@@ -65,7 +65,6 @@
         background: #ffffff;
         cursor: pointer;
         transition: all 0.3s ease;
-        /* color: #fff; */
         color: #2d2d2d;
     }
     .image-preview {
@@ -140,6 +139,41 @@
         .tab-button { padding: 10px 12px; font-size: 14px; }
         .tab-content { padding: 1rem 0.5rem; }
     }
+    .info-card {
+        background: linear-gradient(135deg, #f8faff 0%, #e8f2ff 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .info-card h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    @media (min-width: 640px) {
+        .info-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    .info-item strong {
+        color: #374151;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    .info-item p {
+        color: #111827;
+        margin: 0;
+        word-wrap: break-word;
+    }
 </style>
 @endsection
 
@@ -156,64 +190,113 @@
         </div>
         <form method="POST" action="{{ route('pemilik.daftar-motor.store') }}" enctype="multipart/form-data" class="flex flex-col">
             @csrf
-            <!-- Tab Navigation -->
-            <div class="tab-buttons">
-                <button type="button" class="tab-button active" onclick="showTab('informasi-umum')">Informasi Umum</button>
-                <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
-                <button type="button" class="tab-button" onclick="showTab('motor')">Motor</button>
-            </div>
-            <!-- Tab 1: Informasi Umum -->
-            <div id="informasi-umum" class="tab-content active">
-                <div class="flex flex-col gap-4">
-                    <div>
-                        <label class="form-label">Thumbnail <span style="color: #dc3545;">*</span></label>
-                        <div class="upload-area" onclick="document.getElementById('thumbnail').click()">
-                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;" onchange="previewImage(event, 'thumbnail-preview')" required />
+
+            @if(isset($hasExistingRental) && $hasExistingRental && $existingRental)
+                <input type="hidden" name="use_existing_rental" value="1">
+                <input type="hidden" name="existing_rental_id" value="{{ $existingRental->id }}">
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 500;">
+                    <strong>Info:</strong> Anda sudah memiliki rental "<strong>{{ $existingRental->name }}</strong>" yang aktif.
+                    Motor baru akan ditambahkan ke rental tersebut.
+                </div>
+                <div class="tab-buttons">
+                    <button type="button" class="tab-button active" onclick="showTab('motor')">Motor</button>
+                    <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
+                    <button type="button" class="tab-button" onclick="showTab('informasi-umum')" style="opacity: 0.7;">Informasi Umum (Auto)</button>
+                </div>
+            @else
+                <div class="tab-buttons">
+                    <button type="button" class="tab-button active" onclick="showTab('informasi-umum')">Informasi Umum</button>
+                    <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
+                    <button type="button" class="tab-button" onclick="showTab('motor')">Motor</button>
+                </div>
+            @endif
+            <!-- Tab Informasi Umum -->
+            @if(isset($hasExistingRental) && $hasExistingRental && $existingRental)
+                <div id="informasi-umum" class="tab-content">
+                    <div class="info-card">
+                        <h3 style="color: #000000;">Informasi Rental Saat Ini</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <strong>Nama Rental:</strong>
+                                <p>{{ $existingRental->name }}</p>
+                            </div>
+                            <div class="info-item">
+                                <strong>Alamat:</strong>
+                                <p>{{ $existingRental->address }}</p>
+                            </div>
+                            <div class="info-item">
+                                <strong>Deskripsi:</strong>
+                                <p>{{ Str::limit($existingRental->description, 100) }}</p>
+                            </div>
+                            <div class="info-item">
+                                <strong>Thumbnail:</strong>
+                                @if($existingRental->thumbnail)
+                                    <img src="{{ asset('storage/'.$existingRental->thumbnail) }}" alt="Thumbnail" class="image-preview">
+                                @else
+                                    <p style="color: #6b7280;">Tidak ada thumbnail</p>
+                                @endif
+                            </div>
                         </div>
-                        <div id="thumbnail-preview" style="display: none;">
-                            <img class="image-preview" alt="Pratinjau">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="form-label">Nama <span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="name" id="rental-name" class="form-input" placeholder="Masukkan nama rental" required oninput="generateSlug()" />
-                    </div>
-                    <div>
-                        <label class="form-label">Slug <span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="slug" id="rental-slug" class="form-input" placeholder="Slug otomatis" required readonly/>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label class="form-label">Kota <span style="color: #dc3545;">*</span></label>
-                            <select name="city_id" class="form-select" required>
-                                <option value="">Pilih kota</option>
-                                <option value="1">Bojongsoang</option>
-                                <option value="2">Sukapura</option>
-                                <option value="3">Sukabirus</option>
-                            </select>
-                        </div>
-                        <div class="form-col">
-                            <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
-                            <select name="category_id" class="form-select" required>
-                                <option value="">Pilih kategori</option>
-                                <option value="1">Matic</option>
-                                <option value="2">Sport</option>
-                                <option value="3">Cub</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
-                        <textarea name="description" class="form-textarea" rows="4" placeholder="Masukkan deskripsi" required></textarea>
-                    </div>
-                    <div>
-                        <label class="form-label">Alamat <span style="color: #dc3545;">*</span></label>
-                        <textarea name="address" class="form-textarea" rows="3" placeholder="Masukkan alamat lengkap" required></textarea>
+                        <p style="color: #000000; font-size: 0.9rem; margin-top: 1rem; font-weight: 500;">
+                            Motor baru akan ditambahkan ke rental yang sudah ada.
+                            Untuk mengedit informasi rental, gunakan menu Edit Motor.
+                        </p>
                     </div>
                 </div>
-            </div>
-            <!-- Tab 2: Bonus Sewa -->
+            @else
+                <!-- Untuk pengguna baru formulir lengkap -->
+                <div id="informasi-umum" class="tab-content active">
+                    <div class="flex flex-col gap-4">
+                        <div>
+                            <label class="form-label">Thumbnail <span style="color: #dc3545;">*</span></label>
+                            <div class="upload-area" onclick="document.getElementById('thumbnail').click()">
+                                <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                                <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;" onchange="previewImage(event, 'thumbnail-preview')" required />
+                            </div>
+                            <div id="thumbnail-preview" style="display: none;">
+                                <img class="image-preview" alt="Pratinjau">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Nama <span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="name" id="rental-name" class="form-input" placeholder="Masukkan nama rental" required oninput="generateSlug()" />
+                        </div>
+                        <div>
+                            <label class="form-label">Slug <span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="slug" id="rental-slug" class="form-input" placeholder="Slug otomatis" required readonly/>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label class="form-label">Kota <span style="color: #dc3545;">*</span></label>
+                                <select name="city_id" class="form-select" required>
+                                    <option value="">Pilih kota</option>
+                                    <option value="1">Bojongsoang</option>
+                                    <option value="2">Sukapura</option>
+                                    <option value="3">Sukabirus</option>
+                                </select>
+                            </div>
+                            <div class="form-col">
+                                <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
+                                <select name="category_id" class="form-select" required>
+                                    <option value="">Pilih kategori</option>
+                                    <option value="1">Matic</option>
+                                    <option value="2">Sport</option>
+                                    <option value="3">Cub</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
+                            <textarea name="description" class="form-textarea" rows="4" placeholder="Masukkan deskripsi" required></textarea>
+                        </div>
+                        <div>
+                            <label class="form-label">Alamat <span style="color: #dc3545;">*</span></label>
+                            <textarea name="address" class="form-textarea" rows="3" placeholder="Masukkan alamat lengkap" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <!-- Tab Bonus Sewa -->
             <div id="bonus-sewa" class="tab-content">
                 <div id="bonus-container">
                     <div class="bonus-item">
@@ -242,8 +325,8 @@
                 </div>
                 <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
             </div>
-            <!-- Tab 3: Motor -->
-            <div id="motor" class="tab-content">
+            <!-- Tab Motor -->
+            <div id="motor" class="tab-content @if(isset($hasExistingRental) && $hasExistingRental) active @endif">
                 <div id="motor-container">
                     <div class="motor-item">
                         <div class="flex flex-col gap-4">
@@ -301,13 +384,6 @@
                                     </label>
                                 </div>
                             </div>
-                            {{-- <div>
-                                <label class="form-label">Status<span style="color: #dc3545;">*</span></label>
-                                <select name="motorcycles[0][status]" class="form-select" required>
-                                    <option value="on_going">Sedang Berjalan</option>
-                                    <option value="finished">Selesai</option>
-                                </select>
-                            </div> --}}
                             <div>
                                 <label class="form-label">Gambar Motor<span style="color: #dc3545;">*</span></label>
                                 <div class="upload-area" onclick="document.getElementById('motor_images_0').click()">
@@ -322,7 +398,6 @@
                 </div>
                 <button type="button" class="add-btn" onclick="addMotor()">Tambah Motor</button>
             </div>
-            <!-- Submit Buttons -->
             <div class="flex gap-3 mt-8 mb-2">
                 <button type="button" class="gassor-btn-secondary" onclick="window.history.back()">Batal</button>
                 <button type="submit" class="gassor-btn-primary">Simpan</button>
@@ -337,13 +412,32 @@
 <script>
     let bonusCount = 1;
     let motorCount = 1;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(isset($hasExistingRental) && $hasExistingRental)
+            showTabWithoutEvent('motor');
+            const motorBtn = document.querySelector('button[onclick="showTab(\'motor\')"]');
+            if (motorBtn) motorBtn.classList.add('active');
+        @else
+            showTabWithoutEvent('informasi-umum');
+            const infoBtn = document.querySelector('button[onclick="showTab(\'informasi-umum\')"]');
+            if (infoBtn) infoBtn.classList.add('active');
+        @endif
+    });
+
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         event.target.classList.add('active');
     }
-    // Single image preview with remove
+
+    function showTabWithoutEvent(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+    }
+    // Satu gambar preview hapus
     function previewImage(event, previewId) {
         const input = event.target;
         const preview = document.getElementById(previewId);
@@ -363,7 +457,7 @@
         preview.innerHTML = '';
         preview.style.display = 'none';
     }
-    // Multiple image preview with remove
+    // Gambar banyak preview hapus
     function previewMultipleImages(event, previewId) {
         const input = event.target;
         const preview = document.getElementById(previewId);
@@ -382,21 +476,20 @@
                 };
                 reader.readAsDataURL(file);
             });
-            // Store files for removal
             input._files = Array.from(input.files);
         }
     }
-    // Remove a single image from a multi-image input
+    // Hapus satu gambar dari input banyak gambar
     function removeMultiImage(btn, inputId, idx, previewId) {
         const input = document.getElementById(inputId);
         let files = input._files || Array.from(input.files);
         files.splice(idx, 1);
-        // Create a new DataTransfer to update the input
+        // Buat DataTransfer baru untuk memperbarui input
         const dt = new DataTransfer();
         files.forEach(f => dt.items.add(f));
         input.files = dt.files;
         input._files = files;
-        // Re-render preview
+        // Render ulang
         previewMultipleImages({ target: input }, previewId);
     }
     function addBonus() {
