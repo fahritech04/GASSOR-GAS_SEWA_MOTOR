@@ -3,15 +3,15 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use App\Models\User;
-use App\Models\MotorbikeRental;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class TopPerformingOwnersChart extends ChartWidget
 {
     protected static ?string $heading = 'Top Pemilik Rental';
+
     protected static ?string $description = 'Pemilik dengan pendapatan tertinggi bulan ini';
+
     protected static string $color = 'indigo';
 
     protected function getData(): array
@@ -37,7 +37,7 @@ class TopPerformingOwnersChart extends ChartWidget
         $revenues = [];
         $colors = [
             '#6366F1', '#8B5CF6', '#EC4899', '#EF4444', '#F59E0B',
-            '#10B981', '#06B6D4', '#84CC16', '#F97316', '#3B82F6'
+            '#10B981', '#06B6D4', '#84CC16', '#F97316', '#3B82F6',
         ];
 
         foreach ($data as $item) {

@@ -56,7 +56,7 @@ class MidtransController extends Controller
                     } else {
                         $transaction->update(['payment_status' => 'success']);
                         // Only update stock and status if not already processed
-                        if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
+                        if ($transaction->motorcycle && ! in_array($transaction->rental_status, ['finished', 'on_going'])) {
                             $transaction->motorcycle->decreaseStock(1);
                             $transaction->update(['rental_status' => 'on_going']);
                         }
@@ -64,7 +64,7 @@ class MidtransController extends Controller
                 } else {
                     $transaction->update(['payment_status' => 'success']);
                     // Only update stock and status if not already processed
-                    if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
+                    if ($transaction->motorcycle && ! in_array($transaction->rental_status, ['finished', 'on_going'])) {
                         $transaction->motorcycle->decreaseStock(1);
                         $transaction->update(['rental_status' => 'on_going']);
                     }
@@ -73,7 +73,7 @@ class MidtransController extends Controller
             case 'settlement':
                 $transaction->update(['payment_status' => 'success']);
                 // Only update stock and status if not already processed
-                if ($transaction->motorcycle && !in_array($transaction->rental_status, ['finished', 'on_going'])) {
+                if ($transaction->motorcycle && ! in_array($transaction->rental_status, ['finished', 'on_going'])) {
                     $transaction->motorcycle->decreaseStock(1);
                     $transaction->update(['rental_status' => 'on_going']);
                 }

@@ -177,11 +177,11 @@ class PemilikController extends Controller
                 "✅ Motor {$motorcycle->name} telah dikembalikan oleh {$transaction->name}. Stok tersedia: {$motorcycle->available_stock}/{$motorcycle->stock}");
         } else {
             $reason = 'Unknown';
-            if (!$transaction->motorcycle) {
+            if (! $transaction->motorcycle) {
                 $reason = 'Motor tidak ditemukan';
             } elseif ($transaction->rental_status === 'finished') {
                 $reason = 'Motor sudah dikembalikan sebelumnya';
-            } elseif (!in_array($transaction->rental_status, ['on_going', null])) {
+            } elseif (! in_array($transaction->rental_status, ['on_going', null])) {
                 $reason = 'Status rental tidak valid untuk pengembalian';
             } elseif (strtoupper($transaction->payment_status) !== 'SUCCESS') {
                 $reason = 'Pembayaran belum berhasil';
@@ -213,7 +213,7 @@ class PemilikController extends Controller
                     ->where('motorbike_rental_id', $rental->id)
                     ->exists();
 
-                if (!$userMotorcycles) {
+                if (! $userMotorcycles) {
                     throw new \Exception('Anda tidak memiliki akses ke rental ini.');
                 }
             } else {
@@ -326,7 +326,7 @@ class PemilikController extends Controller
         if ($motorbikeRental) {
             $validated = $request->validate([
                 'rental_name' => 'required|string|max:255',
-                'slug' => 'required|string|max:255|unique:motorbike_rentals,slug,' . $motorbikeRental->id,
+                'slug' => 'required|string|max:255|unique:motorbike_rentals,slug,'.$motorbikeRental->id,
                 'city_id' => 'required|exists:cities,id',
                 'category_id' => 'required|exists:categories,id',
                 'description' => 'required|string',

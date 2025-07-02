@@ -3,14 +3,16 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use Filament\Widgets\ChartWidget;
 use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class MonthlyComparisonChart extends ChartWidget
 {
     protected static ?string $heading = 'Perbandingan Bulanan';
+
     protected static ?string $description = 'Perbandingan pendapatan dan transaksi 6 bulan terakhir';
+
     protected static string $color = 'success';
 
     protected function getData(): array
@@ -39,8 +41,8 @@ class MonthlyComparisonChart extends ChartWidget
 
             // Find data for this month
             $monthData = $data->where('year', $date->year)
-                             ->where('month', $date->month)
-                             ->first();
+                ->where('month', $date->month)
+                ->first();
 
             $transactionCounts[] = $monthData ? $monthData->transaction_count : 0;
             $revenues[] = $monthData ? $monthData->total_revenue / 1000000 : 0; // Convert to millions

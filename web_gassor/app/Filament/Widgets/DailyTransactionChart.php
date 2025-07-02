@@ -3,14 +3,16 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use Filament\Widgets\ChartWidget;
 use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class DailyTransactionChart extends ChartWidget
 {
     protected static ?string $heading = 'Transaksi Harian';
+
     protected static ?string $description = 'Tren transaksi dalam 30 hari terakhir';
+
     protected static string $color = 'success';
 
     protected function getData(): array

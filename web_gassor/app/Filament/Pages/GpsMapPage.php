@@ -3,10 +3,8 @@
 namespace App\Filament\Pages;
 
 use App\Http\Controllers\MapController;
-use App\Models\Motorcycle;
 use App\Models\Transaction;
 use Filament\Pages\Page;
-use Illuminate\Support\Facades\DB;
 
 class GpsMapPage extends Page
 {
@@ -43,6 +41,7 @@ class GpsMapPage extends Page
                 $motorcycle = $transaction->motorcycle;
                 $motorcycle->renter_name = $transaction->name;
                 $motorcycle->transaction_id = $transaction->id;
+
                 return $motorcycle;
             })
             ->unique('id')

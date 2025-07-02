@@ -27,14 +27,14 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function saveTransaction($data)
     {
         // Validasi data yang diperlukan
-        if (!isset($data['motorcycle_id']) || empty($data['motorcycle_id'])) {
+        if (! isset($data['motorcycle_id']) || empty($data['motorcycle_id'])) {
             throw new \Exception('Motorcycle ID is required but missing from transaction data');
         }
 
         $motorcycle = Motorcycle::find($data['motorcycle_id']);
 
-        if (!$motorcycle) {
-            throw new \Exception('Motorcycle not found with ID: ' . $data['motorcycle_id']);
+        if (! $motorcycle) {
+            throw new \Exception('Motorcycle not found with ID: '.$data['motorcycle_id']);
         }
 
         $data = $this->prepareTransactionData($data, $motorcycle);
@@ -113,7 +113,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         return Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
             ->where(function ($query) {
                 $query->where('email', auth()->user()->email)
-                      ->orWhere('name', auth()->user()->name);
+                    ->orWhere('name', auth()->user()->name);
             })
             ->orderByDesc('created_at')
             ->get();
@@ -125,13 +125,13 @@ class TransactionRepository implements TransactionRepositoryInterface
         $query = Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
             ->where(function ($query) {
                 $query->where('email', auth()->user()->email)
-                      ->orWhere('name', auth()->user()->name);
+                    ->orWhere('name', auth()->user()->name);
             })
             ->where(function ($query) {
                 $query->where(function ($subQuery) {
                     // Payment success dan rental on_going
                     $subQuery->where('payment_status', 'success')
-                             ->where('rental_status', 'on_going');
+                        ->where('rental_status', 'on_going');
                 })->orWhere('payment_status', 'pending');
             })
             ->orderByDesc('created_at');
@@ -145,7 +145,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         $query = Transaction::with(['motorcycle', 'motorcycle.owner', 'motorbikeRental'])
             ->where(function ($query) {
                 $query->where('email', auth()->user()->email)
-                      ->orWhere('name', auth()->user()->name);
+                    ->orWhere('name', auth()->user()->name);
             });
 
         if ($paymentStatusFilter) {
@@ -154,13 +154,13 @@ class TransactionRepository implements TransactionRepositoryInterface
             // Jika tidak ada filter, tampilkan history (kecuali payment_status success + rental_status on_going dan pending)
             $query->where(function ($query) {
                 $query->where('payment_status', '!=', 'pending')
-                      ->where(function ($subQuery) {
-                          $subQuery->where('payment_status', '!=', 'success')
-                                   ->orWhere(function ($innerQuery) {
-                                       $innerQuery->where('payment_status', 'success')
-                                              ->where('rental_status', '!=', 'on_going');
-                                   });
-                      });
+                    ->where(function ($subQuery) {
+                        $subQuery->where('payment_status', '!=', 'success')
+                            ->orWhere(function ($innerQuery) {
+                                $innerQuery->where('payment_status', 'success')
+                                    ->where('rental_status', '!=', 'on_going');
+                            });
+                    });
             });
         }
 

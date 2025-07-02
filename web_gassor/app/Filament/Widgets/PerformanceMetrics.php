@@ -2,13 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Transaction;
-use App\Models\User;
-use App\Models\Motorcycle;
 use App\Models\MotorbikeRental;
+use App\Models\Transaction;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PerformanceMetrics extends BaseWidget
@@ -54,27 +51,27 @@ class PerformanceMetrics extends BaseWidget
             ? (($monthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100
             : 0;
 
-        $activeRentals = MotorbikeRental::whereHas('motorcycles', function($query) {
+        $activeRentals = MotorbikeRental::whereHas('motorcycles', function ($query) {
             $query->where('motorcycles.available_stock', '>', 0);
         })->count();
 
         return [
-            Stat::make('Hari Ini', 'Rp ' . number_format($todayRevenue, 0, ',', '.'))
-                ->description($todayTransactions . ' transaksi hari ini')
+            Stat::make('Hari Ini', 'Rp '.number_format($todayRevenue, 0, ',', '.'))
+                ->description($todayTransactions.' transaksi hari ini')
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('success'),
 
-            Stat::make('Bulan Ini', 'Rp ' . number_format($monthRevenue, 0, ',', '.'))
-                ->description($monthTransactions . ' transaksi bulan ini')
+            Stat::make('Bulan Ini', 'Rp '.number_format($monthRevenue, 0, ',', '.'))
+                ->description($monthTransactions.' transaksi bulan ini')
                 ->descriptionIcon('heroicon-m-calendar')
                 ->color('info'),
 
-            Stat::make('Rata-rata Transaksi', 'Rp ' . number_format($avgTransactionValue ?: 0, 0, ',', '.'))
+            Stat::make('Rata-rata Transaksi', 'Rp '.number_format($avgTransactionValue ?: 0, 0, ',', '.'))
                 ->description('Nilai rata-rata per transaksi')
                 ->descriptionIcon('heroicon-m-calculator')
                 ->color('warning'),
 
-            Stat::make('Pertumbuhan', number_format($growthRate, 1) . '%')
+            Stat::make('Pertumbuhan', number_format($growthRate, 1).'%')
                 ->description('Dibanding bulan lalu')
                 ->descriptionIcon($growthRate >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($growthRate >= 0 ? 'success' : 'danger'),
@@ -85,7 +82,7 @@ class PerformanceMetrics extends BaseWidget
                 ->color('primary'),
 
             Stat::make('Rental Terpopuler', $popularRental?->motorbikeRental?->name ?? 'Belum ada data')
-                ->description(($popularRental?->count ?? 0) . ' transaksi bulan ini')
+                ->description(($popularRental?->count ?? 0).' transaksi bulan ini')
                 ->descriptionIcon('heroicon-m-star')
                 ->color('yellow'),
         ];

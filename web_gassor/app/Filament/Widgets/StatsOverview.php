@@ -2,15 +2,14 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Transaction;
-use App\Models\User;
 use App\Models\Category;
 use App\Models\City;
-use App\Models\Motorcycle;
 use App\Models\MotorbikeRental;
+use App\Models\Motorcycle;
+use App\Models\Transaction;
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Number;
 
 class StatsOverview extends BaseWidget
 {
@@ -32,7 +31,7 @@ class StatsOverview extends BaseWidget
         $pendingTransactions = Transaction::where('transactions.payment_status', 'pending')->count();
 
         return [
-            Stat::make('Total Pendapatan', 'Rp ' . number_format($totalRevenue, 0, ',', '.'))
+            Stat::make('Total Pendapatan', 'Rp '.number_format($totalRevenue, 0, ',', '.'))
                 ->description('Total revenue dari semua transaksi')
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('success'),

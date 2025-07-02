@@ -3,14 +3,16 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use Filament\Widgets\ChartWidget;
 use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class RevenueChart extends ChartWidget
 {
     protected static ?string $heading = 'Grafik Pendapatan';
+
     protected static ?string $description = 'Pendapatan bulanan dari transaksi';
+
     protected static string $color = 'success';
 
     protected function getData(): array
@@ -38,8 +40,8 @@ class RevenueChart extends ChartWidget
 
             // Find revenue for this month
             $monthRevenue = $data->where('year', $date->year)
-                                ->where('month', $date->month)
-                                ->first();
+                ->where('month', $date->month)
+                ->first();
 
             $revenues[] = $monthRevenue ? $monthRevenue->total : 0;
         }

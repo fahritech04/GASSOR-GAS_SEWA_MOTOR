@@ -90,7 +90,7 @@ class MidtransStatusSyncService
             $motorcycle = $transaction->motorcycle;
 
             // Only update if rental_status is not already finished or on_going
-            if (!in_array($transaction->rental_status, ['finished', 'on_going'])) {
+            if (! in_array($transaction->rental_status, ['finished', 'on_going'])) {
                 // Decrease available stock
                 $stockDecreased = $motorcycle->decreaseStock(1);
 

@@ -3,14 +3,15 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
-use App\Models\MotorbikeRental;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class PopularMotorbikeRentalsChart extends ChartWidget
 {
     protected static ?string $heading = 'Rental Paling Populer';
+
     protected static ?string $description = 'Top 10 motorbike rental dengan transaksi terbanyak';
+
     protected static string $color = 'warning';
 
     protected function getData(): array
@@ -28,7 +29,7 @@ class PopularMotorbikeRentalsChart extends ChartWidget
         $revenues = [];
 
         foreach ($data as $item) {
-            $rentalName = $item->motorbikeRental ? $item->motorbikeRental->name : 'Rental #' . $item->motorbike_rental_id;
+            $rentalName = $item->motorbikeRental ? $item->motorbikeRental->name : 'Rental #'.$item->motorbike_rental_id;
             $labels[] = $rentalName;
             $transactionCounts[] = $item->transaction_count;
             $revenues[] = $item->total_revenue;

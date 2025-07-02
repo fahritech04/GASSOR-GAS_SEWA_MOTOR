@@ -82,7 +82,7 @@ class BookingController extends Controller
             $sessionData = $this->transactionRepository->getTransactionDataFormSession();
 
             // Validasi session data sebelum melanjutkan
-            if (!$sessionData || !isset($sessionData['motorcycle_id'])) {
+            if (! $sessionData || ! isset($sessionData['motorcycle_id'])) {
                 // Jika data session tidak valid, redirect ke check-booking
                 return redirect()->route('check-booking')->with('error', 'Sesi booking telah berakhir. Silahkan cek pesanan Anda.');
             }
@@ -122,7 +122,7 @@ class BookingController extends Controller
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'session_data' => $this->transactionRepository->getTransactionDataFormSession()
+                'session_data' => $this->transactionRepository->getTransactionDataFormSession(),
             ]);
 
             // Redirect ke check-booking untuk menghindari error user
@@ -139,6 +139,7 @@ class BookingController extends Controller
             if (auth()->check()) {
                 return redirect()->route('check-booking')->with('error', 'Transaksi tidak ditemukan. Silahkan cek pesanan Anda.');
             }
+
             return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan.');
         }
 
@@ -235,7 +236,7 @@ class BookingController extends Controller
         // Update both payment and rental status
         $transaction->update([
             'payment_status' => 'canceled',
-            'rental_status' => 'cancelled'
+            'rental_status' => 'cancelled',
         ]);
 
         return redirect()->route('check-booking')->with('success', 'Pesanan berhasil dibatalkan.');
@@ -250,6 +251,7 @@ class BookingController extends Controller
             if (auth()->check()) {
                 return redirect()->route('check-booking')->with('error', 'Transaksi tidak ditemukan. Silahkan cek pesanan Anda.');
             }
+
             return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan.');
         }
 
@@ -263,6 +265,7 @@ class BookingController extends Controller
         if ($status === 'success') {
             // Redirect ke check-booking dengan pesan sukses
             $message = "Pembayaran berhasil! Pesanan motor {$transaction->motorcycle->name} telah dikonfirmasi.";
+
             return redirect()->route('check-booking')->with('success', $message);
         }
 

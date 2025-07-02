@@ -10,7 +10,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class RecentTransactionsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Transaksi Terbaru';
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

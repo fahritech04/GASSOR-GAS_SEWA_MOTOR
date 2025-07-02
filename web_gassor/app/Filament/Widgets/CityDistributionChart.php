@@ -3,14 +3,14 @@
 namespace App\Filament\Widgets;
 
 use App\Models\City;
-use App\Models\MotorbikeRental;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\DB;
 
 class CityDistributionChart extends ChartWidget
 {
     protected static ?string $heading = 'Distribusi Wilayah';
+
     protected static ?string $description = 'Jumlah rental per kota';
+
     protected static string $color = 'gray';
 
     protected function getData(): array

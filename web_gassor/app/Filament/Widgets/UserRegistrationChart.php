@@ -3,14 +3,16 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
-use Filament\Widgets\ChartWidget;
 use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class UserRegistrationChart extends ChartWidget
 {
     protected static ?string $heading = 'Registrasi User';
+
     protected static ?string $description = 'Grafik registrasi pemilik dan penyewa per bulan';
+
     protected static string $color = 'primary';
 
     protected function getData(): array
@@ -51,12 +53,12 @@ class UserRegistrationChart extends ChartWidget
 
             // Find counts for this month
             $pemilikCount = $pemilikData->where('year', $date->year)
-                                      ->where('month', $date->month)
-                                      ->first();
+                ->where('month', $date->month)
+                ->first();
 
             $penyewaCount = $penyewaData->where('year', $date->year)
-                                       ->where('month', $date->month)
-                                       ->first();
+                ->where('month', $date->month)
+                ->first();
 
             $pemilikCounts[] = $pemilikCount ? $pemilikCount->count : 0;
             $penyewaCounts[] = $penyewaCount ? $penyewaCount->count : 0;

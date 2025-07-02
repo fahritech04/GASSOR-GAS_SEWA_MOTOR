@@ -61,7 +61,7 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                 'Penyewa' => $trx->name,
                 'Harga' => $trx->total_amount,
                 'Status Pembayaran' => $trx->payment_status,
-                'Status Sewa' => match($trx->rental_status ?? 'pending') {
+                'Status Sewa' => match ($trx->rental_status ?? 'pending') {
                     'pending' => 'MENUNGGU',
                     'on_going' => 'SEDANG BERJALAN',
                     'finished' => 'SELESAI',
