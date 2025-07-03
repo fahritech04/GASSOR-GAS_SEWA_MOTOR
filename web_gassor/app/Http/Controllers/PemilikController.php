@@ -226,7 +226,6 @@ class PemilikController extends Controller
                     'name' => 'required|string',
                     'slug' => 'required|string|unique:motorbike_rentals,slug',
                     'city_id' => 'required|exists:cities,id',
-                    'category_id' => 'required|exists:categories,id',
                     'description' => 'required|string',
                     'address' => 'required|string',
                 ]);
@@ -239,7 +238,6 @@ class PemilikController extends Controller
                     'slug' => $request->slug,
                     'thumbnail' => $thumbnailPath,
                     'city_id' => $request->city_id,
-                    'category_id' => $request->category_id,
                     'description' => $request->description,
                     'address' => $request->address,
                     'contact' => Auth::user()->phone ?? '',
@@ -249,16 +247,19 @@ class PemilikController extends Controller
             // Simpan bonus
             if ($request->has('bonuses')) {
                 foreach ($request->bonuses as $bonus) {
-                    $bonusImage = null;
-                    if (isset($bonus['image'])) {
-                        $bonusImage = $bonus['image']->store('bonuses', 'public');
+                    // Hanya simpan jika ada salah satu field terisi
+                    if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
+                        $bonusImage = null;
+                        if (isset($bonus['image']) && $bonus['image']) {
+                            $bonusImage = $bonus['image']->store('bonuses', 'public');
+                        }
+                        Bonus::create([
+                            'motorbike_rental_id' => $rental->id,
+                            'image' => $bonusImage,
+                            'name' => $bonus['name'] ?? '',
+                            'description' => $bonus['description'] ?? '',
+                        ]);
                     }
-                    Bonus::create([
-                        'motorbike_rental_id' => $rental->id,
-                        'image' => $bonusImage,
-                        'name' => $bonus['name'] ?? '',
-                        'description' => $bonus['description'] ?? '',
-                    ]);
                 }
             }
 
@@ -275,8 +276,8 @@ class PemilikController extends Controller
                     $motorcycle = Motorcycle::create([
                         'owner_id' => auth()->id(),
                         'motorbike_rental_id' => $rental->id,
+                        'category_id' => $motor['category_id'],
                         'name' => $motor['name'],
-                        'motorcycle_type' => $motor['motorcycle_type'],
                         'vehicle_number_plate' => $motor['vehicle_number_plate'],
                         'stnk' => $motor['stnk'],
                         'stnk_images' => $stnkImages,
@@ -334,7 +335,6 @@ class PemilikController extends Controller
                 'rental_name' => 'required|string|max:255',
                 'slug' => 'required|string|max:255|unique:motorbike_rentals,slug,'.$motorbikeRental->id,
                 'city_id' => 'required|exists:cities,id',
-                'category_id' => 'required|exists:categories,id',
                 'description' => 'required|string',
                 'address' => 'required|string',
                 'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
@@ -344,7 +344,6 @@ class PemilikController extends Controller
                 'name' => $request->input('rental_name'),
                 'slug' => $request->input('slug'),
                 'city_id' => $request->input('city_id'),
-                'category_id' => $request->input('category_id'),
                 'description' => $request->input('description'),
                 'address' => $request->input('address'),
             ];
@@ -358,39 +357,44 @@ class PemilikController extends Controller
             $inputBonuses = $request->bonuses ?? [];
             $oldBonuses = $motorbikeRental->bonuses()->get();
 
+            $bonusIdx = 0;
             foreach ($inputBonuses as $idx => $bonus) {
-                $bonusImage = null;
-                if (isset($bonus['image']) && $bonus['image']) {
-                    $bonusImage = $bonus['image']->store('bonuses', 'public');
-                } elseif (isset($oldBonuses[$idx]) && $oldBonuses[$idx]->image) {
-                    $bonusImage = $oldBonuses[$idx]->image;
-                }
+                // Hanya update/tambah jika ada salah satu field terisi
+                if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
+                    $bonusImage = null;
+                    if (isset($bonus['image']) && $bonus['image']) {
+                        $bonusImage = $bonus['image']->store('bonuses', 'public');
+                    } elseif (isset($oldBonuses[$bonusIdx]) && $oldBonuses[$bonusIdx]->image) {
+                        $bonusImage = $oldBonuses[$bonusIdx]->image;
+                    }
 
-                if (isset($oldBonuses[$idx])) {
-                    // Update bonus lama
-                    $oldBonuses[$idx]->update([
-                        'image' => $bonusImage,
-                        'name' => $bonus['name'] ?? '',
-                        'description' => $bonus['description'] ?? '',
-                    ]);
-                } else {
-                    // Tambah bonus baru
-                    $motorbikeRental->bonuses()->create([
-                        'image' => $bonusImage,
-                        'name' => $bonus['name'] ?? '',
-                        'description' => $bonus['description'] ?? '',
-                    ]);
+                    if (isset($oldBonuses[$bonusIdx])) {
+                        // Update bonus lama
+                        $oldBonuses[$bonusIdx]->update([
+                            'image' => $bonusImage,
+                            'name' => $bonus['name'] ?? '',
+                            'description' => $bonus['description'] ?? '',
+                        ]);
+                    } else {
+                        // Tambah bonus baru
+                        $motorbikeRental->bonuses()->create([
+                            'image' => $bonusImage,
+                            'name' => $bonus['name'] ?? '',
+                            'description' => $bonus['description'] ?? '',
+                        ]);
+                    }
+                    $bonusIdx++;
                 }
             }
-            // Hapus bonus lama yang tidak ada di input
-            for ($i = count($inputBonuses); $i < count($oldBonuses); $i++) {
+            // Hapus bonus lama yang tidak ada di input (hanya jika input kosong)
+            for ($i = $bonusIdx; $i < count($oldBonuses); $i++) {
                 $oldBonuses[$i]->delete();
             }
         }
 
         $motorcycleValidated = $request->validate([
             'motorcycle_name' => 'required|string|max:255',
-            'motorcycle_type' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'vehicle_number_plate' => 'required|string|max:255',
             'stnk' => 'required|string|max:255',
             'price_per_day' => 'required|numeric|min:0',
@@ -403,7 +407,6 @@ class PemilikController extends Controller
         // Update Motorcycle (Motor) - menghapus bidang status
         $motorcycle->update([
             'name' => $request->input('motorcycle_name'),
-            'motorcycle_type' => $request->input('motorcycle_type'),
             'vehicle_number_plate' => $request->input('vehicle_number_plate'),
             'stnk' => $request->input('stnk'),
             'price_per_day' => $request->input('price_per_day'),
@@ -450,8 +453,8 @@ class PemilikController extends Controller
                 $newMotorcycle = Motorcycle::create([
                     'owner_id' => auth()->id(),
                     'motorbike_rental_id' => $motorbikeRental->id,
+                    'category_id' => $motor['category_id'], // <-- fix: tambahkan category_id
                     'name' => $motor['name'],
-                    'motorcycle_type' => $motor['motorcycle_type'],
                     'vehicle_number_plate' => $motor['vehicle_number_plate'],
                     'stnk' => $motor['stnk'],
                     'stnk_images' => $stnkImages,

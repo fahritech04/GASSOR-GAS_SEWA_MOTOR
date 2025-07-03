@@ -41,9 +41,6 @@ class MotorbikeRentalResource extends Resource
                                 Forms\Components\Select::make('city_id')
                                     ->relationship('city', 'name')
                                     ->required(),
-                                Forms\Components\Select::make('category_id')
-                                    ->relationship('category', 'name')
-                                    ->required(),
                                 Forms\Components\RichEditor::make('description')
                                     ->required(),
                                 Forms\Components\Textarea::make('address')
@@ -69,6 +66,10 @@ class MotorbikeRentalResource extends Resource
                                 Forms\Components\Repeater::make('motorcycles')
                                     ->relationship('motorcycles')
                                     ->schema([
+                                        Forms\Components\Select::make('category_id')
+                                            ->label('Kategori')
+                                            ->relationship('category', 'name')
+                                            ->required(),
                                         Forms\Components\Select::make('owner_id')
                                             ->label('Pemilik')
                                             ->options(
@@ -77,8 +78,6 @@ class MotorbikeRentalResource extends Resource
                                             ->searchable()
                                             ->required(),
                                         Forms\Components\TextInput::make('name')
-                                            ->required(),
-                                        Forms\Components\TextInput::make('motorcycle_type')
                                             ->required(),
                                         Forms\Components\TextInput::make('vehicle_number_plate')
                                             ->required(),
@@ -141,7 +140,6 @@ class MotorbikeRentalResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('city.name'),
-                Tables\Columns\TextColumn::make('category.name'),
                 Tables\Columns\ImageColumn::make('thumbnail'),
             ])
             ->filters([

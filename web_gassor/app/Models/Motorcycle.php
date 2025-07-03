@@ -13,6 +13,7 @@ class Motorcycle extends Model
     protected $fillable = [
         'owner_id',
         'motorbike_rental_id',
+        'category_id',
         'name',
         'motorcycle_type',
         'vehicle_number_plate',
@@ -113,5 +114,10 @@ class Motorcycle extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

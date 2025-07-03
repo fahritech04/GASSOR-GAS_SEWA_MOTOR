@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('owner_id')->constrained('users');
             $table->foreignId('motorbike_rental_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('motorcycle_type');
             $table->string('vehicle_number_plate');
             $table->string('stnk');
             $table->json('stnk_images')->nullable();
@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('stock')->default(1);
             $table->integer('available_stock')->default(1);
             $table->boolean('has_gps')->default(false);
+            $table->time('start_rent_hour')->default('08:00');
+            $table->time('end_rent_hour')->default('20:00');
             $table->softDeletes();
             $table->timestamps();
         });

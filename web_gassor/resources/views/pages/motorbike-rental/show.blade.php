@@ -40,10 +40,6 @@
                 <img src="{{ asset('assets/images/icons/location.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon">
                 <p class="text-gassor-grey">Wilayah {{ $motorbikeRental->city->name }}</p>
             </div>
-            <div class="flex items-center gap-[6px]">
-                <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon">
-                <p class="text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
-            </div>
         </div>
         <hr class="border-[#F1F2F6] mx-5">
         <div id="About" class="flex flex-col gap-[6px] px-5">

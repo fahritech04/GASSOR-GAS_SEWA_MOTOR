@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('slug');
             $table->string('thumbnail');
             $table->foreignId('city_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->text('description');
             $table->text('address');
             $table->string('contact');

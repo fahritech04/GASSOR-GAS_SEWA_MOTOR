@@ -22,7 +22,17 @@ class CityController extends Controller
     public function show($slug)
     {
         $motorbikeRentals = $this->motorbikeRentalRepository->getMotorbikeRentalByCitySlug($slug);
+        $categoryId = request('category_id');
+        $search = request('search');
         $motorcycles = $this->motorbikeRentalRepository->getMotorcyclesByCitySlug($slug);
+        if ($categoryId) {
+            $motorcycles = $motorcycles->where('category_id', $categoryId);
+        }
+        if ($search) {
+            $motorcycles = $motorcycles->filter(function($item) use ($search) {
+                return stripos($item->name, $search) !== false;
+            });
+        }
         $city = $this->cityRepository->getCityBySlug($slug);
 
         return view('pages.city.show', compact('motorbikeRentals', 'motorcycles', 'city'));

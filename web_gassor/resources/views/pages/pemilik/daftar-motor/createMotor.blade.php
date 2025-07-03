@@ -190,7 +190,6 @@
         </div>
         <form method="POST" action="{{ route('pemilik.daftar-motor.store') }}" enctype="multipart/form-data" class="flex flex-col">
             @csrf
-
             @if(isset($hasExistingRental) && $hasExistingRental && $existingRental)
                 <input type="hidden" name="use_existing_rental" value="1">
                 <input type="hidden" name="existing_rental_id" value="{{ $existingRental->id }}">
@@ -277,12 +276,8 @@
                             </div>
                             <div class="form-col">
                                 <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
-                                <select name="category_id" class="form-select" required>
-                                    <option value="">Pilih kategori</option>
-                                    <option value="1">Matic</option>
-                                    <option value="2">Sport</option>
-                                    <option value="3">Cub</option>
-                                </select>
+                                <!-- Pindahkan ke form motor, hapus dari sini -->
+                                <!-- <select name="category_id" class="form-select" required> ... </select> -->
                             </div>
                         </div>
                         <div>
@@ -302,7 +297,7 @@
                     <div class="bonus-item">
                         <div class="flex flex-col gap-4">
                             <div>
-                                <label class="form-label">Gambar<span style="color: #dc3545;">*</span></label>
+                                <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
                                 <div class="upload-area" onclick="document.getElementById('bonus_image_0').click()">
                                     <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
                                     <input type="file" id="bonus_image_0" name="bonuses[0][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_0')" />
@@ -312,11 +307,11 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="form-label">Nama Bonus<span style="color: #dc3545;">*</span></label>
+                                <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
                                 <input type="text" name="bonuses[0][name]" class="form-input" placeholder="Contoh: Helm" />
                             </div>
                             <div>
-                                <label class="form-label">Deskripsi<span style="color: #dc3545;">*</span></label>
+                                <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
                                 <input type="text" name="bonuses[0][description]" class="form-input" placeholder="Contoh: 1 Helm" />
                             </div>
                             <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
@@ -339,11 +334,7 @@
                             <div class="form-row">
                                 <div class="form-col">
                                     <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="motorcycles[0][name]" class="form-input" placeholder="Contoh: Scoopy 125cc" required />
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="motorcycles[0][motorcycle_type]" class="form-input" placeholder="Contoh: matic" required />
+                                    <input type="text" name="motorcycles[0][name]" class="form-input" placeholder="Masukkan nama motor" required />
                                 </div>
                             </div>
                             <div class="form-row">
@@ -419,6 +410,15 @@
                                     <input type="time" name="motorcycles[0][end_rent_hour]" class="form-input" required value="20:00" />
                                 </div>
                             </div>
+                            <div>
+                                <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
+                                <select name="motorcycles[0][category_id]" class="form-select" required>
+                                    <option value="">Pilih kategori</option>
+                                    <option value="1">Matic</option>
+                                    <option value="2">Sport</option>
+                                    <option value="3">Cub</option>
+                                </select>
+                            </div>
                             <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                         </div>
                     </div>
@@ -471,7 +471,7 @@
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                preview.innerHTML = `<img class='image-preview' alt='Preview' src='${e.target.result}'><button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "${input.id}", "${previewId}")'>Remove</button>`;
+                preview.innerHTML = `<img class='image-preview' alt='Preview' src='${e.target.result}'><button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "${input.id}", "${previewId}")'>Hapus</button>`;
                 preview.style.display = 'block';
             };
             reader.readAsDataURL(input.files[0]);
@@ -507,7 +507,7 @@
         const file = event.target.files[0];
         if (file) {
             const preview = document.getElementById(previewId);
-            const container = document.getElementById(previewId.replace('_preview_', '_preview_container_'));
+            const container = document.getElementById(previewId.replace('_preview_', '_preview_container'));
             const existingFiles = getExistingFiles(inputId);
             const allFiles = [...existingFiles, file];
             updatePreview(container, allFiles, inputId, previewId);
@@ -588,25 +588,25 @@
     function addBonus() {
         const container = document.getElementById('bonus-container');
         const bonusHtml = `
-            <div class="bonus-item">
-                <div class="flex flex-col gap-4">
+            <div class=\"bonus-item\">
+                <div class=\"flex flex-col gap-4\">
                     <div>
-                        <label class="form-label">Gambar<span style="color: #dc3545;">*</span></label>
-                        <div class="upload-area" onclick=\"document.getElementById('bonus_image_${bonusCount}').click()\">
+                        <label class=\"form-label\">Gambar <span style=\"color: #888;\">(opsional)</span></label>
+                        <div class=\"upload-area\" onclick=\"document.getElementById('bonus_image_${bonusCount}').click()\">
                             <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
                             <input type=\"file\" id=\"bonus_image_${bonusCount}\" name=\"bonuses[${bonusCount}][image]\" accept=\"image/*\" style=\"display: none;\" onchange=\"previewImage(event, 'bonus_preview_${bonusCount}')\" />
                         </div>
                         <div id=\"bonus_preview_${bonusCount}\" style=\"display: none;\"></div>
                     </div>
                     <div>
-                        <label class="form-label">Nama Bonus<span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="bonuses[${bonusCount}][name]" class="form-input" placeholder="Contoh: Helm" />
+                        <label class=\"form-label\">Nama Bonus <span style=\"color: #888;\">(opsional)</span></label>
+                        <input type=\"text\" name=\"bonuses[${bonusCount}][name]\" class=\"form-input\" placeholder=\"Contoh: Helm\" />
                     </div>
                     <div>
-                        <label class="form-label">Deskripsi<span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="bonuses[${bonusCount}][description]" class="form-input" placeholder="Contoh: 1 Helm" />
+                        <label class=\"form-label\">Deskripsi <span style=\"color: #888;\">(opsional)</span></label>
+                        <input type=\"text\" name=\"bonuses[${bonusCount}][description]\" class=\"form-input\" placeholder=\"Contoh: 1 Helm\" />
                     </div>
-                    <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
+                    <button type=\"button\" class=\"remove-btn self-end\" onclick=\"removeBonus(this)\">Hapus</button>
                 </div>
             </div>
         `;
@@ -634,10 +634,6 @@
                         <div class="form-col">
                             <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
                             <input type="text" name="motorcycles[${idx}][name]" class="form-input" placeholder="Contoh: Scoopy 125cc" required />
-                        </div>
-                        <div class="form-col">
-                            <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
-                            <input type="text" name="motorcycles[${idx}][motorcycle_type]" class="form-input" placeholder="Contoh: matic" required />
                         </div>
                     </div>
                     <div class="form-row">
@@ -725,6 +721,15 @@
                             <input type="time" name="motorcycles[${idx}][end_rent_hour]" class="form-input" required value="20:00" />
                         </div>
                     </div>
+                    <div>
+                        <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
+                        <select name="motorcycles[${idx}][category_id]" class="form-select" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="1">Matic</option>
+                            <option value="2">Sport</option>
+                            <option value="3">Cub</option>
+                        </select>
+                    </div>
                     <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                 </div>
             </div>
@@ -760,6 +765,17 @@
             title: 'Validasi Gagal',
             html: `{!! implode('<br>', $errors->all()) !!}`,
             confirmButtonColor: '#e6a43b'
+        });
+    @endif
+    @if(session('success') && request()->isMethod('post'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: {!! json_encode(session('success')) !!},
+            confirmButtonColor: '#e6a43b',
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: true
         });
     @endif
 </script>

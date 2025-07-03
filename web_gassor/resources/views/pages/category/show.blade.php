@@ -16,6 +16,38 @@
         <p class="text-gassor-grey">Tersedia {{ $motorcycles->count() }} Motor</p>
     </div>
 </div>
+<div style="position: relative; padding: 0 20px; margin-top: 20px;">
+    <form method="GET" action="{{ request()->url() }}" id="filterForm">
+        <div style="background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border: 1px solid #f0f0f0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                <label for="search" style="font-size: 14px; font-weight: 600; color: #374151; margin: 0;">
+                    Cari Motor di Kategori Ini
+                </label>
+                @if(request('search'))
+                    <a href="{{ route('category.show', $category->slug) }}" style="font-size: 12px; color: #e6a43b; font-weight: 500; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #fef3e2; transition: all 0.2s;">
+                        Reset Filter
+                    </a>
+                @endif
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama motor..." style="flex:2; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; color: #374151; background: #ffffff; outline: none; transition: all 0.3s; min-width:180px;" />
+                <button type="submit" id="filterButton"
+                        style="padding: 12px 20px; background: #e6a43b; color: #ffffff; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(230, 164, 59, 0.2); white-space: nowrap; min-width:90px;"
+                        onmouseover="this.style.background='#d4932f'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(230, 164, 59, 0.3)';"
+                        onmouseout="this.style.background='#e6a43b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(230, 164, 59, 0.2)';">
+                    Cari
+                </button>
+            </div>
+            @if(request('search'))
+                <div style="margin-top: 12px; padding: 8px 12px; background: #f9fafb; border-radius: 8px;">
+                    <p style="font-size: 12px; color: #6b7280; margin: 0;">
+                        Pencarian: <span style="font-weight: 600; color: #e6a43b;">{{ request('search') }}</span>
+                    </p>
+                </div>
+            @endif
+        </div>
+    </form>
+</div>
 <section id="Result" class=" relative flex flex-col gap-4 px-5 mt-5 mb-9">
     @foreach ($motorcycles as $motorcycle)
     <a href="{{ route('motor.show', $motorcycle->motorbikeRental->slug) }}" class="card">

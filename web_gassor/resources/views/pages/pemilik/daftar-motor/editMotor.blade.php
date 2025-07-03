@@ -194,13 +194,7 @@
                             </select>
                         </div>
                         <div class="form-col">
-                            <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
-                            <select name="category_id" class="form-select" required>
-                                <option value="">Pilih kategori</option>
-                                <option value="1" {{ old('category_id', $motorbikeRental->category_id ?? '')==1 ? 'selected' : '' }}>Matic</option>
-                                <option value="2" {{ old('category_id', $motorbikeRental->category_id ?? '')==2 ? 'selected' : '' }}>Sport</option>
-                                <option value="3" {{ old('category_id', $motorbikeRental->category_id ?? '')==3 ? 'selected' : '' }}>Cub</option>
-                            </select>
+                            <!-- Kategori dipindahkan ke form motor, tidak perlu di sini -->
                         </div>
                     </div>
                     <div>
@@ -222,7 +216,7 @@
                         <div class="bonus-item">
                             <div class="flex flex-col gap-4">
                                 <div>
-                                    <label class="form-label">Gambar<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
                                     <div class="upload-area" onclick="document.getElementById('bonus_image_{{ $bonusCount }}').click()">
                                         <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
                                         <input type="file" id="bonus_image_{{ $bonusCount }}" name="bonuses[{{ $bonusCount }}][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_{{ $bonusCount }}')" />
@@ -234,11 +228,11 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="form-label">Nama Bonus<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
                                     <input type="text" name="bonuses[{{ $bonusCount }}][name]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.name', $bonus->name) }}" />
                                 </div>
                                 <div>
-                                    <label class="form-label">Deskripsi<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
                                     <input type="text" name="bonuses[{{ $bonusCount }}][description]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.description', $bonus->description) }}" />
                                 </div>
                                 <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
@@ -250,7 +244,7 @@
                         <div class="bonus-item">
                             <div class="flex flex-col gap-4">
                                 <div>
-                                    <label class="form-label">Gambar<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
                                     <div class="upload-area" onclick="document.getElementById('bonus_image_0').click()">
                                         <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
                                         <input type="file" id="bonus_image_0" name="bonuses[0][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_0')" />
@@ -258,11 +252,11 @@
                                     <div id="bonus_preview_0" style="display: none;"></div>
                                 </div>
                                 <div>
-                                    <label class="form-label">Nama Bonus<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
                                     <input type="text" name="bonuses[0][name]" class="form-input" placeholder="Contoh: Helm" />
                                 </div>
                                 <div>
-                                    <label class="form-label">Deskripsi<span style="color: #dc3545;">*</span></label>
+                                    <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
                                     <input type="text" name="bonuses[0][description]" class="form-input" placeholder="Contoh: 1 Helm" />
                                 </div>
                                 <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
@@ -287,10 +281,6 @@
                                 <div class="form-col">
                                     <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
                                     <input type="text" name="motorcycle_name" class="form-input" value="{{ old('motorcycle_name', $motorcycle->name) }}" required />
-                                </div>
-                                <div class="form-col">
-                                    <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="motorcycle_type" class="form-input" value="{{ old('motorcycle_type', $motorcycle->motorcycle_type) }}" required />
                                 </div>
                             </div>
                             <div class="form-row">
@@ -391,6 +381,15 @@
                                     <input type="time" name="end_rent_hour" class="form-input" required value="{{ old('end_rent_hour', $motorcycle->end_rent_hour ?? '20:00') }}" />
                                 </div>
                             </div>
+                            <div class="form-col">
+                                <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
+                                <select name="category_id" class="form-select" required>
+                                    <option value="">Pilih kategori</option>
+                                    <option value="1" {{ old('category_id', $motorcycle->category_id ?? '')==1 ? 'selected' : '' }}>Matic</option>
+                                    <option value="2" {{ old('category_id', $motorcycle->category_id ?? '')==2 ? 'selected' : '' }}>Sport</option>
+                                    <option value="3" {{ old('category_id', $motorcycle->category_id ?? '')==3 ? 'selected' : '' }}>Cub</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -438,7 +437,7 @@
         });
     @endif
 
-    @if(session('success'))
+    @if(session('success') && request()->isMethod('post'))
         Swal.fire({
             icon: 'success',
             title: 'Berhasil!',
@@ -464,7 +463,7 @@
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                preview.innerHTML = `<img class='image-preview' alt='Preview' src='${e.target.result}'><button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "${input.id}", "${previewId}")'>Remove</button>`;
+                preview.innerHTML = `<img class='image-preview' alt='Preview' src='${e.target.result}'><button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "${input.id}", "${previewId}")'>Hapus</button>`;
                 preview.style.display = 'block';
             };
             reader.readAsDataURL(input.files[0]);
@@ -589,25 +588,25 @@
     function addBonus() {
         const container = document.getElementById('bonus-container');
         const bonusHtml = `
-            <div class="bonus-item">
-                <div class="flex flex-col gap-4">
+            <div class=\"bonus-item\">
+                <div class=\"flex flex-col gap-4\">
                     <div>
-                        <label class="form-label">Gambar<span style=\"color: #dc3545;\">*</span></label>
-                        <div class="upload-area" onclick=\"document.getElementById('bonus_image_${bonusCount}').click()">
+                        <label class=\"form-label\">Gambar <span style=\"color: #888;\">(opsional)</span></label>
+                        <div class=\"upload-area\" onclick=\"document.getElementById('bonus_image_${bonusCount}').click()\">
                             <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
                             <input type=\"file\" id=\"bonus_image_${bonusCount}\" name=\"bonuses[${bonusCount}][image]\" accept=\"image/*\" style=\"display: none;\" onchange=\"previewImage(event, 'bonus_preview_${bonusCount}')\" />
                         </div>
                         <div id=\"bonus_preview_${bonusCount}\" style=\"display: none;\"></div>
                     </div>
                     <div>
-                        <label class="form-label">Nama Bonus<span style=\"color: #dc3545;\">*</span></label>
-                        <input type="text" name="bonuses[${bonusCount}][name]" class="form-input" placeholder="Contoh: Helm" />
+                        <label class=\"form-label\">Nama Bonus <span style=\"color: #888;\">(opsional)</span></label>
+                        <input type=\"text\" name=\"bonuses[${bonusCount}][name]\" class=\"form-input\" placeholder=\"Contoh: Helm\" />
                     </div>
                     <div>
-                        <label class="form-label">Deskripsi<span style=\"color: #dc3545;\">*</span></label>
-                        <input type="text" name="bonuses[${bonusCount}][description]" class="form-input" placeholder="Contoh: 1 Helm" />
+                        <label class=\"form-label\">Deskripsi <span style=\"color: #888;\">(opsional)</span></label>
+                        <input type=\"text\" name=\"bonuses[${bonusCount}][description]\" class=\"form-input\" placeholder=\"Contoh: 1 Helm\" />
                     </div>
-                    <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
+                    <button type=\"button\" class=\"remove-btn self-end\" onclick=\"removeBonus(this)\">Hapus</button>
                 </div>
             </div>
         `;
@@ -635,10 +634,6 @@
                         <div class="form-col">
                             <label class="form-label">Nama Motor<span style="color: #dc3545;">*</span></label>
                             <input type="text" name="motorcycles[${idx}][name]" class="form-input" placeholder="Contoh: Scoopy 125cc" required />
-                        </div>
-                        <div class="form-col">
-                            <label class="form-label">Tipe Motor<span style="color: #dc3545;">*</span></label>
-                            <input type="text" name="motorcycles[${idx}][motorcycle_type]" class="form-input" placeholder="Contoh: matic" required />
                         </div>
                     </div>
                     <div class="form-row">
@@ -715,12 +710,21 @@
                     <div class="form-row">
                         <div class="form-col">
                             <label class="form-label">Jam Awal Bisa Pinjam <span style="color: #dc3545;">*</span></label>
-                            <input type="time" name="motorcycles[${idx}][start_rent_hour]" class="form-input" required value="{{ old('start_rent_hour', $motorcycle->start_rent_hour ?? '08:00') }}" />
+                            <input type="time" name="motorcycles[${idx}][start_rent_hour]" class="form-input" required value="08:00" />
                         </div>
                         <div class="form-col">
                             <label class="form-label">Jam Akhir Bisa Pinjam <span style="color: #dc3545;">*</span></label>
-                            <input type="time" name="motorcycles[${idx}][end_rent_hour]" class="form-input" required value="{{ old('end_rent_hour', $motorcycle->end_rent_hour ?? '20:00') }}" />
+                            <input type="time" name="motorcycles[${idx}][end_rent_hour]" class="form-input" required value="20:00" />
                         </div>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
+                        <select name="motorcycles[${idx}][category_id]" class="form-select" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="1">Matic</option>
+                            <option value="2">Sport</option>
+                            <option value="3">Cub</option>
+                        </select>
                     </div>
                     <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                 </div>

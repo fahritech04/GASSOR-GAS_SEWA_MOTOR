@@ -23,7 +23,7 @@ class Category extends Model
 
     public function motorcycles()
     {
-        return $this->hasManyThrough(Motorcycle::class, MotorbikeRental::class);
+        return $this->hasMany(Motorcycle::class);
     }
 
     public function getMotorcyclesCountAttribute()

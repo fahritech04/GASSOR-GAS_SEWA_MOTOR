@@ -15,7 +15,6 @@ class MotorbikeRental extends Model
         'slug',
         'thumbnail',
         'city_id',
-        'category_id',
         'description',
         'price',
         'address',
@@ -25,11 +24,6 @@ class MotorbikeRental extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
     }
 
     public function motorcycles()
@@ -62,5 +56,10 @@ class MotorbikeRental extends Model
     public function motorcyclesWithGps()
     {
         return $this->hasMany(Motorcycle::class)->where('has_gps', true);
+    }
+
+    public function category()
+    {
+        return $this->hasOneThrough(Category::class, Motorcycle::class, 'motorbike_rental_id', 'id', 'id', 'category_id');
     }
 }
