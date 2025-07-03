@@ -203,6 +203,10 @@ class PemilikController extends Controller
 
     public function storeMotor(Request $request)
     {
+        $user = auth()->user();
+        if (!$user || !$user->is_approved) {
+            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi admin. Tidak dapat menambah motor.');
+        }
         try {
             $useExistingRental = $request->has('use_existing_rental') && $request->use_existing_rental == '1';
 

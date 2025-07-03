@@ -24,6 +24,10 @@ class ProfilePenyewaController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+        // Cek approval admin
+        if (!$user->is_approved) {
+            return redirect()->route('editprofile.penyewa')->with('error', 'Data Anda belum diverifikasi oleh admin. Silakan tunggu persetujuan admin sebelum dapat mengubah profil.');
+        }
         $validated = $request->validate([
             'name' => 'required|string|max:500',
             'username' => 'required|string|max:500',

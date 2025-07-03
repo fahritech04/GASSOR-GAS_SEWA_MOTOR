@@ -25,6 +25,10 @@ class BookingController extends Controller
 
     public function booking(Request $request, $slug)
     {
+        $user = auth()->user();
+        if (!$user || !$user->is_approved) {
+            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi admin. Tidak dapat melakukan pemesanan.');
+        }
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
         if (! $motorcycle || ! $motorcycle->isAvailable()) {
             return redirect()->back()->with('error', 'Motor sudah tidak tersedia.');

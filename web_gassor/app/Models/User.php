@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_approved',
         'profile_image_url',
         'tempat_lahir',
         'tanggal_lahir',
@@ -53,5 +54,6 @@ class User extends Authenticatable
         'password' => 'hashed',
         'tanggal_lahir' => 'date',
         'google_blocked' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 }

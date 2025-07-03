@@ -103,6 +103,17 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('error'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Akun Belum Diverifikasi',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#ff9900',
+            });
+        @endif
+    });
+
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -110,23 +121,6 @@
             text: '{{ session('success') }}',
             confirmButtonText: 'OK',
             confirmButtonColor: '#E6A43B',
-            background: '#ffffff',
-            customClass: {
-                popup: 'rounded-lg shadow-lg',
-                title: 'text-gassor-black font-bold',
-                content: 'text-gassor-grey',
-                confirmButton: 'rounded-full px-6 py-2 font-bold'
-            }
-        });
-    @endif
-
-    @if(session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops! Ada Masalah',
-            text: '{{ session('error') }}',
-            confirmButtonText: 'Mengerti',
-            confirmButtonColor: '#EB5757',
             background: '#ffffff',
             customClass: {
                 popup: 'rounded-lg shadow-lg',

@@ -31,6 +31,9 @@ class UserResource extends Resource
                         'pemilik' => 'Pemilik',
                         'penyewa' => 'Penyewa',
                     ])->required(),
+                Forms\Components\Toggle::make('is_approved')
+                    ->label('Disetujui Admin?')
+                    ->helperText('Centang jika data sudah diverifikasi dan disetujui admin.'),
                 Forms\Components\DatePicker::make('tanggal_lahir')->label('Tanggal Lahir'),
                 Forms\Components\TextInput::make('tempat_lahir')->label('Tempat Lahir')->maxLength(255),
                 Forms\Components\FileUpload::make('profile_image_url')
@@ -67,6 +70,9 @@ class UserResource extends Resource
                 TextColumn::make('phone'),
                 TextColumn::make('tempat_lahir'),
                 TextColumn::make('tanggal_lahir')->date(),
+                Tables\Columns\IconColumn::make('is_approved')
+                    ->boolean()
+                    ->label('Approved'),
                 ImageColumn::make('profile_image_url')->label('Foto Profil')->disk('public'),
                 ImageColumn::make('ktp_image_url')->label('KTP')->disk('public'),
                 ImageColumn::make('sim_image_url')->label('SIM')->disk('public'),
