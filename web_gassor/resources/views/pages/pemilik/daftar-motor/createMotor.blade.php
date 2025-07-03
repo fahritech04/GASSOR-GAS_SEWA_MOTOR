@@ -409,6 +409,16 @@
                                     </p>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <label class="form-label">Jam Awal Bisa Pinjam <span style="color: #dc3545;">*</span></label>
+                                    <input type="time" name="motorcycles[0][start_rent_hour]" class="form-input" required value="08:00" />
+                                </div>
+                                <div class="form-col">
+                                    <label class="form-label">Jam Akhir Bisa Pinjam <span style="color: #dc3545;">*</span></label>
+                                    <input type="time" name="motorcycles[0][end_rent_hour]" class="form-input" required value="20:00" />
+                                </div>
+                            </div>
                             <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>
                         </div>
                     </div>
@@ -703,6 +713,16 @@
                             <p style="font-size: 12px; color: #666; margin-top: 8px;">
                                 <strong>Tips:</strong> Untuk kamera HP, ambil foto satu per satu. Klik "Ambil dari Kamera" lagi untuk foto berikutnya.
                             </p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label class="form-label">Jam Awal Bisa Pinjam <span style="color: #dc3545;">*</span></label>
+                            <input type="time" name="motorcycles[${idx}][start_rent_hour]" class="form-input" required value="08:00" />
+                        </div>
+                        <div class="form-col">
+                            <label class="form-label">Jam Akhir Bisa Pinjam <span style="color: #dc3545;">*</span></label>
+                            <input type="time" name="motorcycles[${idx}][end_rent_hour]" class="form-input" required value="20:00" />
                         </div>
                     </div>
                     <button type="button" class="remove-btn self-end" onclick="removeMotor(this)">Hapus</button>

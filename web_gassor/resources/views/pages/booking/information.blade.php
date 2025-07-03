@@ -127,17 +127,47 @@
             <div class="flex flex-col gap-[6px] px-5">
                 <p class="text-sm text-gassor-grey">
                     Hanya bisa memilih jam pengambilan dan pengembalian,
-                    <span class="text-gassor-orange underline font-semibold">dari jam 08:00 sampai dengan 16:00</span>.
+                    <span class="text-gassor-orange underline font-semibold">
+                        sesuai jam operasional pemilik motor: <b>{{ $motorcycle->start_rent_hour ?? '00:00' }}</b> sampai <b>{{ $motorcycle->end_rent_hour ?? '23:59' }}</b>.
+                    </span>
                 </p>
             </div>
             <div class="flex flex-col md:flex-row gap-2 px-5 mt-2">
                 <div class="flex flex-col w-full md:w-1/2">
                     <label class="font-semibold mb-1">Jam Pengambilan</label>
-                    <input type="time" name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" required>
+                    <select name="start_time" id="start_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" required>
+                        @php
+                            $start = \Carbon\Carbon::parse($motorcycle->start_rent_hour ?? '00:00');
+                            $end = \Carbon\Carbon::parse($motorcycle->end_rent_hour ?? '23:59');
+                            $options = [];
+                            while ($start <= $end) {
+                                $val = $start->format('H:i');
+                                $options[] = $val;
+                                $start->addMinutes(30);
+                            }
+                        @endphp
+                        @foreach($options as $val)
+                            <option value="{{ $val }}">{{ $val }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="flex flex-col w-full md:w-1/2">
                     <label class="font-semibold mb-1">Jam Pengembalian</label>
-                    <input type="time" name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" readonly>
+                    <select name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" required>
+                        @php
+                            $start = \Carbon\Carbon::parse($motorcycle->start_rent_hour ?? '00:00');
+                            $end = \Carbon\Carbon::parse($motorcycle->end_rent_hour ?? '23:59');
+                            $options = [];
+                            while ($start <= $end) {
+                                $val = $start->format('H:i');
+                                $options[] = $val;
+                                $start->addMinutes(30);
+                            }
+                        @endphp
+                        @foreach($options as $val)
+                            <option value="{{ $val }}">{{ $val }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -164,9 +194,23 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const defaultPrice = parseFloat('{{ $motorcycle->price_per_day }}');
+    const startRentHour = '{{ $motorcycle->start_rent_hour ?? "00:00" }}';
+    const endRentHour = '{{ $motorcycle->end_rent_hour ?? "23:59" }}';
 
-    // Validasi input sebelum submit
     document.addEventListener('DOMContentLoaded', function() {
+        // Batasi input time sesuai jam operasional
+        const startTimeInput = document.getElementById('start_time');
+        const endTimeInput = document.getElementById('end_time');
+        if (startTimeInput) {
+            startTimeInput.min = startRentHour;
+            startTimeInput.max = endRentHour;
+        }
+        if (endTimeInput) {
+            endTimeInput.min = startRentHour;
+            endTimeInput.max = endRentHour;
+        }
+
+        // Validasi input sebelum submit
         const form = document.querySelector('form[action="{{ route('booking.information.save', $motorbikeRental->slug) }}"]');
         const nameInput = form.querySelector('input[name="name"]');
         const emailInput = form.querySelector('input[name="email"]');

@@ -22,11 +22,15 @@ class Motorcycle extends Model
         'stock',
         'available_stock',
         'has_gps',
+        'start_rent_hour',
+        'end_rent_hour',
     ];
 
     protected $casts = [
         'stnk_images' => 'array',
         'has_gps' => 'boolean',
+        'start_rent_hour' => 'string',
+        'end_rent_hour' => 'string',
     ];
 
     /**

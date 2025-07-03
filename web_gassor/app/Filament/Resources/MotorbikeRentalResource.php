@@ -119,6 +119,16 @@ class MotorbikeRentalResource extends Resource
                                                     ->required()
                                                     ->directory('motorcycles'),
                                             ]),
+                                        Forms\Components\TextInput::make('start_rent_hour')
+                                            ->label('Jam Awal Bisa Pinjam')
+                                            ->type('time')
+                                            ->default('08:00')
+                                            ->required(),
+                                        Forms\Components\TextInput::make('end_rent_hour')
+                                            ->label('Jam Akhir Bisa Pinjam')
+                                            ->type('time')
+                                            ->default('20:00')
+                                            ->required(),
                                     ]),
                             ]),
                     ])->columnSpan(2),

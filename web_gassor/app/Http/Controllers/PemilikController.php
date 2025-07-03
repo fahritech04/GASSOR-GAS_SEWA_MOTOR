@@ -284,6 +284,8 @@ class PemilikController extends Controller
                         'stock' => 1, // selalu 1
                         'available_stock' => 1, // selalu 1
                         'has_gps' => $motor['has_gps'] ?? false,
+                        'start_rent_hour' => $motor['start_rent_hour'] ?? '08:00',
+                        'end_rent_hour' => $motor['end_rent_hour'] ?? '20:00',
                     ]);
                     // Simpan gambar motor ke motorcycle_images
                     if (isset($motor['images'])) {
@@ -408,6 +410,8 @@ class PemilikController extends Controller
             'stock' => $request->input('stock', $motorcycle->stock),
             'available_stock' => $request->input('available_stock', $motorcycle->available_stock),
             'has_gps' => $request->has('has_gps'),
+            'start_rent_hour' => $request->input('start_rent_hour', $motorcycle->start_rent_hour ?? '08:00'),
+            'end_rent_hour' => $request->input('end_rent_hour', $motorcycle->end_rent_hour ?? '20:00'),
         ]);
 
         // Update gambar STNK jika ada
