@@ -154,10 +154,12 @@
         <div id="TabContent-Container">
             @php
             $subtotal = $motorcycle->price_per_day * $transaction['duration'];
-            $total = $subtotal;
+            $ppn = $subtotal * 0.11;
+            $total = $subtotal + $ppn;
             @endphp
             <div id="FullPayment-Tab" class="tab-content flex flex-col gap-4">
-                <p class="text-sm text-gassor-grey">Anda tidak perlu membayar biaya tambahan apapun ketika survey motor</p>
+                <p class="text-sm text-gassor-grey">Anda tidak perlu membayar biaya tambahan apapun ketika survey motor
+                </p>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <img src="{{ asset('assets/images/icons/card-tick.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
@@ -171,6 +173,13 @@
                         <p class="text-gassor-grey">Jumlah Total</p>
                     </div>
                     <p class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</p>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <img src="{{ asset('assets/images/icons/receipt-2.svg') }}" class="w-6 h-6 flex shrink-0" alt="icon">
+                        <p class="text-gassor-grey">PPN 11%</p>
+                    </div>
+                    <p class="font-semibold">Rp {{ number_format($ppn, 0, ',', '.') }}</p>
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
