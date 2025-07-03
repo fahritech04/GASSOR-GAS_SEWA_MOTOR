@@ -277,8 +277,8 @@ class PemilikController extends Controller
                         'stnk' => $motor['stnk'],
                         'stnk_images' => $stnkImages,
                         'price_per_day' => $motor['price_per_day'],
-                        'stock' => $motor['stock'] ?? 1,
-                        'available_stock' => $motor['stock'] ?? 1,
+                        'stock' => 1, // selalu 1
+                        'available_stock' => 1, // selalu 1
                         'has_gps' => $motor['has_gps'] ?? false,
                     ]);
                     // Simpan gambar motor ke motorcycle_images
@@ -389,7 +389,7 @@ class PemilikController extends Controller
             'stnk' => 'required|string|max:255',
             'price_per_day' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
-            'available_stock' => 'required|integer|min:0',
+            'available_stock' => 'required|integer|in:0,1',
             'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
         ]);

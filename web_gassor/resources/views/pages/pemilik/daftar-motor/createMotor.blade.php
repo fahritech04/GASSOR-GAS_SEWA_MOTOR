@@ -382,8 +382,7 @@
                             </div>
                             <div>
                                 <label class="form-label">Stok Motor<span style="color: #dc3545;">*</span></label>
-                                <input type="number" name="motorcycles[0][stock]" class="form-input" placeholder="1" min="1" value="1" required />
-                                <small class="text-gray-500">Berapa banyak unit motor ini yang tersedia</small>
+                                <input type="number" name="motorcycles[0][stock]" class="form-input" placeholder="1" min="1" value="1" required readonly />
                             </div>
                             <div class="form-row">
                                 <div class="form-col">
@@ -673,8 +672,7 @@
                     </div>
                     <div>
                         <label class="form-label">Stok Motor<span style="color: #dc3545;">*</span></label>
-                        <input type="number" name="motorcycles[${idx}][stock]" class="form-input" placeholder="1" min="1" value="1" required />
-                        <small class="text-gray-500">Berapa banyak unit motor ini yang tersedia</small>
+                        <input type="number" name="motorcycles[${idx}][stock]" class="form-input" placeholder="1" min="1" value="1" required readonly />
                     </div>
                     <div class="form-row">
                         <div class="form-col">

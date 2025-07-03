@@ -344,8 +344,7 @@
                                 </div>
                                 <div class="form-col">
                                     <label class="form-label">Stok Tersedia</label>
-                                    <input type="number" name="available_stock" class="form-input" value="{{ old('available_stock', $motorcycle->available_stock ?? 1) }}" min="0" />
-                                    <small class="text-gray-500">Unit yang tersedia untuk disewa</small>
+                                    <input type="number" name="available_stock" class="form-input" value="{{ old('available_stock', $motorcycle->available_stock ?? 1) }}" min="0" max="1" required />
                                 </div>
                             </div>
                             <div class="form-row">
@@ -674,7 +673,7 @@
                         </div>
                         <div class="form-col">
                             <label class="form-label">Stok Tersedia</label>
-                            <input type="number" name="motorcycles[${idx}][available_stock]" class="form-input" placeholder="1" min="0" value="1" />
+                            <input type="number" name="motorcycles[${idx}][available_stock]" class="form-input" placeholder="1" min="0" max="1" value="1" />
                             <small class="text-gray-500">Unit yang tersedia untuk disewa</small>
                         </div>
                     </div>
