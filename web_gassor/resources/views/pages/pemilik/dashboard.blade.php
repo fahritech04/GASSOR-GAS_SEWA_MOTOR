@@ -43,7 +43,7 @@
                 </div>
                 <div class="flex flex-col items-center flex-1 max-w-[140px] p-4 text-center">
                     <img src="{{ asset('assets/images/icons/pendapatan.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    <span class="text-m font-bold">Rp {{ number_format($totalIncome, 0, ',', '.') }}</span>
+                    <span class="text-m font-bold">Rp {{ number_format($totalIncome / 1.11, 0, ',', '.') }}</span>
                     <span class="text-m text-gassor-grey">Pendapatan</span>
                 </div>
                 </div>

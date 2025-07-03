@@ -37,8 +37,8 @@
         <div class="laporan-summary row justify-content-center">
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-wallet" style="color:#000000;"></i></span>
-                <span class="fs-6 fw-semibold">Total Pendapatan</span>
-                <span class="fs-4 fw-bold">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
+                <span class="fs-6 fw-semibold">Total Pendapatan (sebelum PPN)</span>
+                <span class="fs-4 fw-bold">Rp {{ number_format(($summary['total_income'] ?? 0) / 1.11, 0, ',', '.') }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-receipt" style="color:#000000;"></i></span>
@@ -71,7 +71,7 @@
                             <td>{{ \Carbon\Carbon::parse($trx->start_date)->isoFormat('D MMM YYYY') }}</td>
                             <td>{{ $trx->motorcycle->name ?? '-' }}</td>
                             <td>{{ $trx->name }}</td>
-                            <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                            <td>Rp {{ number_format($trx->total_amount / 1.11, 0, ',', '.') }}</td>
                             <td>
                                 <span class="badge {{ $trx->payment_status == 'success' ? 'bg-success' : 'bg-warning text-dark' }} px-3 py-2 fw-bold">
                                     {{ strtoupper($trx->payment_status) }}

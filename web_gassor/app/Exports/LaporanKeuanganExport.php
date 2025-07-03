@@ -48,10 +48,12 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                 ->whereYear('start_date', $date->year);
         }
         $transactions = $query->with(['motorcycle'])->orderBy('start_date', 'desc')->get();
+        // Hitung summary tanpa PPN
+        $total_income_no_ppn = $transactions->sum(function($trx) { return $trx->total_amount / 1.11; });
         $this->summary = [
-            'total_income' => $transactions->sum('total_amount'),
+            'total_income' => $total_income_no_ppn,
             'total_transactions' => $transactions->count(),
-            'average_income' => $transactions->count() > 0 ? $transactions->sum('total_amount') / $transactions->count() : 0,
+            'average_income' => $transactions->count() > 0 ? $total_income_no_ppn / $transactions->count() : 0,
         ];
 
         return $transactions->map(function ($trx) {
@@ -59,15 +61,15 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                 'Tanggal' => Carbon::parse($trx->start_date)->isoFormat('D MMM YYYY'),
                 'Motor' => $trx->motorcycle->name ?? '-',
                 'Penyewa' => $trx->name,
-                'Harga' => $trx->total_amount,
+                'Harga' => $trx->total_amount / 1.11, // Harga sebelum PPN
                 'Status Pembayaran' => $trx->payment_status,
                 'Status Sewa' => match ($trx->rental_status ?? 'pending') {
                     'pending' => 'MENUNGGU',
                     'on_going' => 'SEDANG BERJALAN',
                     'finished' => 'SELESAI',
                     'cancelled' => 'DIBATALKAN',
-                    default => 'TIDAK DIKETAHUI'
-                },
+                    default => 'TIDAK DIKETAHUI',
+                }
             ];
         });
     }
