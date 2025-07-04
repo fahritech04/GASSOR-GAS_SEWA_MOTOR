@@ -16,9 +16,9 @@ class PemilikLaporanController extends Controller
         $tanggal = $request->get('tanggal', Carbon::now()->toDateString());
         $date = Carbon::parse($tanggal);
 
-        // Query dasar transaksi milik pemilik - hanya success dan finished
+        // hanya success dan finished
         $query = Transaction::where('payment_status', 'success')
-            ->where('rental_status', 'finished') // Use rental_status per transaction
+            ->where('rental_status', 'finished') // rental_status per transaction
             ->whereHas('motorcycle', function ($q) use ($user) {
                 $q->where('owner_id', $user->id);
             });
@@ -38,24 +38,27 @@ class PemilikLaporanController extends Controller
 
         $transactions = $query->with(['motorcycle'])->orderBy('start_date', 'desc')->get();
 
-        // Summary
-        $total_income = $transactions->sum('total_amount');
+        // PPN tidak dihitung untuk pemilik
+        $total_income_no_ppn = $transactions->sum(function ($trx) {
+            return $trx->total_amount / 1.11;
+        });
         $total_transactions = $transactions->count();
-        $average_income = $total_transactions > 0 ? $total_income / $total_transactions : 0;
+        $average_income = $total_transactions > 0 ? $total_income_no_ppn / $total_transactions : 0;
 
         // Grafik: group by tanggal
         $chartLabels = [];
         $chartData = [];
         if ($filter === 'harian') {
-            $chartLabels[] = $date->isoFormat('D MMM YYYY');
-            $chartData[] = $total_income;
+            $chartLabels[] = $date->isoFormat('D MMM YYYY');                $chartData[] = $total_income_no_ppn;
         } elseif ($filter === 'mingguan') {
             for ($d = $date->copy()->startOfWeek(); $d <= $date->copy()->endOfWeek(); $d->addDay()) {
                 $label = $d->isoFormat('ddd, D');
                 $chartLabels[] = $label;
                 $chartData[] = $transactions->filter(function ($trx) use ($d) {
                     return Carbon::parse($trx->start_date)->isSameDay($d);
-                })->sum('total_amount');
+                })->sum(function ($trx) {
+                    return $trx->total_amount / 1.11;
+                });
             }
         } elseif ($filter === 'bulanan') {
             $daysInMonth = $date->daysInMonth;
@@ -65,12 +68,14 @@ class PemilikLaporanController extends Controller
                 $chartLabels[] = $label;
                 $chartData[] = $transactions->filter(function ($trx) use ($d) {
                     return Carbon::parse($trx->start_date)->isSameDay($d);
-                })->sum('total_amount');
+                })->sum(function ($trx) {
+                    return $trx->total_amount / 1.11;
+                });
             }
         }
 
         $summary = [
-            'total_income' => $total_income,
+            'total_income' => $total_income_no_ppn,
             'total_transactions' => $total_transactions,
             'average_income' => $average_income,
         ];

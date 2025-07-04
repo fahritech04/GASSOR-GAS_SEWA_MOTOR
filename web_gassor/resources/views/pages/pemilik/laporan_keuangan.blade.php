@@ -35,7 +35,7 @@
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-wallet" style="color:#000000;"></i></span>
                 <span class="fs-6 fw-semibold">Total Pendapatan</span>
-                <span class="fs-4 fw-bold">Rp {{ number_format(($summary['total_income'] ?? 0) / 1.11, 0, ',', '.') }}</span>
+                <span class="fs-4 fw-bold">Rp {{ number_format($summary['total_income'] ?? 0, 0, ',', '.') }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-receipt" style="color:#000000;"></i></span>

@@ -92,9 +92,9 @@
         </tbody>
     </table>
     <div class="pdf-summary">
-        <div><strong>Total Pendapatan:</strong> Rp {{ number_format($summary['total_income'] / 1.11, 0, ',', '.') }}</div>
+        <div><strong>Total Pendapatan:</strong> Rp {{ number_format($summary['total_income'], 0, ',', '.') }}</div>
         <div><strong>Total Transaksi:</strong> {{ $summary['total_transactions'] }}</div>
-        <div><strong>Pendapatan Rata-rata:</strong> Rp {{ number_format($summary['average_income'] / 1.11, 0, ',', '.') }}</div>
+        <div><strong>Pendapatan Rata-rata:</strong> Rp {{ number_format($summary['average_income'], 0, ',', '.') }}</div>
     </div>
 </div>
 </body>
