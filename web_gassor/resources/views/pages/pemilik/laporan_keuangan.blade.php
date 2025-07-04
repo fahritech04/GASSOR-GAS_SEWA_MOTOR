@@ -3,7 +3,6 @@
 @section('content')
 <div id="Content-Container" class="relative flex flex-col w-full max-w-[640px] min-h-screen mx-auto bg-white overflow-x-hidden" style="box-shadow:0 4px 32px 0 rgba(0,0,0,0.08);">
     <div class="flex flex-col gap-6 p-8">
-        <!-- Header Laporan -->
         <div class="laporan-header mb-4">
             <a href="{{ route('pemilik.dashboard') }}" class="flex items-center justify-center w-12 h-12 overflow-hidden bg-white rounded-full shrink-0">
                 <img src="{{ asset('assets/images/icons/arrow-left.svg') }}" class="w-[28px] h-[28px]" alt="icon" />
@@ -32,12 +31,10 @@
                 <button type="button" onclick="window.print()" class="btn fw-bold text-white" style="background:#000000; border-color:#000000;"><i class="fas fa-print me-1"></i> Cetak</button>
             </div>
         </div>
-
-        <!-- Summary -->
         <div class="laporan-summary row justify-content-center">
             <div class="summary-card col-md-3 mx-2 mb-2">
                 <span class="icon"><i class="fas fa-wallet" style="color:#000000;"></i></span>
-                <span class="fs-6 fw-semibold">Total Pendapatan (sebelum PPN)</span>
+                <span class="fs-6 fw-semibold">Total Pendapatan</span>
                 <span class="fs-4 fw-bold">Rp {{ number_format(($summary['total_income'] ?? 0) / 1.11, 0, ',', '.') }}</span>
             </div>
             <div class="summary-card col-md-3 mx-2 mb-2">
@@ -51,7 +48,6 @@
                 <span class="fs-4 fw-bold">Rp {{ number_format($summary['average_income'] ?? 0, 0, ',', '.') }}</span>
             </div>
         </div>
-
         <div class="bg-white p-4 shadow overflow-auto">
             <h2 class="fw-bold mb-4 fs-5 d-flex align-items-center gap-2"><i class="fas fa-table" style="color:#000000;"></i> Detail Transaksi</h2>
             <table class="table table-bordered laporan-table align-middle mb-0">

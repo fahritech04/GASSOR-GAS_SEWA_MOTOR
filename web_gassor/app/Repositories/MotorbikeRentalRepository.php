@@ -96,7 +96,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getAllMotorcycles($search = null, $city = null, $category = null)
     {
-        $query = Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images']);
+        $query = Motorcycle::with(['motorbikeRental.city', 'category', 'images']);
 
         if ($search) {
             $query->where('name', 'like', '%'.$search.'%');
@@ -109,7 +109,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
         }
 
         if ($category) {
-            $query->whereHas('motorbikeRental.category', function (Builder $query) use ($category) {
+            $query->whereHas('category', function (Builder $query) use ($category) {
                 $query->where('slug', $category);
             });
         }
@@ -119,7 +119,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getAllMotorcyclesForHome($limit = 10)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
             ->where('available_stock', '>', 0)
             ->take($limit)
             ->get();
@@ -127,7 +127,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getMotorcyclesByCitySlug($slug)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
             ->whereHas('motorbikeRental.city', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
@@ -136,8 +136,8 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getMotorcyclesByCategorySlug($slug)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'motorbikeRental.category', 'images'])
-            ->whereHas('motorbikeRental.category', function (Builder $query) use ($slug) {
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
+            ->whereHas('category', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
             ->get();

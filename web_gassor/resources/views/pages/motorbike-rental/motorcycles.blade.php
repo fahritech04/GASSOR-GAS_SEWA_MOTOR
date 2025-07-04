@@ -26,7 +26,11 @@
             </div>
             <div class="flex items-center gap-[6px]">
                 <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
-                <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->category->name }}</p>
+                @if($motorbikeRental->hasMultipleCategories())
+                    <p class="text-sm text-gassor-grey">Kategori Beragam</p>
+                @else
+                    <p class="text-sm text-gassor-grey">Kategori {{ $motorbikeRental->getPredominantCategory()?->name ?? 'Tidak Ada' }}</p>
+                @endif
             </div>
         </div>
     </div>

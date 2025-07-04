@@ -46,10 +46,10 @@ class MotorbikeRental extends Model
         return $this->hasManyThrough(
             \App\Models\User::class,
             \App\Models\Motorcycle::class,
-            'motorbike_rental_id', // Foreign key motorcycles
-            'id', // Foreign key users
-            'id', // Local key rentals
-            'owner_id' // Local key motorcycles
+            'motorbike_rental_id',
+            'id',
+            'id',
+            'owner_id'
         )->distinct();
     }
 
@@ -61,5 +61,47 @@ class MotorbikeRental extends Model
     public function category()
     {
         return $this->hasOneThrough(Category::class, Motorcycle::class, 'motorbike_rental_id', 'id', 'id', 'category_id');
+    }
+
+    // kategori dominan atau "Campuran" jika ada beberapa kategori
+    public function getPredominantCategory()
+    {
+        $categories = $this->motorcycles()
+            ->with('category')
+            ->get()
+            ->pluck('category')
+            ->filter()
+            ->unique('id');
+
+        if ($categories->count() === 0) {
+            return null;
+        }
+
+        if ($categories->count() === 1) {
+            return $categories->first();
+        }
+
+        // Multiple categories - return the most common one
+        $categoryCounts = $this->motorcycles()
+            ->with('category')
+            ->get()
+            ->groupBy('category_id')
+            ->map(function ($group) {
+                return [
+                    'category' => $group->first()->category,
+                    'count' => $group->count()
+                ];
+            })
+            ->sortByDesc('count');
+
+        return $categoryCounts->first()['category'] ?? null;
+    }
+
+    // Periksa apakah memiliki sepeda motor dari beberapa kategori
+    public function hasMultipleCategories()
+    {
+        return $this->motorcycles()
+            ->distinct('category_id')
+            ->count('category_id') > 1;
     }
 }

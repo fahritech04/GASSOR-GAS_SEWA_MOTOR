@@ -17,10 +17,8 @@ class CategoryDistributionChart extends ChartWidget
     {
         $data = Category::select('categories.*')
             ->selectRaw('(SELECT COUNT(*) FROM motorcycles
-                         INNER JOIN motorbike_rentals ON motorbike_rentals.id = motorcycles.motorbike_rental_id
-                         WHERE motorbike_rentals.category_id = categories.id
-                         AND motorcycles.deleted_at IS NULL
-                         AND motorbike_rentals.deleted_at IS NULL) as motorcycles_count')
+                         WHERE motorcycles.category_id = categories.id
+                         AND motorcycles.deleted_at IS NULL) as motorcycles_count')
             ->having('motorcycles_count', '>', 0)
             ->orderBy('motorcycles_count', 'desc')
             ->get();

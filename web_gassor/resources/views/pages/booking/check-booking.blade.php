@@ -37,7 +37,7 @@
                                         $rentalStatusLabel = 'SELESAI';
                                         $rentalStatusColor = '#27ae60';
                                     } elseif ($rentalStatus === 'on_going') {
-                                        $rentalStatusLabel = 'SEDANG BERJALAN';
+                                        $rentalStatusLabel = 'BERJALAN';
                                         $rentalStatusColor = '#E6A43B';
                                     } else {
                                         $rentalStatusLabel = null;

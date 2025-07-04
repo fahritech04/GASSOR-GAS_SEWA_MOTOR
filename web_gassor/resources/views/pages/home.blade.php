@@ -153,7 +153,7 @@
                     <div class="flex items-center gap-[6px]">
                         <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-5 h-5 flex shrink-0"
                             alt="icon">
-                        <p class="text-sm text-gassor-grey">Kategori {{ $motorcycle->motorbikeRental->category->name }}</p>
+                        <p class="text-sm text-gassor-grey">Kategori {{ $motorcycle->category->name }}</p>
                     </div>
                     <div class="flex items-center gap-[6px]">
                         <img src="{{ asset('assets/images/icons/receipt-text.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">

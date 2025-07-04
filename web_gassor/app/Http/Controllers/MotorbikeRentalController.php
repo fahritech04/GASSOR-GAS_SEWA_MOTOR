@@ -40,7 +40,7 @@ class MotorbikeRentalController extends Controller
             abort(404);
         }
 
-        $motorcycle->load(['motorbikeRental.city', 'motorbikeRental.category', 'images']);
+        $motorcycle->load(['motorbikeRental.city', 'category', 'images']);
 
         return view('pages.motorbike-rental.motorcycle-detail', compact('motorcycle'));
     }
