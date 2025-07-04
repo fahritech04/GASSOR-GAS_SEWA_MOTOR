@@ -10,20 +10,29 @@
         <h1 class="font-bold text-[32px] leading-[48px]">Daftar Motor Anda</h1>
         <p class="text-gassor-grey">Tersedia {{ $totalMotor }} Motor</p>
     </div>
-    <a href="{{ route('pemilik.create-motor') }}"
-    style="background-color: #000000; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block;">
-        Tambah
-    </a>
+    @if($isApproved)
+        <a href="{{ route('pemilik.create-motor') }}" style="background-color: #000000; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block;">Tambah</a>
+    @else
+        <span style="background-color: #cccccc; color: #666; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); cursor: not-allowed; display: inline-block;">Tambah</span>
+    @endif
 </div>
+@if(!$isApproved)
+<div class="relative px-5 mt-4">
+    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fef3c7 100%); border: 2px solid #f59e0b; color: #92400e; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-weight: 500;">
+        <p class="mt-2">Akun Anda belum diverifikasi admin. Tidak dapat menambah motor baru. Pastikan data profil Anda sudah lengkap dan benar.</p>
+        <a href="{{ route('editprofile.pemilik') }}" style="color: #e6a43b; text-decoration: underline; font-weight: 600; margin-top: 0.5rem; display: inline-block;">Klik di sini untuk melengkapi profil →</a>
+    </div>
+</div>
+@endif
 <section id="Result" class="relative flex flex-col gap-4 px-5 mt-5 mb-9">
     <div class="flex items-center justify-between mb-4">
         <h2 class="font-bold text-lg">Motor yang dimiliki {{ auth()->user()->name }}</h2>
         @if($motorcycles->count() > 0)
-            <a href="#" class="btn-hapus-rental"
-               data-id="{{ $motorcycles->first()->motorbike_rental_id }}"
-               style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center; font-size: 14px;">
-                Hapus Semua
-            </a>
+            @if($isApproved)
+                <a href="#" class="btn-hapus-rental" data-id="{{ $motorcycles->first()->motorbike_rental_id }}" style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center; font-size: 14px;">Hapus Semua</a>
+            @else
+                <span style="background-color: #cccccc; color: #666; font-weight: 600; padding: 8px 16px; border-radius: 12px; cursor: not-allowed; display: inline-block; text-align: center; font-size: 14px;">Hapus Semua</span>
+            @endif
             <form id="form-hapus-rental-{{ $motorcycles->first()->motorbike_rental_id }}" action="{{ route('pemilik.destroy-rental', $motorcycles->first()->motorbike_rental_id) }}" method="POST" style="display:none;">
                 @csrf
                 @method('DELETE')
@@ -44,16 +53,13 @@
                 <p class="text-sm text-gassor-grey">Harga • Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}/hari</p>
             </div>
             <div class="flex flex-col gap-2 w-full">
-                <a href="{{ route('pemilik.edit-motor', $motorcycle->id) }}"
-                style="background-color: #e6a43b; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
-                    Edit
-                </a>
-                <a href="#" class="btn-hapus-motor"
-                   data-id="{{ $motorcycle->id }}"
-                   data-name="{{ $motorcycle->name }}"
-                   style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">
-                    Hapus
-                </a>
+                @if($isApproved)
+                    <a href="{{ route('pemilik.edit-motor', $motorcycle->id) }}" style="background-color: #e6a43b; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">Edit</a>
+                    <a href="#" class="btn-hapus-motor" data-id="{{ $motorcycle->id }}" data-name="{{ $motorcycle->name }}" style="background-color: #eb5757; color: #fff; font-weight: 600; padding: 8px 20px; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: background 0.2s; text-decoration: none; display: inline-block; text-align: center;">Hapus</a>
+                @else
+                    <span style="background-color: #cccccc; color: #666; font-weight: 600; padding: 8px 20px; border-radius: 15px; cursor: not-allowed; display: inline-block; text-align: center;">Edit</span>
+                    <span style="background-color: #cccccc; color: #666; font-weight: 600; padding: 8px 20px; border-radius: 15px; cursor: not-allowed; display: inline-block; text-align: center;">Hapus</span>
+                @endif
                 <form id="form-hapus-motor-{{ $motorcycle->id }}" action="{{ route('pemilik.destroy-motor', $motorcycle->id) }}" method="POST" style="display:none;">
                     @csrf
                     @method('DELETE')
@@ -102,10 +108,14 @@
         confirmButtonColor: '#e6a43b',
         timer: 4000,
         timerProgressBar: true,
-        showConfirmButton: true
+        showConfirmButton: true,
+        customClass: {
+            popup: 'text-black',
+            confirmButton: 'rounded-full'
+        },
+        color: '#000000'
     });
 @endif
-
 @if (session('error'))
     Swal.fire({
         icon: 'error',
@@ -114,10 +124,14 @@
         confirmButtonColor: '#eb5757',
         timer: 5000,
         timerProgressBar: true,
-        showConfirmButton: true
+        showConfirmButton: true,
+        customClass: {
+            popup: 'text-black',
+            confirmButton: 'rounded-full'
+        },
+        color: '#000000'
     });
 @endif
-
 document.querySelectorAll('.btn-hapus-motor').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -129,10 +143,17 @@ document.querySelectorAll('.btn-hapus-motor').forEach(function(btn) {
             text: 'Motor ini akan dihapus dari rental Anda. Jika ini motor terakhir dalam rental, maka rental juga akan ikut terhapus.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ff9800',
+            confirmButtonColor: '#eb5757',
             cancelButtonColor: '#aaa',
             confirmButtonText: 'Ya, hapus motor ini!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full',
+                cancelButton: 'rounded-full'
+            },
+            color: '#000000'
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('form-hapus-motor-' + motorId).submit();
@@ -140,7 +161,6 @@ document.querySelectorAll('.btn-hapus-motor').forEach(function(btn) {
         });
     });
 });
-
 document.querySelector('.btn-hapus-rental')?.addEventListener('click', function(e) {
     e.preventDefault();
     var rentalId = this.getAttribute('data-id');
@@ -155,7 +175,13 @@ document.querySelector('.btn-hapus-rental')?.addEventListener('click', function(
         confirmButtonText: 'Ya, hapus semuanya!',
         cancelButtonText: 'Batal',
         reverseButtons: true,
-        focusCancel: true
+        focusCancel: true,
+        customClass: {
+            popup: 'text-black',
+            confirmButton: 'rounded-full',
+            cancelButton: 'rounded-full'
+        },
+        color: '#000000'
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('form-hapus-rental-' + rentalId).submit();

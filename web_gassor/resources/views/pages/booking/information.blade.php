@@ -128,7 +128,7 @@
                 <p class="text-sm text-gassor-grey">
                     Hanya bisa memilih jam pengambilan dan pengembalian,
                     <span class="text-gassor-orange underline font-semibold">
-                        sesuai jam operasional pemilik motor: <b>{{ $motorcycle->start_rent_hour ?? '00:00' }}</b> sampai <b>{{ $motorcycle->end_rent_hour ?? '23:59' }}</b>.
+                        sesuai jam operasional pemilik motor: <b>{{ \Carbon\Carbon::parse($motorcycle->start_rent_hour ?? '00:00')->format('H:i') }}</b> sampai <b>{{ \Carbon\Carbon::parse($motorcycle->end_rent_hour ?? '23:59')->format('H:i') }}</b>.
                     </span>
                 </p>
             </div>
@@ -153,21 +153,10 @@
                 </div>
                 <div class="flex flex-col w-full md:w-1/2">
                     <label class="font-semibold mb-1">Jam Pengembalian</label>
-                    <select name="end_time" id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-white border border-[#F1F2F6] focus:ring-1 focus:ring-[#E6A43B] transition-all duration-300" required>
-                        @php
-                            $start = \Carbon\Carbon::parse($motorcycle->start_rent_hour ?? '00:00');
-                            $end = \Carbon\Carbon::parse($motorcycle->end_rent_hour ?? '23:59');
-                            $options = [];
-                            while ($start <= $end) {
-                                $val = $start->format('H:i');
-                                $options[] = $val;
-                                $start->addMinutes(30);
-                            }
-                        @endphp
-                        @foreach($options as $val)
-                            <option value="{{ $val }}">{{ $val }}</option>
-                        @endforeach
+                    <select id="end_time" class="appearance-none outline-none w-full font-semibold rounded-full p-[14px_20px] bg-gray-100 border border-[#F1F2F6] text-gray-600 cursor-not-allowed" readonly disabled>
+                        <option value="">Otomatis +24 jam</option>
                     </select>
+                    <input type="hidden" name="end_time" id="end_time_hidden" />
                 </div>
             </div>
         </div>
@@ -190,12 +179,13 @@
 @endsection
 
 @section('scripts')
-<!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const defaultPrice = parseFloat('{{ $motorcycle->price_per_day }}');
-    const startRentHour = '{{ $motorcycle->start_rent_hour ?? "00:00" }}';
-    const endRentHour = '{{ $motorcycle->end_rent_hour ?? "23:59" }}';
+    const startRentHour = '{{ \Carbon\Carbon::parse($motorcycle->start_rent_hour ?? "00:00")->format("H:i") }}';
+    const endRentHour = '{{ \Carbon\Carbon::parse($motorcycle->end_rent_hour ?? "23:59")->format("H:i") }}';
+    window.startRentHour = startRentHour;
+    window.endRentHour = endRentHour;
 
     document.addEventListener('DOMContentLoaded', function() {
         // Batasi input time sesuai jam operasional
@@ -224,7 +214,12 @@
                     icon: 'warning',
                     title: 'Lengkapi dulu akun kamu',
                     text: 'Pastikan nama, email, dan nomor telepon sudah terisi.',
-                    confirmButtonColor: '#ff9900',
+                    confirmButtonColor: '#e6a43b',
+                    customClass: {
+                        popup: 'text-black',
+                        confirmButton: 'rounded-full'
+                    },
+                    color: '#000000'
                 });
                 return false;
             }

@@ -88,10 +88,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         @if(session('error'))
             Swal.fire({
-                icon: 'warning',
-                title: 'Akun Belum Diverifikasi',
-                text: '{{ session('error') }}',
-                confirmButtonColor: '#ff9900',
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                html: `{!! session('error') !!}`,
+                confirmButtonColor: '#e6a43b',
+                customClass: {
+                    popup: 'text-black',
+                    confirmButton: 'rounded-full'
+                },
+                color: '#000000'
             });
         @endif
     });

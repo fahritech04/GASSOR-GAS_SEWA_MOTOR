@@ -29,7 +29,7 @@ class CategoryController extends Controller
             $motorcycles = $motorcycles->where('category_id', $categoryId);
         }
         if ($search) {
-            $motorcycles = $motorcycles->filter(function($item) use ($search) {
+            $motorcycles = $motorcycles->filter(function ($item) use ($search) {
                 return stripos($item->name, $search) !== false;
             });
         }

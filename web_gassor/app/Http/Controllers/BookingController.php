@@ -26,8 +26,8 @@ class BookingController extends Controller
     public function booking(Request $request, $slug)
     {
         $user = auth()->user();
-        if (!$user || !$user->is_approved) {
-            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi admin. Tidak dapat melakukan pemesanan.');
+        if (! $user || ! $user->is_approved) {
+            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi admin. Tidak dapat melakukan pemesanan. Pastikan data akun anda sudah benar. <a href="'.route('editprofile.penyewa').'" class="text-gassor-orange underline font-semibold">Klik di sini untuk melengkapi profil</a>.');
         }
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
         if (! $motorcycle || ! $motorcycle->isAvailable()) {

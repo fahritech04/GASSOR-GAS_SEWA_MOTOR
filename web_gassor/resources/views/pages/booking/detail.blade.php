@@ -252,8 +252,9 @@ function showStnkModal(imgUrl) {
         background: '#fff',
         customClass: {
             image: 'w-full h-auto max-w-2xl rounded-lg',
-            popup: 'p-0',
-        }
+            popup: 'p-0 text-black',
+        },
+        color: '#000000'
     });
 }
 </script>

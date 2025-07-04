@@ -224,11 +224,12 @@
             confirmButtonColor: '#E6A43B',
             background: '#ffffff',
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         });
     @endif
 
@@ -241,19 +242,18 @@
             confirmButtonColor: '#EB5757',
             background: '#ffffff',
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         });
     @endif
 
     // Handle form submission dengan validasi tambahan
     document.querySelector('form').addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // Konfirmasi pembayaran dengan SweetAlert2
         Swal.fire({
             icon: 'question',
             title: 'Konfirmasi Pembayaran',
@@ -272,33 +272,34 @@
             cancelButtonColor: '#95A5A6',
             reverseButtons: true,
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold',
                 cancelButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Disable tombol submit untuk mencegah double click
                 const submitBtn = document.querySelector('button[type="submit"]');
                 submitBtn.disabled = true;
-
-                // Tampilkan loading dengan SweetAlert2
                 Swal.fire({
                     title: 'Memproses Pembayaran...',
                     html: 'Mohon tunggu, Anda akan diarahkan ke halaman pembayaran',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showConfirmButton: false,
+                    customClass: {
+                        popup: 'text-black'
+                    },
+                    color: '#000000',
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
-
                 // Submit form setelah konfirmasi
                 e.target.submit();
-
                 // Re-enable setelah 10 detik jika tidak redirect
                 setTimeout(function() {
                     submitBtn.disabled = false;

@@ -49,7 +49,9 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
         }
         $transactions = $query->with(['motorcycle'])->orderBy('start_date', 'desc')->get();
         // Hitung summary tanpa PPN
-        $total_income_no_ppn = $transactions->sum(function($trx) { return $trx->total_amount / 1.11; });
+        $total_income_no_ppn = $transactions->sum(function ($trx) {
+            return $trx->total_amount / 1.11;
+        });
         $this->summary = [
             'total_income' => $total_income_no_ppn,
             'total_transactions' => $transactions->count(),
@@ -69,7 +71,7 @@ class LaporanKeuanganExport implements FromCollection, WithEvents, WithHeadings,
                     'finished' => 'SELESAI',
                     'cancelled' => 'DIBATALKAN',
                     default => 'TIDAK DIKETAHUI',
-                }
+                },
             ];
         });
     }

@@ -274,11 +274,9 @@
                                     <option value="3">Sukabirus</option>
                                 </select>
                             </div>
-                            <div class="form-col">
+                            {{-- <div class="form-col">
                                 <label class="form-label">Kategori <span style="color: #dc3545;">*</span></label>
-                                <!-- Pindahkan ke form motor, hapus dari sini -->
-                                <!-- <select name="category_id" class="form-select" required> ... </select> -->
-                            </div>
+                            </div> --}}
                         </div>
                         <div>
                             <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
@@ -293,30 +291,66 @@
             @endif
             <!-- Tab Bonus Sewa -->
             <div id="bonus-sewa" class="tab-content">
+                @if(isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses && count($existingRental->bonuses))
+                    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 500;"><strong>Info:</strong> Data bonus berikut diambil dari rental "<strong>{{ $existingRental->name }}</strong>" yang sudah ada. Anda dapat mengedit atau menambah bonus baru di bawah ini.</div>
+                @endif
                 <div id="bonus-container">
-                    <div class="bonus-item">
-                        <div class="flex flex-col gap-4">
-                            <div>
-                                <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
-                                <div class="upload-area" onclick="document.getElementById('bonus_image_0').click()">
-                                    <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                                    <input type="file" id="bonus_image_0" name="bonuses[0][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_0')" />
+                    @php $bonusCount = 0; @endphp
+                    @if(isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses && count($existingRental->bonuses))
+                        @foreach($existingRental->bonuses as $bonus)
+                        <div class="bonus-item">
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
+                                    <div class="upload-area" onclick="document.getElementById('bonus_image_{{ $bonusCount }}').click()">
+                                        <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                                        <input type="file" id="bonus_image_{{ $bonusCount }}" name="bonuses[{{ $bonusCount }}][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_{{ $bonusCount }}')" />
+                                    </div>
+                                    <div id="bonus_preview_{{ $bonusCount }}" style="display: {{ $bonus->image ? 'block' : 'none' }};">
+                                        @if($bonus->image)
+                                            <img class="image-preview" src="{{ asset('storage/'.$bonus->image) }}" alt="Pratinjau">
+                                            <button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "bonus_image_{{ $bonusCount }}", "bonus_preview_{{ $bonusCount }}")'>Hapus</button>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div id="bonus_preview_0" style="display: none;">
-                                    <img class="image-preview" alt="Pratinjau">
+                                <div>
+                                    <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
+                                    <input type="text" name="bonuses[{{ $bonusCount }}][name]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.name', $bonus->name) }}" placeholder="Contoh: Helm" />
                                 </div>
+                                <div>
+                                    <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
+                                    <input type="text" name="bonuses[{{ $bonusCount }}][description]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.description', $bonus->description) }}" placeholder="Contoh: 1 Helm" />
+                                </div>
+                                <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
                             </div>
-                            <div>
-                                <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
-                                <input type="text" name="bonuses[0][name]" class="form-input" placeholder="Contoh: Helm" />
-                            </div>
-                            <div>
-                                <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
-                                <input type="text" name="bonuses[0][description]" class="form-input" placeholder="Contoh: 1 Helm" />
-                            </div>
-                            <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
                         </div>
-                    </div>
+                        @php $bonusCount++; @endphp
+                        @endforeach
+                    @else
+                        <div class="bonus-item">
+                            <div class="flex flex-col gap-4">
+                                <div>
+                                    <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
+                                    <div class="upload-area" onclick="document.getElementById('bonus_image_0').click()">
+                                        <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                                        <input type="file" id="bonus_image_0" name="bonuses[0][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_0')" />
+                                    </div>
+                                    <div id="bonus_preview_0" style="display: none;">
+                                        <img class="image-preview" alt="Pratinjau">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
+                                    <input type="text" name="bonuses[0][name]" class="form-input" placeholder="Contoh: Helm" />
+                                </div>
+                                <div>
+                                    <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
+                                    <input type="text" name="bonuses[0][description]" class="form-input" placeholder="Contoh: 1 Helm" />
+                                </div>
+                                <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
             </div>
@@ -437,7 +471,7 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let bonusCount = 1;
+    let bonusCount = {{ isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses ? count($existingRental->bonuses) : 1 }};
     let motorCount = 1;
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -451,14 +485,12 @@
             if (infoBtn) infoBtn.classList.add('active');
         @endif
     });
-
     function showTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         event.target.classList.add('active');
     }
-
     function showTabWithoutEvent(tabName) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -507,7 +539,7 @@
         const file = event.target.files[0];
         if (file) {
             const preview = document.getElementById(previewId);
-            const container = document.getElementById(previewId.replace('_preview_', '_preview_container'));
+            const container = document.getElementById(previewId.replace('_preview_', '_preview_container_'));
             const existingFiles = getExistingFiles(inputId);
             const allFiles = [...existingFiles, file];
             updatePreview(container, allFiles, inputId, previewId);
@@ -755,8 +787,13 @@
         Swal.fire({
             icon: 'error',
             title: 'Terjadi Kesalahan',
-            html: `{!! nl2br(e(session('error'))) !!}`,
-            confirmButtonColor: '#e6a43b'
+            html: `{!! session('error') !!}`,
+            confirmButtonColor: '#e6a43b',
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
     @if($errors->any())
@@ -764,7 +801,12 @@
             icon: 'error',
             title: 'Validasi Gagal',
             html: `{!! implode('<br>', $errors->all()) !!}`,
-            confirmButtonColor: '#e6a43b'
+            confirmButtonColor: '#e6a43b',
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
     @if(session('success') && request()->isMethod('post'))
@@ -775,7 +817,12 @@
             confirmButtonColor: '#e6a43b',
             timer: 4000,
             timerProgressBar: true,
-            showConfirmButton: true
+            showConfirmButton: true,
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
 </script>

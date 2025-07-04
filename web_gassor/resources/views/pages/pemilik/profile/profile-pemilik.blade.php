@@ -51,13 +51,16 @@
                         </div>
                         <p class="font-semibold w-full break-all text-right">{{ Auth::user()->phone }}</p>
                     </div>
-                    {{-- <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('assets/images/icons/location.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                        <p class="text-gassor-grey">Alamat</p>
-                    </div>
-                    <p class="font-semibold text-right"></p>
-                    </div> --}}
+
+                    @if(Auth::user()->is_approved == 1)
+                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; color: #166534; padding: 1rem; border-radius: 12px; margin-top: 1rem; font-weight: 500;">
+                            <strong>Info:</strong> Akun Anda sudah di approved dan di validasi admin.
+                        </div>
+                    @else
+                        <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; color: #92400e; padding: 1rem; border-radius: 12px; margin-top: 1rem; font-weight: 500;">
+                            <strong>Info:</strong> Akun Anda belum di approved dan di validasi admin.
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -75,13 +78,6 @@
                         </div>
                         <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
                     </a>
-                    {{-- <a href="#" class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/icons/key.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                            <p class="text-gassor-grey">Ganti Kata Sandi</p>
-                        </div>
-                        <img src="{{ asset('assets/images/icons/arrow-right.svg') }}" class="flex w-6 h-6 shrink-0" alt="icon" />
-                    </a> --}}
                 </div>
             </div>
 

@@ -75,33 +75,62 @@ durationInput.addEventListener("blur", () => {
 
 // harga awal
 updatePrice();
-
-// Set end_time otomatis 24 jam setelah start_time
 const startTimeInput = document.getElementById("start_time");
 const endTimeInput = document.getElementById("end_time");
+const endTimeHidden = document.getElementById("end_time_hidden");
 
 if (startTimeInput && endTimeInput) {
     startTimeInput.addEventListener("input", function () {
         if (this.value) {
             let [hours, minutes] = this.value.split(":").map(Number);
-            if (hours < 8) {
-                hours = 8;
-                minutes = 0;
-                this.value = "08:00";
-            } else if (hours > 16 || (hours === 16 && minutes > 0)) {
-                hours = 16;
-                minutes = 0;
-                this.value = "16:00";
+
+            const startRentHour =
+                typeof window.startRentHour !== "undefined"
+                    ? window.startRentHour
+                    : startRentHour;
+            const endRentHour =
+                typeof window.endRentHour !== "undefined"
+                    ? window.endRentHour
+                    : endRentHour;
+
+            const [minHour, minMinute] = startRentHour.split(":").map(Number);
+            const [maxHour, maxMinute] = endRentHour.split(":").map(Number);
+
+            if (hours < minHour || (hours === minHour && minutes < minMinute)) {
+                hours = minHour;
+                minutes = minMinute;
+                this.value = `${String(hours).padStart(2, "0")}:${String(
+                    minutes
+                ).padStart(2, "0")}`;
+            } else if (
+                hours > maxHour ||
+                (hours === maxHour && minutes > maxMinute)
+            ) {
+                hours = maxHour;
+                minutes = maxMinute;
+                this.value = `${String(hours).padStart(2, "0")}:${String(
+                    minutes
+                ).padStart(2, "0")}`;
             }
-            // Tambah 24 jam
+
+            // Tambah 24 jam untuk end_time
             const endDate = new Date();
             endDate.setHours(hours + 24, minutes, 0, 0);
-            // Format HH:MM
             const endHours = String(endDate.getHours()).padStart(2, "0");
             const endMinutes = String(endDate.getMinutes()).padStart(2, "0");
-            endTimeInput.value = `${endHours}:${endMinutes}`;
+            const endTimeValue = `${endHours}:${endMinutes}`;
+
+            // Update display select dan hidden input
+            endTimeInput.innerHTML = `<option value="${endTimeValue}" selected>${endTimeValue} (+24 jam)</option>`;
+            if (endTimeHidden) {
+                endTimeHidden.value = endTimeValue;
+            }
         } else {
-            endTimeInput.value = "";
+            endTimeInput.innerHTML =
+                '<option value="">Otomatis +24 jam</option>';
+            if (endTimeHidden) {
+                endTimeHidden.value = "";
+            }
         }
     });
 }

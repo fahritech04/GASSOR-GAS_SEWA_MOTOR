@@ -109,7 +109,12 @@
                 icon: 'warning',
                 title: 'Akun Belum Diverifikasi',
                 text: '{{ session('error') }}',
-                confirmButtonColor: '#ff9900',
+                confirmButtonColor: '#e6a43b',
+                customClass: {
+                    popup: 'text-black',
+                    confirmButton: 'rounded-full'
+                },
+                color: '#000000'
             });
         @endif
     });
@@ -123,11 +128,12 @@
             confirmButtonColor: '#E6A43B',
             background: '#ffffff',
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         });
     @endif
 
@@ -146,25 +152,28 @@
             cancelButtonColor: '#95A5A6',
             reverseButtons: true,
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold',
                 cancelButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Tampilkan loading
                 Swal.fire({
                     title: 'Membatalkan Pesanan...',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showConfirmButton: false,
+                    customClass: {
+                        popup: 'text-black'
+                    },
+                    color: '#000000',
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
-
                 // Submit form pembatalan
                 form.submit();
             }
@@ -186,25 +195,28 @@
             cancelButtonColor: '#95A5A6',
             reverseButtons: true,
             customClass: {
-                popup: 'rounded-lg shadow-lg',
+                popup: 'rounded-lg shadow-lg text-black',
                 title: 'text-gassor-black font-bold',
                 content: 'text-gassor-grey',
                 confirmButton: 'rounded-full px-6 py-2 font-bold',
                 cancelButton: 'rounded-full px-6 py-2 font-bold'
-            }
+            },
+            color: '#000000'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Tampilkan loading
                 Swal.fire({
                     title: 'Mengarahkan ke Pembayaran...',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showConfirmButton: false,
+                    customClass: {
+                        popup: 'text-black'
+                    },
+                    color: '#000000',
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
-
                 // Submit form retry payment
                 form.submit();
             }

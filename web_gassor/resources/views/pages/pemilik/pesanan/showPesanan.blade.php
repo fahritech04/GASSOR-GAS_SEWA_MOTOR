@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- Add CSRF token for AJAX --}}
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div id="Background"
@@ -157,8 +156,6 @@
     // Auto-refresh untuk transaksi pending dengan AJAX
     let autoRefreshInterval;
     let pendingTransactionIds = [];
-
-    // Collect all pending transaction IDs
     document.addEventListener('DOMContentLoaded', function() {
         @foreach($transactions as $transaction)
             @if($transaction->payment_status === 'pending')
@@ -171,13 +168,11 @@
             showAutoRefreshNotification();
         }
     });
-
     function startAutoRefresh() {
         autoRefreshInterval = setInterval(function() {
             checkPendingTransactions();
         }, 15000); // Check setiap 15 detik untuk lebih responsive
     }
-
     function checkPendingTransactions() {
         pendingTransactionIds.forEach(transactionId => {
             fetch(`/pemilik/pesanan/${transactionId}/check-status`, {
@@ -203,7 +198,6 @@
             });
         });
     }
-
     function showAutoRefreshNotification() {
         const notification = document.createElement('div');
         notification.innerHTML = `
@@ -222,7 +216,6 @@
             }
         }, 5000);
     }
-
     function stopAutoRefresh() {
         if (autoRefreshInterval) {
             clearInterval(autoRefreshInterval);
@@ -232,7 +225,6 @@
             notif.style.display = 'none';
         }
     }
-
     // Stop auto-refresh when user navigates away
     window.addEventListener('beforeunload', function() {
         stopAutoRefresh();
@@ -250,7 +242,14 @@ function confirmReturn(transactionId, motorName, customerName) {
         confirmButtonColor: '#27ae60',
         cancelButtonColor: '#95a5a6',
         confirmButtonText: 'Ya, Sudah Dikembalikan',
-        cancelButtonText: 'Batal'
+        cancelButtonText: 'Batal',
+        reverseButtons: true,
+        customClass: {
+            popup: 'text-black',
+            confirmButton: 'rounded-full',
+            cancelButton: 'rounded-full'
+        },
+        color: '#000000'
     }).then((result) => {
         if (result.isConfirmed) {
             document.getElementById('return-form-' + transactionId).submit();

@@ -193,9 +193,6 @@
                                 <option value="3" {{ old('city_id', $motorbikeRental->city_id ?? '')==3 ? 'selected' : '' }}>Sukabirus</option>
                             </select>
                         </div>
-                        <div class="form-col">
-                            <!-- Kategori dipindahkan ke form motor, tidak perlu di sini -->
-                        </div>
                     </div>
                     <div>
                         <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
@@ -264,7 +261,7 @@
                         </div>
                     @endif
                 </div>
-                <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
+                {{-- <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button> --}}
             </div>
             <!-- Tab Motor -->
             <div id="motor" class="tab-content">
@@ -393,7 +390,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="add-btn" onclick="addMotor()">Tambah Motor</button>
+                {{-- <button type="button" class="add-btn" onclick="addMotor()">Tambah Motor</button> --}}
             </div>
             <div class="flex gap-3 mt-8 mb-2">
                 <button type="button" class="gassor-btn-secondary" onclick="window.history.back()">Batal</button>
@@ -415,7 +412,12 @@
             confirmButtonColor: '#eb5757',
             timer: 5000,
             timerProgressBar: true,
-            showConfirmButton: true
+            showConfirmButton: true,
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
 
@@ -433,7 +435,12 @@
             confirmButtonColor: '#e6a43b',
             timer: 8000,
             timerProgressBar: true,
-            showConfirmButton: true
+            showConfirmButton: true,
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
 
@@ -445,7 +452,12 @@
             confirmButtonColor: '#e6a43b',
             timer: 4000,
             timerProgressBar: true,
-            showConfirmButton: true
+            showConfirmButton: true,
+            customClass: {
+                popup: 'text-black',
+                confirmButton: 'rounded-full'
+            },
+            color: '#000000'
         });
     @endif
 

@@ -105,7 +105,7 @@
 
             <div class="form-row" style="gap: 24px; margin-bottom: 1.5rem; flex-wrap: wrap;">
                 <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
-                    <label for="ktp_image" class="text-sm font-medium mb-2">Upload KTP</label>
+                    <label for="ktp_image" class="text-sm font-medium mb-2">Upload KTP<span style="color: #dc3545;"> *</span></label>
                     <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
                         <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('ktp_image').click()">
                             <img id="ktp-preview" src="{{ old('ktp_image_url', isset($user) && $user->ktp_image_url ? asset('storage/' . $user->ktp_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->ktp_image_url) ? 'block' : 'none' }};" alt="Preview KTP" />
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
-                    <label for="sim_image" class="text-sm font-medium mb-2">Upload SIM</label>
+                    <label for="sim_image" class="text-sm font-medium mb-2">Upload SIM<span style="color: #dc3545;"> *</span></label>
                     <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
                         <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('sim_image').click()">
                             <img id="sim-preview" src="{{ old('sim_image_url', isset($user) && $user->sim_image_url ? asset('storage/' . $user->sim_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->sim_image_url) ? 'block' : 'none' }};" alt="Preview SIM" />
@@ -129,7 +129,7 @@
                     </div>
                 </div>
                 <div class="form-col ktp-sim-ktm-upload-col" style="align-items:center; min-width:180px; max-width:180px;">
-                    <label for="ktm_image" class="text-sm font-medium mb-2">Upload KTM</label>
+                    <label for="ktm_image" class="text-sm font-medium mb-2">Upload KTM<span style="color: #dc3545;"> *</span></label>
                     <div style="width: 180px; display: flex; flex-direction: column; align-items: center;">
                         <div class="ktp-sim-ktm-upload-imgbox" style="width: 180px; height: 120px; border-radius: 10px; border: 1.5px solid #e6a43b; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; margin-bottom: 8px;" onclick="document.getElementById('ktm_image').click()">
                             <img id="ktm-preview" src="{{ old('ktm_image_url', isset($user) && $user->ktm_image_url ? asset('storage/' . $user->ktm_image_url) : '' ) }}" style="max-width: 100%; max-height: 100%; object-fit: cover; display: {{ (isset($user) && $user->ktm_image_url) ? 'block' : 'none' }};" alt="Preview KTM" />
@@ -222,7 +222,11 @@
                 title: 'Berhasil',
                 text: "{{ session('success') }}",
                 timer: 2000,
-                showConfirmButton: false
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'text-black'
+                },
+                color: '#000000'
             });
         @endif
         @if(session('error'))
@@ -231,7 +235,11 @@
                 title: 'Gagal',
                 text: "{{ session('error') }}",
                 timer: 2500,
-                showConfirmButton: false
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'text-black'
+                },
+                color: '#000000'
             });
         @endif
         @if($errors->any())
@@ -240,10 +248,14 @@
                 title: 'Error',
                 text: "{{ $errors->first() }}",
                 timer: 2500,
-                showConfirmButton: false
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'text-black'
+                },
+                color: '#000000'
             });
         @endif
-        // Validasi wajib isi semua kolom (termasuk upload KTP, SIM, KTM)
+        // Validasi wajib isi semua kolom
         const form = document.querySelector('form');
         form.addEventListener('submit', function(e) {
             let requiredFields = [
@@ -259,7 +271,7 @@
                     if (!firstEmpty) firstEmpty = input;
                 }
             });
-            // Validasi umur minimal 17 tahun
+            // Validasi umur 17 tahun
             let tanggalLahirInput = document.getElementsByName('tanggal_lahir')[0];
             if (tanggalLahirInput && tanggalLahirInput.value) {
                 let today = new Date();
@@ -276,17 +288,21 @@
                         title: 'Peringatan',
                         text: 'Anda belum cukup umur (minimal 17 tahun)',
                         timer: 2000,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'text-black'
+                        },
+                        color: '#000000'
                     });
                     tanggalLahirInput.focus();
                     return;
                 }
             }
-            // Cek upload KTP, SIM, KTM wajib ada (preview harus ada gambarnya)
+            // Cek upload KTP, SIM, KTM wajib ada
             ['ktp', 'sim', 'ktm'].forEach(function(type) {
                 let preview = document.getElementById(type+'-preview');
                 let removeInput = document.getElementById('remove_'+type+'_image');
-                // Cek jika tidak ada gambar sama sekali (src kosong atau default)
+                // Cek jika tidak ada gambar sama sekali
                 if (!preview || !preview.src || preview.src === '' || preview.style.display === 'none' || (removeInput && removeInput.value === '1')) {
                     isValid = false;
                     if (!firstEmpty) firstEmpty = document.getElementById(type+'_image');
@@ -299,7 +315,11 @@
                     title: 'Peringatan',
                     text: 'Semua kolom wajib diisi!!!',
                     timer: 2000,
-                    showConfirmButton: false
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'text-black'
+                    },
+                    color: '#000000'
                 });
                 if (firstEmpty) firstEmpty.focus();
             }

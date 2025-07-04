@@ -67,6 +67,10 @@
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
+                customClass: {
+                    popup: 'text-black'
+                },
+                color: '#000000'
             });
         @endif
         @if (session('status'))
@@ -77,6 +81,10 @@
                 showConfirmButton: false,
                 timer: 2000,
                 timerProgressBar: true,
+                customClass: {
+                    popup: 'text-black'
+                },
+                color: '#000000'
             });
         @endif
     </script>

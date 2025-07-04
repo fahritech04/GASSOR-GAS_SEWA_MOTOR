@@ -50,8 +50,10 @@ class PemilikController extends Controller
     {
         $motorcycles = Motorcycle::where('owner_id', auth()->id())->paginate(5);
         $totalMotor = Motorcycle::where('owner_id', auth()->id())->count();
+        $user = auth()->user();
+        $isApproved = $user && $user->is_approved;
 
-        return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles', 'totalMotor'));
+        return view('pages.pemilik.daftar-motor.showDaftarMotor', compact('motorcycles', 'totalMotor', 'isApproved'));
     }
 
     public function showPesanan()
@@ -108,7 +110,7 @@ class PemilikController extends Controller
     public function createMotor()
     {
         // Cek apakah user sudah memiliki motor atau rental yang ada
-        $existingMotorcycles = Motorcycle::where('owner_id', auth()->id())->with('motorbikeRental')->get();
+        $existingMotorcycles = Motorcycle::where('owner_id', auth()->id())->with('motorbikeRental.bonuses')->get();
         $hasExistingRental = $existingMotorcycles->isNotEmpty();
 
         $existingRental = null;
@@ -204,9 +206,6 @@ class PemilikController extends Controller
     public function storeMotor(Request $request)
     {
         $user = auth()->user();
-        if (!$user || !$user->is_approved) {
-            return redirect()->back()->with('error', 'Akun Anda belum diverifikasi admin. Tidak dapat menambah motor.');
-        }
         try {
             $useExistingRental = $request->has('use_existing_rental') && $request->use_existing_rental == '1';
 
@@ -244,21 +243,60 @@ class PemilikController extends Controller
                 ]);
             }
 
-            // Simpan bonus
+            // Simpan bonus - hanya untuk rental baru, atau update bonus untuk rental yang sudah ada
             if ($request->has('bonuses')) {
-                foreach ($request->bonuses as $bonus) {
-                    // Hanya simpan jika ada salah satu field terisi
-                    if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
-                        $bonusImage = null;
-                        if (isset($bonus['image']) && $bonus['image']) {
-                            $bonusImage = $bonus['image']->store('bonuses', 'public');
+                if ($useExistingRental) {
+                    // Untuk rental yang sudah ada, update bonus yang ada atau tambah bonus baru
+                    $existingBonuses = $rental->bonuses()->get();
+                    $bonusIndex = 0;
+
+                    foreach ($request->bonuses as $bonus) {
+                        // Hanya proses jika ada salah satu field terisi
+                        if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
+                            $bonusImage = null;
+
+                            if (isset($bonus['image']) && $bonus['image']) {
+                                $bonusImage = $bonus['image']->store('bonuses', 'public');
+                            } elseif (isset($existingBonuses[$bonusIndex]) && $existingBonuses[$bonusIndex]->image) {
+                                // Gunakan gambar yang sudah ada jika tidak ada gambar baru
+                                $bonusImage = $existingBonuses[$bonusIndex]->image;
+                            }
+
+                            if (isset($existingBonuses[$bonusIndex])) {
+                                // Update bonus yang sudah ada
+                                $existingBonuses[$bonusIndex]->update([
+                                    'image' => $bonusImage,
+                                    'name' => $bonus['name'] ?? '',
+                                    'description' => $bonus['description'] ?? '',
+                                ]);
+                            } else {
+                                // Tambah bonus baru jika tidak ada bonus di index ini
+                                Bonus::create([
+                                    'motorbike_rental_id' => $rental->id,
+                                    'image' => $bonusImage,
+                                    'name' => $bonus['name'] ?? '',
+                                    'description' => $bonus['description'] ?? '',
+                                ]);
+                            }
+                            $bonusIndex++;
                         }
-                        Bonus::create([
-                            'motorbike_rental_id' => $rental->id,
-                            'image' => $bonusImage,
-                            'name' => $bonus['name'] ?? '',
-                            'description' => $bonus['description'] ?? '',
-                        ]);
+                    }
+                } else {
+                    // Untuk rental baru, buat bonus baru
+                    foreach ($request->bonuses as $bonus) {
+                        // Hanya simpan jika ada salah satu field terisi
+                        if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
+                            $bonusImage = null;
+                            if (isset($bonus['image']) && $bonus['image']) {
+                                $bonusImage = $bonus['image']->store('bonuses', 'public');
+                            }
+                            Bonus::create([
+                                'motorbike_rental_id' => $rental->id,
+                                'image' => $bonusImage,
+                                'name' => $bonus['name'] ?? '',
+                                'description' => $bonus['description'] ?? '',
+                            ]);
+                        }
                     }
                 }
             }
@@ -501,9 +539,7 @@ class PemilikController extends Controller
         return redirect()->route('pemilik.daftar-motor')->with('success', 'Rental dan semua data terkait berhasil dihapus permanen!');
     }
 
-    /**
-     * Sinkronisasi status pembayaran manual dari Midtrans
-     */
+    // Sinkronisasi status pembayaran manual dari Midtrans
     public function syncPaymentStatus(Transaction $transaction)
     {
         $syncService = new MidtransStatusSyncService;
@@ -518,9 +554,7 @@ class PemilikController extends Controller
             ->with('info', 'Status pembayaran sudah up-to-date');
     }
 
-    /**
-     * AJAX endpoint check status pembayaran real-time
-     */
+    // AJAX endpoint check status pembayaran real-time
     public function checkPaymentStatus(Transaction $transaction)
     {
         $syncService = new MidtransStatusSyncService;
@@ -544,30 +578,24 @@ class PemilikController extends Controller
         if ($motorcycle->owner_id !== auth()->id()) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus motor ini.');
         }
-
         // Cek apakah motor sedang dalam transaksi aktif
         $activeTransactions = Transaction::where('motorcycle_id', $motorcycle->id)
             ->whereIn('payment_status', ['pending', 'success'])
             ->where('rental_status', '!=', 'finished')
             ->count();
-
         if ($activeTransactions > 0) {
             return redirect()->route('pemilik.daftar-motor')
                 ->with('error', 'Motor tidak dapat dihapus karena sedang dalam transaksi aktif.');
         }
-
         $motorName = $motorcycle->name;
         $rental = $motorcycle->motorbikeRental;
-
         foreach ($motorcycle->images as $img) {
             $img->delete();
         }
-
         $motorcycle->delete();
 
         // Cek apakah masih ada motor lain di rental ini
         $remainingMotors = Motorcycle::where('motorbike_rental_id', $rental->id)->count();
-
         if ($remainingMotors == 0) {
             // Jika tidak ada motor lagi, hapus rental beserta bonus
             foreach ($rental->bonuses as $bonus) {
