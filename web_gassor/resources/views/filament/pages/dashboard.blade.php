@@ -10,6 +10,10 @@
             @livewire(\App\Filament\Widgets\StatsOverview::class)
         </div>
 
+        <div class="widgets-overview">
+            @livewire(\App\Filament\Widgets\AdminRevenueStats::class)
+        </div>
+
         {{-- <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Revenue Chart -->
@@ -39,7 +43,6 @@
             <div class="widget-container">
                 @livewire(\App\Filament\Widgets\PopularMotorcyclesChart::class)
             </div>
-
             <!-- Popular Motorbike Rentals -->
             <div class="widget-container">
                 @livewire(\App\Filament\Widgets\PopularMotorbikeRentalsChart::class)
