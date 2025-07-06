@@ -67,16 +67,25 @@ class UserResource extends Resource
                 TextColumn::make('username')->searchable(),
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('role'),
+                TextColumn::make('motorcycles_count')
+                    ->label('Jumlah Motor')
+                    ->counts('motorcycles')
+                    ->badge()
+                    ->color('success'),
+                TextColumn::make('active_transactions_count')
+                    ->label('Transaksi Aktif')
+                    ->getStateUsing(function (User $record) {
+                        return \App\Models\Transaction::whereHas('motorcycle', function ($query) use ($record) {
+                            $query->where('owner_id', $record->id);
+                        })->whereIn('rental_status', ['pending', 'on_going'])->count();
+                    })
+                    ->badge()
+                    ->color(fn (string $state): string => $state > 0 ? 'danger' : 'success'),
                 TextColumn::make('phone'),
-                TextColumn::make('tempat_lahir'),
-                TextColumn::make('tanggal_lahir')->date(),
                 Tables\Columns\IconColumn::make('is_approved')
                     ->boolean()
                     ->label('Approved'),
                 ImageColumn::make('profile_image_url')->label('Foto Profil')->disk('public'),
-                ImageColumn::make('ktp_image_url')->label('KTP')->disk('public'),
-                ImageColumn::make('sim_image_url')->label('SIM')->disk('public'),
-                ImageColumn::make('ktm_image_url')->label('KTM')->disk('public'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('role')
@@ -89,11 +98,49 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->before(function (User $record) {
+                        $activeTransactions = \App\Models\Transaction::whereHas('motorcycle', function ($query) use ($record) {
+                            $query->where('owner_id', $record->id);
+                        })->whereIn('rental_status', ['pending', 'on_going'])->exists();
+
+                        if ($activeTransactions) {
+                            throw new \Exception('Tidak dapat menghapus user karena masih memiliki transaksi aktif. Selesaikan atau batalkan transaksi terlebih dahulu.');
+                        }
+
+                        \App\Models\Transaction::whereHas('motorcycle', function ($query) use ($record) {
+                            $query->where('owner_id', $record->id);
+                        })->delete();
+                    })
+                    ->requiresConfirmation()
+                    ->modalHeading('Hapus User')
+                    ->modalDescription('Apakah Anda yakin ingin menghapus user ini? Semua motor dan transaksi yang terkait akan ikut terhapus. User dengan transaksi aktif tidak dapat dihapus.')
+                    ->modalSubmitActionLabel('Ya, Hapus'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->before(function ($records) {
+                            foreach ($records as $record) {
+                                $activeTransactions = \App\Models\Transaction::whereHas('motorcycle', function ($query) use ($record) {
+                                    $query->where('owner_id', $record->id);
+                                })->whereIn('rental_status', ['pending', 'on_going'])->exists();
+
+                                if ($activeTransactions) {
+                                    throw new \Exception("Tidak dapat menghapus user '{$record->name}' karena masih memiliki transaksi aktif. Selesaikan atau batalkan transaksi terlebih dahulu.");
+                                }
+                            }
+
+                            foreach ($records as $record) {
+                                \App\Models\Transaction::whereHas('motorcycle', function ($query) use ($record) {
+                                    $query->where('owner_id', $record->id);
+                                })->delete();
+                            }
+                        })
+                        ->requiresConfirmation()
+                        ->modalHeading('Hapus Users')
+                        ->modalDescription('Apakah Anda yakin ingin menghapus users yang dipilih? Semua motor dan transaksi yang terkait akan ikut terhapus. Users dengan transaksi aktif tidak dapat dihapus.')
+                        ->modalSubmitActionLabel('Ya, Hapus'),
                 ]),
             ]);
     }

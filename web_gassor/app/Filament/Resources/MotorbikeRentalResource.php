@@ -41,6 +41,10 @@ class MotorbikeRentalResource extends Resource
                                 Forms\Components\Select::make('city_id')
                                     ->relationship('city', 'name')
                                     ->required(),
+                                Forms\Components\TextInput::make('contact')
+                                    ->label('Nomor Kontak')
+                                    ->tel()
+                                    ->required(),
                                 Forms\Components\RichEditor::make('description')
                                     ->required(),
                                 Forms\Components\Textarea::make('address')
@@ -138,9 +142,14 @@ class MotorbikeRentalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('city.name'),
-                Tables\Columns\ImageColumn::make('thumbnail'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Rental'),
+                Tables\Columns\TextColumn::make('city.name')
+                    ->label('Kota'),
+                Tables\Columns\TextColumn::make('contact')
+                    ->label('Kontak'),
+                Tables\Columns\ImageColumn::make('thumbnail')
+                    ->label('Thumbnail'),
             ])
             ->filters([
                 //
