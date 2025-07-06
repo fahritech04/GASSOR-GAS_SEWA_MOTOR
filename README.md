@@ -9,11 +9,6 @@ Aplikasi web ini dibuat berdasarkan keresahan pribadi karena ga punya motor seba
 1. Sewa Motor
 2. Orang yang punya motor pribadi juga bisa sewain motor nya melalui aplikasi ini.
 
-Secara keseluruhan, konsepnya adalah memaksimalkan penggunaan motor yang tidak aktif dengan menyewakannya, sehingga memberikan keuntungan bagi pemilik.
-
-| Tampilan Utama | Tampilan Kata | Tampilan Praktik |
-| -------------- | ------------- | ---------------- |
-
 ### Link Berkas PA
 
 (diisi link Google Drive kelompok PA yang telah disiapkan oleh Tim PA)
