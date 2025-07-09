@@ -39,4 +39,32 @@ class Transaction extends Model
     {
         return $this->belongsTo(Motorcycle::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(MotorcycleReview::class);
+    }
+
+    /**
+     * Cek apakah transaksi sudah direview
+     */
+    public function getIsReviewedAttribute()
+    {
+        return $this->review()->exists();
+    }
+
+    /**
+     * Cek apakah transaksi bisa direview (selesai dan belum direview)
+     */
+    public function getCanBeReviewedAttribute()
+    {
+        return $this->rental_status === 'finished' &&
+               $this->payment_status === 'success' &&
+               !$this->is_reviewed;
+    }
 }

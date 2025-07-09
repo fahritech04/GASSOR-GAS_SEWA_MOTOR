@@ -57,19 +57,18 @@ class User extends Authenticatable
         'is_approved' => 'boolean',
     ];
 
-    /**
-     * Get all motorcycles owned by this user
-     */
     public function motorcycles()
     {
         return $this->hasMany(Motorcycle::class, 'owner_id');
     }
 
-    /**
-     * Get all transactions related to this user's motorcycles
-     */
     public function motorOwnerTransactions()
     {
         return $this->hasManyThrough(Transaction::class, Motorcycle::class, 'owner_id', 'motorcycle_id');
+    }
+
+    public function motorcycleReviews()
+    {
+        return $this->hasMany(MotorcycleReview::class);
     }
 }

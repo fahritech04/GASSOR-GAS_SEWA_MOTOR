@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InformasiController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\MotorbikeRentalController;
+use App\Http\Controllers\MotorcycleReviewController;
 use App\Http\Controllers\PemilikController;
 use App\Http\Controllers\PemilikLaporanController;
 use App\Http\Controllers\ProfilePemilikController;
@@ -44,6 +45,10 @@ Route::middleware(['block.manual.access'])->group(function () {
     Route::get('/informasi', [InformasiController::class, 'index'])->name('informasi')->middleware('pemilik.block');
     Route::get('/motor/{slug}', [MotorbikeRentalController::class, 'show'])->name('motor.show')->middleware('pemilik.block');
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/motorcycle/{motorcycle}/reviews', [MotorcycleReviewController::class, 'show'])->name('motorcycle.reviews');
+    });
+
     // Route khusus penyewa
     Route::middleware(['auth', 'role:penyewa'])->group(function () {
         // Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -69,6 +74,11 @@ Route::middleware(['block.manual.access'])->group(function () {
         Route::post('/check-booking/{code}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
         Route::get('/history-booking', [BookingController::class, 'history'])->name('history-booking');
         Route::get('/booking-status', [BookingController::class, 'paymentStatus'])->name('booking.status');
+
+        // Review routes
+        Route::get('/review/create/{transaction}', [MotorcycleReviewController::class, 'create'])->name('review.create');
+        Route::post('/review/store/{transaction}', [MotorcycleReviewController::class, 'store'])->name('review.store');
+        Route::delete('/review/{review}', [MotorcycleReviewController::class, 'destroy'])->name('review.destroy');
     });
 
     // Route khusus pemilik

@@ -51,7 +51,7 @@
                 <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/notes.svg') }}" class="w-5 h-5 flex shrink-0"
                         alt="icon">
-                    <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>
+                    <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk == 1 ? 'Tersedia' : 'Tidak Tersedia' }}</p>
                 </div>
                 <div class="flex items-center gap-[6px]">
                     <img src="{{ asset('assets/images/icons/police.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">

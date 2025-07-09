@@ -60,12 +60,18 @@
                         <div class="flex items-center gap-[6px]">
                             <img src="{{ asset('assets/images/icons/notes.svg') }}" class="w-5 h-5 flex shrink-0"
                                 alt="icon">
-                            <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk }}</p>
+                            <p class="text-sm text-gassor-grey">STNK : {{ $motorcycle->stnk == 1 ? 'Tersedia' : 'Tidak Tersedia' }}</p>
                         </div>
                         <div class="flex items-center gap-[6px]">
                             <img src="{{ asset('assets/images/icons/police.svg') }}" class="w-5 h-5 flex shrink-0" alt="icon">
                             <p class="text-sm text-gassor-grey">Nomor Polisi : {{ $motorcycle->vehicle_number_plate }}</p>
                         </div>
+                        @if($motorcycle->total_reviews > 0)
+                        <div class="flex items-center gap-[6px]">
+                            <img src="{{ asset('assets/images/icons/star.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon" style="filter: brightness(0) saturate(100%) invert(94%) sepia(6%) saturate(0%) hue-rotate(180deg) brightness(97%) contrast(10%);">
+                            <p class="text-sm text-gassor-grey">{{ number_format($motorcycle->average_rating, 1) }} ({{ $motorcycle->total_reviews }} review)</p>
+                        </div>
+                        @endif
                         <hr class="border-[#F1F2F6]">
                         <p class="font-semibold text-lg text-gassor-orange">Rp {{ number_format($motorcycle->price_per_day, 0, ',', '.') }}<span
                                 class="text-sm text-gassor-grey font-normal">/hari</span></p>

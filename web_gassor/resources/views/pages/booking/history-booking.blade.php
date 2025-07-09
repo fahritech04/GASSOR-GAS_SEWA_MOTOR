@@ -222,13 +222,30 @@ document.addEventListener('DOMContentLoaded', function() {
             </form>
 
             @if($transaction->motorbikeRental && $transaction->motorbikeRental->slug)
-                <div style="margin-top: 8px;">
+                <div style="margin-top: 8px; display: flex; gap: 8px;">
                     <a href="{{ route('motor.show', $transaction->motorbikeRental->slug) }}"
-                       style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 14px 0; background: #000000; color: #ffffff; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+                       style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 14px 0; background: #000000; color: #ffffff; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
                        onmouseover="this.style.background='#1f2937'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 12px rgba(0, 0, 0, 0.15)';"
                        onmouseout="this.style.background='#000000'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(0, 0, 0, 0.1)';">
                         Pesan Lagi
                     </a>
+
+                    {{-- Tombol Review untuk transaksi yang sudah selesai --}}
+                    @if($transaction->can_be_reviewed)
+                        <a href="{{ route('review.create', $transaction) }}"
+                           style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 14px 0; background: #e6a43b; color: #ffffff; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 6px rgba(230, 164, 59, 0.2);"
+                           onmouseover="this.style.background='#d4932f'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 12px rgba(230, 164, 59, 0.3)';"
+                           onmouseout="this.style.background='#e6a43b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(230, 164, 59, 0.2)';">
+                            Beri Review
+                        </a>
+                    @elseif($transaction->is_reviewed)
+                        <a href="{{ route('motorcycle.reviews', $transaction->motorcycle_id) }}"
+                           style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 14px 0; background: #27ae60; color: #ffffff; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.3s; box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);"
+                           onmouseover="this.style.background='#229954'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 12px rgba(39, 174, 96, 0.3)';"
+                           onmouseout="this.style.background='#27ae60'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(39, 174, 96, 0.2)';">
+                            Lihat Review
+                        </a>
+                    @endif
                 </div>
             @endif
         </div>
@@ -267,4 +284,28 @@ document.addEventListener('DOMContentLoaded', function() {
     @endforelse
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            icon: 'success',
+            confirmButtonColor: '#e6a43b',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            title: 'Error!',
+            text: '{{ session('error') }}',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+    @endif
+</script>
 @endsection

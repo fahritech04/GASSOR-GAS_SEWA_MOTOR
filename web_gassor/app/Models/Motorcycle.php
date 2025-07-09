@@ -123,4 +123,31 @@ class Motorcycle extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(MotorcycleReview::class);
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?: 0;
+    }
+
+    public function getTotalReviewsAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
+    /**
+     * Mendapatkan distribusi rating
+     */
+    public function getRatingDistributionAttribute()
+    {
+        $distribution = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $distribution[$i] = $this->reviews()->where('rating', $i)->count();
+        }
+        return $distribution;
+    }
 }

@@ -48,6 +48,16 @@
                     <p class="text-gassor-grey">Kategori {{ $motorbikeRental->getPredominantCategory()?->name ?? 'Tidak Ada' }}</p>
                 @endif
             </div>
+            @php
+                $totalReviews = $motorbikeRental->motorcycles->sum(fn($m) => $m->total_reviews);
+                $avgRating = $motorbikeRental->motorcycles->filter(fn($m) => $m->total_reviews > 0)->avg('average_rating');
+            @endphp
+            @if($totalReviews > 0)
+            <div class="flex items-center gap-[6px]">
+                <img src="{{ asset('assets/images/icons/star.svg') }}" class="w-[26px] h-[26px] flex shrink-0" alt="icon" style="filter: brightness(0) saturate(100%) invert(94%) sepia(6%) saturate(0%) hue-rotate(180deg) brightness(97%) contrast(10%);">
+                <p class="text-gassor-grey">{{ number_format($avgRating, 1) }} ({{ $totalReviews }} review)</p>
+            </div>
+            @endif
         </div>
         <hr class="border-[#F1F2F6] mx-5">
         <div id="About" class="flex flex-col gap-[6px] px-5">
@@ -60,6 +70,11 @@
                     <button
                         class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300 !bg-gassor-black !text-white"
                         data-target-tab="#Bonus-Tab">Bonus Motor</button>
+                </div>
+                <div class="swiper-slide !w-fit">
+                    <button
+                        class="tab-link rounded-full p-[8px_14px] border border-[#F1F2F6] text-sm font-semibold hover:bg-gassor-black hover:text-white transition-all duration-300"
+                        data-target-tab="#Reviews-Tab">Review Motor</button>
                 </div>
                 <div class="swiper-slide !w-fit">
                     <button
@@ -86,7 +101,48 @@
                     @endforeach
                 </div>
             </div>
-            <div id="Contact-Tab" class="tab-content flex flex-col gap-5 hidden">
+            <div id="Reviews-Tab" class="tab-content flex-col gap-5 hidden">
+                @php
+                    $allReviews = $motorbikeRental->motorcycles->flatMap(fn($m) => $m->reviews->take(3));
+                    $totalReviews = $motorbikeRental->motorcycles->sum(fn($m) => $m->total_reviews);
+                @endphp
+
+                @if($totalReviews > 0)
+                    <div class="flex flex-col gap-3 mb-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-lg">Review Motor ({{ $totalReviews }} total)</h3>
+                        </div>
+                        @foreach($allReviews as $review)
+                        <div class="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <p class="font-semibold">{{ $review->user->name }}</p>
+                                    <div class="flex items-center gap-1">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <span class="text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}">⭐</span>
+                                        @endfor
+                                    </div>
+                                </div>
+                                <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-sm text-gray-600">{{ $review->motorcycle->name }}</p>
+                            <p class="text-sm">{{ $review->comment }}</p>
+                        </div>
+                        @endforeach
+
+                        @if($totalReviews > 3)
+                        <div class="mt-4">
+                            <p class="text-center text-sm text-gray-500">Dan {{ $totalReviews - 3 }} review lainnya...</p>
+                        </div>
+                        @endif
+                    </div>
+                @else
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">Belum ada review untuk motor di rental ini</p>
+                    </div>
+                @endif
+            </div>
+            <div id="Contact-Tab" class="tab-content flex-col gap-5 hidden">
                 <div class="flex flex-col gap-4">
                     @foreach ($motorbikeRental->contacts ?? [$motorbikeRental] as $contact)
                     <div

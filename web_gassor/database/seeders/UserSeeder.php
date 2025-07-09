@@ -13,16 +13,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('users')->insert([
-        //     'name' => 'pemilik',
-        //     'email' => 'pemilik@gmail.com',
-        //     'password' => Hash::make('pemilik'),
-        //     'role' => "pemilik",
-
-        // ]);
-
         $owners = [];
-        for ($i = 1; $i <= 4; $i++) {
+        for ($i = 1; $i <= 3; $i++) {
             $owners[] = [
                 'name' => 'Pemilik '.$i,
                 'username' => 'pemilik'.$i,
@@ -37,5 +29,22 @@ class UserSeeder extends Seeder
         }
 
         DB::table('users')->insert($owners);
+
+        $penyewa = [];
+        for ($i = 1; $i <= 3; $i++) {
+            $penyewa[] = [
+                'name' => 'Penyewa '.$i,
+                'username' => 'penyewa'.$i,
+                'email' => 'penyewa'.$i.'@gmail.com',
+                'password' => Hash::make('penyewa'.$i),
+                'role' => 'penyewa',
+                'profile_image_url' => null,
+                'tempat_lahir' => 'Kota Penyewa '.$i,
+                'tanggal_lahir' => '1995-01-0'.$i,
+                'phone' => '6285174309800'.$i,
+            ];
+        }
+
+        DB::table('users')->insert($penyewa);
     }
 }
