@@ -377,8 +377,11 @@
                                     <input type="text" name="motorcycles[0][vehicle_number_plate]" class="form-input" placeholder="Contoh: B 1234 KZT" required />
                                 </div>
                                 <div class="form-col">
-                                    <label class="form-label">STNK<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="motorcycles[0][stnk]" class="form-input" placeholder="Contoh: Tersedia" required />
+                                    <label class="form-label">Status STNK</label>
+                                    <div class="form-input" style="background: #f8f9fa; color: #6c757d; display: flex; align-items: center;">
+                                        <span id="stnk_status_0">❌ Belum Tersedia</span>
+                                        <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
+                                    </div>
                                 </div>
                             </div>
                             <div>
@@ -527,6 +530,11 @@
             updatePreview(container, allFiles, inputId, previewId);
             updateInputFiles(inputId, allFiles);
             preview.style.display = 'block';
+
+            // Update status STNK jika ini adalah upload STNK
+            if (inputId.includes('stnk_images')) {
+                updateStnkStatus(inputId, allFiles.length > 0);
+            }
         }
     }
     // Fungsi untuk capture dari kamera (satu foto)
@@ -546,6 +554,25 @@
             updateInputFiles(inputId, allFiles);
             preview.style.display = 'block';
             event.target.value = '';
+
+            // Update status STNK jika ini adalah upload STNK
+            if (inputId.includes('stnk_images')) {
+                updateStnkStatus(inputId, allFiles.length > 0);
+            }
+        }
+    }
+    // Fungsi untuk mengupdate status STNK
+    function updateStnkStatus(inputId, hasFiles) {
+        const motorIndex = inputId.match(/\d+/)[0]; // Ambil index motor
+        const statusElement = document.getElementById(`stnk_status_${motorIndex}`);
+        if (statusElement) {
+            if (hasFiles) {
+                statusElement.innerHTML = '✅ Tersedia';
+                statusElement.style.color = '#28a745';
+            } else {
+                statusElement.innerHTML = '❌ Belum Tersedia';
+                statusElement.style.color = '#dc3545';
+            }
         }
     }
     // Fungsi untuk mendapatkan files yang sudah ada
@@ -597,6 +624,11 @@
 
         if (existingFiles.length === 0) {
             document.getElementById(previewId).style.display = 'none';
+        }
+
+        // Update status STNK jika ini adalah hapus file STNK
+        if (inputId.includes('stnk_images')) {
+            updateStnkStatus(inputId, existingFiles.length > 0);
         }
     }
     // Gambar banyak preview hapus (function lama - untuk backward compatibility)
@@ -674,8 +706,11 @@
                             <input type="text" name="motorcycles[${idx}][vehicle_number_plate]" class="form-input" placeholder="Contoh: B 1234 KZT" required />
                         </div>
                         <div class="form-col">
-                            <label class="form-label">STNK<span style="color: #dc3545;">*</span></label>
-                            <input type="text" name="motorcycles[${idx}][stnk]" class="form-input" placeholder="Contoh: Tersedia" required />
+                            <label class="form-label">Status STNK</label>
+                            <div class="form-input" style="background: #f8f9fa; color: #6c757d; display: flex; align-items: center;">
+                                <span id="stnk_status_${idx}">❌ Belum Tersedia</span>
+                                <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
+                            </div>
                         </div>
                     </div>
                     <div>

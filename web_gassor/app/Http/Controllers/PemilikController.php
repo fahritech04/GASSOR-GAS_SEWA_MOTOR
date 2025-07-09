@@ -317,8 +317,7 @@ class PemilikController extends Controller
                         'category_id' => $motor['category_id'],
                         'name' => $motor['name'],
                         'vehicle_number_plate' => $motor['vehicle_number_plate'],
-                        'stnk' => $motor['stnk'],
-                        'stnk_images' => $stnkImages,
+                        'stnk_images' => $stnkImages, // stnk akan otomatis diset di mutator
                         'price_per_day' => $motor['price_per_day'],
                         'stock' => 1, // selalu 1
                         'available_stock' => 1, // selalu 1
@@ -434,7 +433,6 @@ class PemilikController extends Controller
             'motorcycle_name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'vehicle_number_plate' => 'required|string|max:255',
-            'stnk' => 'required|string|max:255',
             'price_per_day' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
             'available_stock' => 'required|integer|in:0,1',
@@ -446,7 +444,6 @@ class PemilikController extends Controller
         $motorcycle->update([
             'name' => $request->input('motorcycle_name'),
             'vehicle_number_plate' => $request->input('vehicle_number_plate'),
-            'stnk' => $request->input('stnk'),
             'price_per_day' => $request->input('price_per_day'),
             'stock' => $request->input('stock', $motorcycle->stock),
             'available_stock' => $request->input('available_stock', $motorcycle->available_stock),

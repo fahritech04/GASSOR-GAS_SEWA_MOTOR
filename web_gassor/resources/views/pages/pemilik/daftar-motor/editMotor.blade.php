@@ -286,8 +286,11 @@
                                     <input type="text" name="vehicle_number_plate" class="form-input" value="{{ old('vehicle_number_plate', $motorcycle->vehicle_number_plate) }}" required />
                                 </div>
                                 <div class="form-col">
-                                    <label class="form-label">STNK<span style="color: #dc3545;">*</span></label>
-                                    <input type="text" name="stnk" class="form-input" value="{{ old('stnk', $motorcycle->stnk) }}" required />
+                                    <label class="form-label">Status STNK</label>
+                                    <div class="form-input" style="background: #f8f9fa; color: {{ $motorcycle->stnk ? '#28a745' : '#dc3545' }}; display: flex; align-items: center;">
+                                        <span id="stnk_status_0">{{ $motorcycle->stnk ? '✅ Tersedia' : '❌ Belum Tersedia' }}</span>
+                                        <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
+                                    </div>
                                 </div>
                             </div>
                             <div>
@@ -488,6 +491,21 @@
         preview.innerHTML = '';
         preview.style.display = 'none';
     }
+    // Fungsi untuk mengupdate status STNK
+    function updateStnkStatus(inputId, hasFiles) {
+        const motorIndex = inputId.match(/\d+/)[0]; // Ambil index motor
+        const statusElement = document.getElementById(`stnk_status_${motorIndex}`);
+        if (statusElement) {
+            if (hasFiles) {
+                statusElement.innerHTML = '✅ Tersedia';
+                statusElement.style.color = '#28a745';
+            } else {
+                statusElement.innerHTML = '❌ Belum Tersedia';
+                statusElement.style.color = '#dc3545';
+            }
+        }
+    }
+
     // Fungsi untuk menangani multiple files dari galeri
     function handleMultipleFiles(event, previewId, inputId) {
         const files = event.target.files;
@@ -499,6 +517,11 @@
             updatePreview(container, allFiles, inputId, previewId);
             updateInputFiles(inputId, allFiles);
             preview.style.display = 'block';
+
+            // Update status STNK jika ini adalah upload STNK
+            if (inputId.includes('stnk_images')) {
+                updateStnkStatus(inputId, allFiles.length > 0);
+            }
         }
     }
 
@@ -520,6 +543,11 @@
             updateInputFiles(inputId, allFiles);
             preview.style.display = 'block';
             event.target.value = '';
+
+            // Update status STNK jika ini adalah upload STNK
+            if (inputId.includes('stnk_images')) {
+                updateStnkStatus(inputId, allFiles.length > 0);
+            }
         }
     }
     // Fungsi untuk mendapatkan files yang sudah ada
@@ -580,6 +608,12 @@
             if (!hasExistingItems) {
                 preview.style.display = 'none';
             }
+        }
+
+        // Update status STNK jika ini adalah hapus file STNK
+        if (inputId.includes('stnk_images')) {
+            const totalFiles = existingFiles.length + container.querySelectorAll('[data-existing="true"]').length;
+            updateStnkStatus(inputId, totalFiles > 0);
         }
     }
 

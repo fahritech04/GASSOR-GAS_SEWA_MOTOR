@@ -28,6 +28,7 @@ class Motorcycle extends Model
     ];
 
     protected $casts = [
+        'stnk' => 'boolean',
         'stnk_images' => 'array',
         'has_gps' => 'boolean',
         'start_rent_hour' => 'string',
@@ -42,25 +43,20 @@ class Motorcycle extends Model
         return $value ? json_decode($value, true) : [];
     }
 
-    /**
-     * Mutator untuk menyimpan array gambar STNK (depan & belakang)
-     */
     public function setStnkImagesAttribute($value)
     {
+        $images = is_array($value) ? $value : ($value ? json_decode($value, true) : []);
         $this->attributes['stnk_images'] = is_array($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : $value;
+
+        // Otomatis set stnk berdasarkan ketersediaan gambar
+        $this->attributes['stnk'] = !empty($images) && count(array_filter($images)) > 0;
     }
 
-    /**
-     * Cek apakah motor tersedia
-     */
     public function isAvailable()
     {
         return $this->available_stock > 0;
     }
 
-    /**
-     * Mengurangi stok yang tersedia
-     */
     public function decreaseStock($quantity = 1)
     {
         if ($this->available_stock >= $quantity) {
@@ -73,9 +69,6 @@ class Motorcycle extends Model
         return false;
     }
 
-    /**
-     * Menambah stok yang tersedia
-     */
     public function increaseStock($quantity = 1)
     {
         if (($this->available_stock + $quantity) <= $this->stock) {

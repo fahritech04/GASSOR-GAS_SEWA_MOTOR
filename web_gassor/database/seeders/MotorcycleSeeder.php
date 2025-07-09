@@ -19,7 +19,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Scoopy 125cc',
                 'vehicle_number_plate' => 'B 1234 KZT',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 50000,
                 'stock' => 1,
@@ -33,7 +33,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Scoopy 50cc',
                 'vehicle_number_plate' => 'D 6789 MUI',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 45000,
                 'stock' => 1,
@@ -47,7 +47,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 2,
                 'name' => 'Scoopy 200cc',
                 'vehicle_number_plate' => 'L 4321 ZPA',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 60000,
                 'stock' => 1,
@@ -61,7 +61,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Vario 125cc',
                 'vehicle_number_plate' => 'AB 9090 TKX',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 45000,
                 'stock' => 1,
@@ -75,7 +75,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Vario 50cc',
                 'vehicle_number_plate' => 'F 1122 VGB',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 55000,
                 'stock' => 1,
@@ -89,7 +89,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 2,
                 'name' => 'Vario 200cc',
                 'vehicle_number_plate' => 'H 3344 LWN',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 65000,
                 'stock' => 1,
@@ -103,7 +103,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Beat 125cc',
                 'vehicle_number_plate' => 'DA 5566 QRP',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 50000,
                 'stock' => 1,
@@ -117,7 +117,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 1,
                 'name' => 'Beat 50cc',
                 'vehicle_number_plate' => 'BK 7788 YUE',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 45000,
                 'stock' => 1,
@@ -131,7 +131,7 @@ class MotorcycleSeeder extends Seeder
                 'category_id' => 2,
                 'name' => 'Beat 200cc',
                 'vehicle_number_plate' => 'KT 9900 HDS',
-                'stnk' => 'Tersedia',
+                'stnk' => true, // Otomatis true karena ada stnk_images
                 'stnk_images' => json_encode(['stnk_images/stnk_depan.png', 'stnk_images/stnk_belakang.png']),
                 'price_per_day' => 60000,
                 'stock' => 1,

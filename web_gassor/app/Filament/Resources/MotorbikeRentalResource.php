@@ -85,15 +85,17 @@ class MotorbikeRentalResource extends Resource
                                             ->required(),
                                         Forms\Components\TextInput::make('vehicle_number_plate')
                                             ->required(),
-                                        Forms\Components\TextInput::make('stnk')
-                                            ->required(),
                                         Forms\Components\FileUpload::make('stnk_images')
                                             ->label('STNK (Depan & Belakang)')
                                             ->multiple()
                                             ->image()
                                             ->directory('stnk')
                                             ->maxFiles(2)
-                                            ->helperText('Upload gambar STNK depan dan belakang (maksimal 2 gambar)')
+                                            ->helperText('Upload gambar STNK depan dan belakang (maksimal 2 gambar). Status STNK akan otomatis menjadi tersedia setelah upload.')
+                                            ->columnSpanFull(),
+                                        Forms\Components\Placeholder::make('stnk_status')
+                                            ->label('Status STNK')
+                                            ->content(fn ($record) => $record && $record->stnk ? '✅ Tersedia' : '❌ Belum Tersedia')
                                             ->columnSpanFull(),
                                         Forms\Components\TextInput::make('price_per_day')
                                             ->numeric()

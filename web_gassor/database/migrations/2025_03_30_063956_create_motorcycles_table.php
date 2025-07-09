@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('vehicle_number_plate');
-            $table->string('stnk');
+            $table->boolean('stnk')->default(false);
             $table->json('stnk_images')->nullable();
             $table->integer('price_per_day');
             $table->integer('stock')->default(1);
