@@ -18,6 +18,8 @@ interface MotorbikeRentalRepositoryInterface
 
     public function getMotorbikeRentalBySlug($slug);
 
+    public function getMotorbikeRentalForDisplayBySlug($slug);
+
     public function getMotorbikeRentalMotorcycleById($id);
 
     public function getMotorcyclesByCitySlug($slug);

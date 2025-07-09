@@ -70,7 +70,22 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     public function getMotorbikeRentalBySlug($slug)
     {
         return MotorbikeRental::with([
+            'motorcycles' => function ($q) {
+                $q->approvedOwner();
+            },
             'motorcycles.images',
+            'motorcycles.owner',
+            'city', 'category', 'bonuses',
+        ])
+            ->where('slug', $slug)
+            ->firstOrFail();
+    }
+
+    public function getMotorbikeRentalForDisplayBySlug($slug)
+    {
+        return MotorbikeRental::with([
+            'motorcycles.images',
+            'motorcycles.owner',
             'city', 'category', 'bonuses',
         ])
             ->where('slug', $slug)
@@ -86,9 +101,9 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
     {
         return MotorbikeRental::with([
             'motorcycles' => function ($q) {
-                $q->where('available_stock', '>', 0);
+                $q->where('available_stock', '>', 0)->approvedOwner();
             },
-            'motorcycles.images', 'city', 'category',
+            'motorcycles.images', 'motorcycles.owner', 'city', 'category',
         ])
             ->where('slug', $slug)
             ->firstOrFail();
@@ -96,7 +111,8 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getAllMotorcycles($search = null, $city = null, $category = null)
     {
-        $query = Motorcycle::with(['motorbikeRental.city', 'category', 'images']);
+        $query = Motorcycle::with(['motorbikeRental.city', 'category', 'images', 'owner'])
+            ->approvedOwner();
 
         if ($search) {
             $query->where('name', 'like', '%'.$search.'%');
@@ -119,27 +135,30 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
 
     public function getAllMotorcyclesForHome($limit = 10)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images', 'owner'])
             ->where('available_stock', '>', 0)
+            ->approvedOwner()
             ->take($limit)
             ->get();
     }
 
     public function getMotorcyclesByCitySlug($slug)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images', 'owner'])
             ->whereHas('motorbikeRental.city', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
+            ->approvedOwner()
             ->get();
     }
 
     public function getMotorcyclesByCategorySlug($slug)
     {
-        return Motorcycle::with(['motorbikeRental.city', 'category', 'images'])
+        return Motorcycle::with(['motorbikeRental.city', 'category', 'images', 'owner'])
             ->whereHas('category', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
+            ->approvedOwner()
             ->get();
     }
 }

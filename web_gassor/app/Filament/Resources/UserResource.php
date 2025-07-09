@@ -33,7 +33,7 @@ class UserResource extends Resource
                     ])->required(),
                 Forms\Components\Toggle::make('is_approved')
                     ->label('Disetujui Admin?')
-                    ->helperText('Centang jika data sudah diverifikasi dan disetujui admin.'),
+                    ->helperText('Centang jika data sudah diverifikasi dan disetujui admin. PENTING: Jika status pemilik diubah menjadi tidak disetujui, semua motor miliknya akan disembunyikan dari halaman penyewa.'),
                 Forms\Components\DatePicker::make('tanggal_lahir')->label('Tanggal Lahir'),
                 Forms\Components\TextInput::make('tempat_lahir')->label('Tempat Lahir')->maxLength(255),
                 Forms\Components\FileUpload::make('profile_image_url')

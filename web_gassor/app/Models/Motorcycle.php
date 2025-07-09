@@ -89,6 +89,16 @@ class Motorcycle extends Model
         return $query->where('available_stock', '>', 0);
     }
 
+    /**
+     * Scope untuk motor dari pemilik yang disetujui
+     */
+    public function scopeApprovedOwner($query)
+    {
+        return $query->whereHas('owner', function ($q) {
+            $q->where('is_approved', true);
+        });
+    }
+
     public function motorbikeRental()
     {
         return $this->belongsTo(MotorbikeRental::class);

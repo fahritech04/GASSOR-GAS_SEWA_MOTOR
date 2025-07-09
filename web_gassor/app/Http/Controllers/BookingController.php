@@ -31,7 +31,7 @@ class BookingController extends Controller
         }
         $motorcycle = $this->motorbikeRentalRepository->getMotorbikeRentalMotorcycleById($request->motorcycle_id);
         if (! $motorcycle || ! $motorcycle->isAvailable()) {
-            return redirect()->back()->with('error', 'Motor sudah tidak tersedia.');
+            return redirect()->back()->with('error', 'Motor tidak tersedia.');
         }
         $this->transactionRepository->saveTransactionDataToSession($request->all());
 

@@ -27,7 +27,7 @@ class MotorbikeRentalController extends Controller
 
     public function show($slug)
     {
-        $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalBySlug($slug);
+        $motorbikeRental = $this->motorbikeRentalRepository->getMotorbikeRentalForDisplayBySlug($slug);
 
         return view('pages.motorbike-rental.show', compact('motorbikeRental'));
     }

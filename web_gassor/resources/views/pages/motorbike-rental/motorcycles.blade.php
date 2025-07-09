@@ -40,7 +40,7 @@
     <h2 class="font-bold px-5">Motor yang Tersedia</h2>
     <div id="MotorcyclesContainer" class="flex flex-col gap-4 px-5">
         @if($motorbikeRental->motorcycles->isEmpty())
-            <p class="text-center text-gassor-grey">Semua motor sudah dipinjam, silakan cek kembali nanti.</p>
+            <p class="text-center text-gassor-grey">Motor tidak tersedia, silahkan cek kembali nanti.</p>
         @else
             @foreach ($motorbikeRental->motorcycles as $motorcycle)
             <label class="relative group">
@@ -48,8 +48,6 @@
                 <div
                     class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] group-has-[:checked]:ring-2 group-has-[:checked]:ring-[#E6A43B] transition-all duration-300">
                     <div class="flex w-[120px] h-[156px] shrink-0 rounded-[30px] bg-[#D9D9D9] overflow-hidden">
-                        {{-- @dd($motorcycle->images) --}}
-
                         <img src="{{ asset('storage/' . $motorcycle->images->first()->image) }}" class="w-full h-full object-cover" alt="icon">
                     </div>
                     <div class="flex flex-col gap-3 w-full">

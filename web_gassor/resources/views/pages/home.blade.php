@@ -74,7 +74,7 @@
     </div>
     <div class="swiper w-full overflow-x-hidden">
         <div class="swiper-wrapper">
-            @foreach ($popularMotorbikeRentals as $motorbikeRental)
+            @forelse ($popularMotorbikeRentals as $motorbikeRental)
             <div class="swiper-slide !w-fit">
                 <a href="{{ route('motor.show', $motorbikeRental->slug) }}" class="card">
                     <div
@@ -96,7 +96,15 @@
                     </div>
                 </a>
             </div>
-            @endforeach
+            @empty
+            <div class="w-full px-5">
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <img src="{{ asset('assets/images/icons/note-favorite-grey.svg') }}" class="w-16 h-16 mb-4 opacity-50" alt="empty">
+                    <p class="text-gassor-grey font-medium">Rental populer belum tersedia</p>
+                    <p class="text-sm text-gassor-grey mt-1">Silakan coba lagi nanti</p>
+                </div>
+            </div>
+            @endforelse
         </div>
     </div>
 </section>
@@ -128,7 +136,7 @@
         <h2 class="font-bold">Semua Jenis Motor</h2>
     </div>
     <div class="flex flex-col gap-4">
-        @foreach ($motorcycles as $motorcycle)
+        @forelse ($motorcycles as $motorcycle)
         <a href="{{ route('motor.show', $motorcycle->motorbikeRental->slug) }}" class="card">
             <div
                 class="flex rounded-[30px] border border-[#F1F2F6] p-4 gap-4 bg-white hover:border-[#E6A43B] transition-all duration-300">
@@ -163,7 +171,13 @@
                 </div>
             </div>
         </a>
-        @endforeach
+        @empty
+        <div class="flex flex-col items-center justify-center py-12 text-center">
+            <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-16 h-16 mb-4 opacity-50" alt="empty">
+            <p class="text-gassor-grey font-medium">Motor belum tersedia</p>
+            <p class="text-sm text-gassor-grey mt-1">Silakan coba lagi nanti</p>
+        </div>
+        @endforelse
     </div>
 </section>
 
