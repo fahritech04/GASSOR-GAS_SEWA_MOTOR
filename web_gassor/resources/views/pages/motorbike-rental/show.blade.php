@@ -114,7 +114,7 @@
                         </div>
                         @foreach($allReviews as $review)
                         <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#E6A43B] transition-all duration-300">
-                            <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden items-center justify-center">
+                            {{-- <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden items-center justify-center">
                                 @if(isset($review->user->avatar) && $review->user->avatar)
                                     <img src="{{ asset('storage/' . $review->user->avatar) }}" class="w-full h-full object-cover" alt="avatar">
                                 @else
@@ -122,19 +122,17 @@
                                         {{ strtoupper(substr($review->user->name, 0, 1)) }}
                                     </span>
                                 @endif
-                            </div>
-                            <div class="flex flex-col gap-1 flex-1">
-                                <div class="flex flex-col gap-1">
-                                    <div class="flex items-center gap-2">
-                                        <p class="font-semibold">{{ $review->user->name }}</p>
-                                        <div class="flex items-center gap-1">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <span class="text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}">⭐</span>
-                                            @endfor
-                                        </div>
+                            </div> --}}
+                            <div class="w-full flex flex-col gap-2">
+                                <div class="flex items-center gap-2">
+                                    <h5 class="font-bold text-gray-900 text-base sm:text-lg" style="line-height: 1.2;">{{ $review->user->name }}</h5>
+                                    <div class="flex items-center gap-0.5">
+                                        @for($i = 1; $i <= $review->rating; $i++)
+                                            <span class="text-sm opacity-100">⭐</span>
+                                        @endfor
                                     </div>
-                                    <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                                 </div>
+                                <span class="text-xs sm:text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                                 <p class="text-sm text-gray-600">{{ $review->motorcycle->name }}</p>
                                 <p class="text-sm">{{ $review->comment }}</p>
                             </div>
