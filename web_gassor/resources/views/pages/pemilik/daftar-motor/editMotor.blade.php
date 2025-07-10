@@ -75,12 +75,20 @@
         border: 2px solid #e6a43b;
         margin-top: 0.5rem;
     }
-    .bonus-item, .motor-item {
+    .bonus-item, .motor-item, .informasi-item, .checklist-item {
         background: #e0caa5;
         border-radius: 20px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         color: #fff;
+    }
+    .info-card h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     .remove-btn {
         background: #dc3545;
@@ -121,6 +129,11 @@
         width: 100%;
         margin-right: 0.5rem;
         transition: background 0.2s;
+    }
+    .gassor-btn-primary:disabled {
+        background: #6b7280;
+        cursor: not-allowed;
+        opacity: 0.6;
     }
     .gassor-btn-secondary {
         background: #dc3545;
@@ -163,45 +176,47 @@
             </div>
             <!-- Tab Informasi Umum -->
             <div id="informasi-umum" class="tab-content active">
-                <div class="flex flex-col gap-4">
-                    <div>
-                        <label class="form-label">Thumbnail <span style="color: #dc3545;">*</span></label>
-                        <div class="upload-area" onclick="document.getElementById('thumbnail').click()">
-                            <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;" onchange="previewImage(event, 'thumbnail-preview')" />
+                <div class="informasi-item">
+                    <div class="flex flex-col gap-4">
+                        <div>
+                            <label class="form-label">Thumbnail <span style="color: #dc3545;">*</span></label>
+                            <div class="upload-area" onclick="document.getElementById('thumbnail').click()">
+                                <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
+                                <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;" onchange="previewImage(event, 'thumbnail-preview')" />
+                            </div>
+                            <div id="thumbnail-preview" style="display: {{ $motorbikeRental && $motorbikeRental->thumbnail ? 'block' : 'none' }};">
+                                @if($motorbikeRental && $motorbikeRental->thumbnail)
+                                    <img class="image-preview" src="{{ asset('storage/'.$motorbikeRental->thumbnail) }}" alt="Pratinjau">
+                                @endif
+                            </div>
                         </div>
-                        <div id="thumbnail-preview" style="display: {{ $motorbikeRental && $motorbikeRental->thumbnail ? 'block' : 'none' }};">
-                            @if($motorbikeRental && $motorbikeRental->thumbnail)
-                                <img class="image-preview" src="{{ asset('storage/'.$motorbikeRental->thumbnail) }}" alt="Pratinjau">
-                            @endif
+                        <div>
+                            <label class="form-label">Nama <span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="rental_name" id="rental-name" class="form-input" value="{{ old('rental_name', $motorbikeRental->name ?? '') }}" required oninput="generateSlug()" />
                         </div>
-                    </div>
-                    <div>
-                        <label class="form-label">Nama <span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="rental_name" id="rental-name" class="form-input" value="{{ old('rental_name', $motorbikeRental->name ?? '') }}" required oninput="generateSlug()" />
-                    </div>
-                    <div>
-                        <label class="form-label">Slug <span style="color: #dc3545;">*</span></label>
-                        <input type="text" name="slug" id="rental-slug" class="form-input" value="{{ old('slug', $motorbikeRental->slug ?? '') }}" required readonly/>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-col">
-                            <label class="form-label">Kota <span style="color: #dc3545;">*</span></label>
-                            <select name="city_id" class="form-select" required>
-                                <option value="">Pilih kota</option>
-                                <option value="1" {{ old('city_id', $motorbikeRental->city_id ?? '')==1 ? 'selected' : '' }}>Bojongsoang</option>
-                                <option value="2" {{ old('city_id', $motorbikeRental->city_id ?? '')==2 ? 'selected' : '' }}>Sukapura</option>
-                                <option value="3" {{ old('city_id', $motorbikeRental->city_id ?? '')==3 ? 'selected' : '' }}>Sukabirus</option>
-                            </select>
+                        <div>
+                            <label class="form-label">Slug <span style="color: #dc3545;">*</span></label>
+                            <input type="text" name="slug" id="rental-slug" class="form-input" value="{{ old('slug', $motorbikeRental->slug ?? '') }}" required readonly/>
                         </div>
-                    </div>
-                    <div>
-                        <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
-                        <textarea name="description" class="form-textarea" rows="4" required>{{ old('description', $motorbikeRental->description ?? '') }}</textarea>
-                    </div>
-                    <div>
-                        <label class="form-label">Alamat <span style="color: #dc3545;">*</span></label>
-                        <textarea name="address" class="form-textarea" rows="3" required>{{ old('address', $motorbikeRental->address ?? '') }}</textarea>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label class="form-label">Kota <span style="color: #dc3545;">*</span></label>
+                                <select name="city_id" class="form-select" required>
+                                    <option value="">Pilih kota</option>
+                                    <option value="1" {{ old('city_id', $motorbikeRental->city_id ?? '')==1 ? 'selected' : '' }}>Bojongsoang</option>
+                                    <option value="2" {{ old('city_id', $motorbikeRental->city_id ?? '')==2 ? 'selected' : '' }}>Sukapura</option>
+                                    <option value="3" {{ old('city_id', $motorbikeRental->city_id ?? '')==3 ? 'selected' : '' }}>Sukabirus</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Deskripsi <span style="color: #dc3545;">*</span></label>
+                            <textarea name="description" class="form-textarea" rows="4" required>{{ old('description', $motorbikeRental->description ?? '') }}</textarea>
+                        </div>
+                        <div>
+                            <label class="form-label">Alamat <span style="color: #dc3545;">*</span></label>
+                            <textarea name="address" class="form-textarea" rows="3" required>{{ old('address', $motorbikeRental->address ?? '') }}</textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -262,67 +277,69 @@
                         </div>
                     @endif
                 </div>
-                {{-- <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button> --}}
+                <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
             </div>
             <!-- Tab Checklist Fisik -->
             <div id="checklist-fisik" class="tab-content">
-                <div class="info-card">
-                    <h3 style="color: #000000;">Checklist Pemeriksaan Fisik Motor</h3>
-                    <div class="flex flex-col gap-2" id="checklist-fisik-list">
-                        @php
-                            // Pastikan checklistLama selalu array di view (fallback jika controller gagal)
-                            if (!is_array($checklistLama)) {
-                                if (is_string($checklistLama) && strlen($checklistLama) > 0) {
-                                    $decoded = json_decode($checklistLama, true);
-                                    $checklistLama = is_array($decoded) ? $decoded : [];
-                                } else {
-                                    $checklistLama = [];
+                <div class="checklist-item">
+                    <div class="info-card">
+                        <h3 style="color: #000000;">Checklist Pemeriksaan Fisik Motor</h3>
+                        <div class="flex flex-col gap-2" id="checklist-fisik-list">
+                            @php
+                                // Pastikan checklistLama selalu array di view (fallback jika controller gagal)
+                                if (!is_array($checklistLama)) {
+                                    if (is_string($checklistLama) && strlen($checklistLama) > 0) {
+                                        $decoded = json_decode($checklistLama, true);
+                                        $checklistLama = is_array($decoded) ? $decoded : [];
+                                    } else {
+                                        $checklistLama = [];
+                                    }
                                 }
-                            }
-                            $opsiChecklist = [
-                                'ban' => 'Ban',
-                                'baret' => 'Baret/Bodi Lecet',
-                                'rem' => 'Rem',
-                                'oli' => 'Oli',
-                                'lampu' => 'Lampu',
-                                'spion' => 'Spion',
-                                'klakson' => 'Klakson',
-                                'standar' => 'Standar Samping/Tengah',
-                                'kunci' => 'Kunci Kontak',
-                                'body' => 'Body Motor',
-                                'speedometer' => 'Speedometer',
-                                'rantai' => 'Rantai/Drive Belt',
-                                'knalpot' => 'Knalpot',
-                                'radiator' => 'Radiator/Coolant',
-                                'busi' => 'Busi',
-                                'accu' => 'Accu/Aki',
-                                'tutup_tangki' => 'Tutup Tangki',
-                                'ban_serep' => 'Ban Serep (jika ada)',
-                            ];
-                        @endphp
-                        @foreach($opsiChecklist as $val => $label)
-                            <label style="color:#2d2d2d;font-weight:500;">
-                                <input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="{{ $val }}" {{ in_array($val, $checklistLama) ? 'checked' : '' }}> {{ $label }}
+                                $opsiChecklist = [
+                                    'ban' => 'Ban',
+                                    'baret' => 'Baret/Bodi Lecet',
+                                    'rem' => 'Rem',
+                                    'lampu' => 'Lampu',
+                                    'spion' => 'Spion',
+                                    'knalpot' => 'Knalpot',
+                                ];
+                            @endphp
+                            @foreach($opsiChecklist as $val => $label)
+                                <label style="color:#2d2d2d;font-weight:500;">
+                                    <input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="{{ $val }}" {{ in_array($val, $checklistLama) ? 'checked' : '' }}> {{ $label }}
+                                </label>
+                            @endforeach
+                        </div>
+                        <div style="margin-top:1.5rem;">
+                            <label class="form-label">Upload Video Pemeriksaan Fisik Motor
+                                @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path)
+                                    {{-- <span style="color:#888;">(opsional - sudah ada video)</span> --}}
+                                @else
+                                    <span style="color:#dc3545;">*</span>
+                                @endif
                             </label>
-                        @endforeach
-                    </div>
-                    <div style="margin-top:1.5rem;">
-                        <label class="form-label">Upload Video Pemeriksaan Fisik Motor <span style="color:#dc3545;">*</span></label>
-                        <div class="upload-area" onclick="document.getElementById('video_fisik').click()">
-                            <span>Pilih dari Galeri / Kamera</span>
-                            <input type="file" id="video_fisik" name="video_fisik" accept="video/mp4,video/3gp,video/mov" capture="environment" style="display:none;" onchange="previewVideo(event)" />
+                            <div class="upload-area" onclick="document.getElementById('video_fisik').click()">
+                                <span>Pilih dari Galeri / Kamera</span>
+                                <input type="file" id="video_fisik" name="video_fisik" accept="video/mp4,video/3gp,video/mov" capture="environment" style="display:none;" onchange="previewVideo(event)" />
+                            </div>
+                            <div id="video_fisik_preview" style="margin-top:10px; @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path) display:block; @else display:none; @endif">
+                                @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path)
+                                    <video width="320" height="240" controls style="border-radius:12px;border:2px solid #e6a43b;">
+                                        <source src="{{ asset('storage/'.$motorcycle->physicalCheck->video_path) }}" type="video/mp4">
+                                        Video tidak didukung.
+                                    </video>
+                                @endif
+                            </div>
+                            <small style="color:#374151;">Format: mp4, mov, 3gp. Maksimal 100MB.
+                                @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path)
+                                    Upload video baru jika ingin mengganti yang lama.
+                                @else
+                                    Wajib upload video dari HP (kamera/galeri).
+                                @endif
+                            </small>
                         </div>
-                        <div id="video_fisik_preview" style="margin-top:10px; @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path) display:block; @else display:none; @endif">
-                            @if($motorcycle->physicalCheck && $motorcycle->physicalCheck->video_path)
-                                <video width="320" height="240" controls style="border-radius:12px;border:2px solid #e6a43b;">
-                                    <source src="{{ asset('storage/'.$motorcycle->physicalCheck->video_path) }}" type="video/mp4">
-                                    Video tidak didukung.
-                                </video>
-                            @endif
-                        </div>
-                        <small style="color:#374151;">Format: mp4, mov, 3gp. Maksimal 100MB. Wajib upload video dari HP (kamera/galeri).</small>
+                        <div id="checklist-fisik-warning" style="color:#dc3545;display:none;margin-top:8px;font-weight:500;">Semua checklist fisik harus dipilih dan video harus ada sebelum update motor!</div>
                     </div>
-                    <div id="checklist-fisik-warning" style="color:#dc3545;display:none;margin-top:8px;font-weight:500;">Checklist & video harus lengkap sebelum update motor!</div>
                 </div>
             </div>
             <!-- Tab Motor -->
@@ -351,7 +368,6 @@
                                     <label class="form-label">Status STNK</label>
                                     <div class="form-input" style="background: #f8f9fa; color: {{ $motorcycle->stnk ? '#28a745' : '#dc3545' }}; display: flex; align-items: center;">
                                         <span id="stnk_status_0">{{ $motorcycle->stnk ? '✅ Tersedia' : '❌ Belum Tersedia' }}</span>
-                                        <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
                                     </div>
                                 </div>
                             </div>
@@ -859,10 +875,30 @@
         for (let i = 0; i < items.length; i++) {
             if (!items[i].checked) return false;
         }
-        // Video wajib
+
+        // Video: wajib jika belum ada video di database, opsional jika sudah ada
         const video = document.getElementById('video_fisik');
-        if (!video || !video.files || video.files.length === 0) return false;
+        const hasExistingVideo = document.querySelector('#video_fisik_preview video');
+
+        // Jika belum ada video di database, wajib upload video baru
+        if (!hasExistingVideo && (!video || !video.files || video.files.length === 0)) {
+            return false;
+        }
+
         return true;
+    }
+
+    function updateChecklistFisikState() {
+        const btn = document.querySelector('button[type="submit"]');
+        if (!isChecklistFisikLengkap()) {
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        }
     }
     function previewVideo(event) {
         const input = event.target;
@@ -872,6 +908,34 @@
             preview.innerHTML = `<video width='320' height='240' controls style='border-radius:12px;border:2px solid #e6a43b;'><source src='${url}' type='video/mp4'>Video tidak didukung.</video>`;
             preview.style.display = 'block';
         }
+        // Update checklist state after video upload
+        updateChecklistFisikState();
     }
+
+    // Event listeners for validation
+    document.addEventListener('DOMContentLoaded', function() {
+        updateChecklistFisikState();
+
+        // Add change listeners to checklist items
+        document.querySelectorAll('.checklist-fisik-item').forEach(cb => {
+            cb.addEventListener('change', updateChecklistFisikState);
+        });
+
+        // Add change listener to video input
+        document.getElementById('video_fisik').addEventListener('change', updateChecklistFisikState);
+
+        // Form submission validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!isChecklistFisikLengkap()) {
+                e.preventDefault();
+                document.getElementById('checklist-fisik-warning').style.display = 'block';
+                showTab('checklist-fisik');
+                setTimeout(() => {
+                    document.getElementById('checklist-fisik-warning').style.display = 'none';
+                }, 5000);
+                return false;
+            }
+        });
+    });
 </script>
 @endsection

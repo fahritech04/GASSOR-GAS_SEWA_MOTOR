@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('motorbike_rental_id')->constrained()->cascadeOnDelete();
-            $table->string('image');
-            $table->string('name');
-            $table->string('description');
+            $table->string('image')->nullable();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

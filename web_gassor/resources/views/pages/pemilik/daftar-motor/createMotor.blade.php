@@ -140,10 +140,11 @@
         .tab-content { padding: 1rem 0.5rem; }
     }
     .info-card {
-        background: linear-gradient(135deg, #f8faff 0%, #e8f2ff 100%);
-        border-radius: 16px;
+        background: #e0caa5;
+        border-radius: 20px;
         padding: 1.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        color: #fff;
     }
     .info-card h3 {
         font-size: 1.2rem;
@@ -297,38 +298,40 @@
                     <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 500;"><strong>Info:</strong> Data bonus berikut diambil dari rental "<strong>{{ $existingRental->name }}</strong>" yang sudah ada. Anda dapat mengedit atau menambah bonus baru di bawah ini.</div>
                 @endif
                 <div id="bonus-container">
-                    @php $bonusCount = 0; @endphp
-                    @if(isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses && count($existingRental->bonuses))
+                    @php
+                        $bonusCount = 0;
+                        $hasExistingBonuses = isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses && count($existingRental->bonuses) > 0;
+                    @endphp
+
+                    @if($hasExistingBonuses)
+                        {{-- Tampilkan bonus existing HANYA untuk tampilan, TIDAK dikirim ke server --}}
                         @foreach($existingRental->bonuses as $bonus)
                         <div class="bonus-item">
                             <div class="flex flex-col gap-4">
                                 <div>
-                                    <label class="form-label">Gambar <span style="color: #888;">(opsional)</span></label>
-                                    <div class="upload-area" onclick="document.getElementById('bonus_image_{{ $bonusCount }}').click()">
-                                        <span>Seret & Lepas file Anda atau <b>Telusuri</b></span>
-                                        <input type="file" id="bonus_image_{{ $bonusCount }}" name="bonuses[{{ $bonusCount }}][image]" accept="image/*" style="display: none;" onchange="previewImage(event, 'bonus_preview_{{ $bonusCount }}')" />
+                                    <label class="form-label">Gambar <span style="color: #888;">(sudah ada)</span></label>
+                                    <div class="upload-area" style="pointer-events: none; opacity: 0.7;">
+                                        <span>Gambar dari rental existing</span>
                                     </div>
-                                    <div id="bonus_preview_{{ $bonusCount }}" style="display: {{ $bonus->image ? 'block' : 'none' }};">
-                                        @if($bonus->image)
-                                            <img class="image-preview" src="{{ asset('storage/'.$bonus->image) }}" alt="Pratinjau">
-                                            <button type='button' class='remove-btn' style='margin-left:12px;margin-top:8px;' onclick='removeSingleImage(this, "bonus_image_{{ $bonusCount }}", "bonus_preview_{{ $bonusCount }}")'>Hapus</button>
-                                        @endif
-                                    </div>
+                                    @if($bonus->image)
+                                        <div style="margin-top: 10px;">
+                                            <img class="image-preview" src="{{ asset('storage/'.$bonus->image) }}" alt="Bonus Existing">
+                                        </div>
+                                    @endif
                                 </div>
                                 <div>
-                                    <label class="form-label">Nama Bonus <span style="color: #888;">(opsional)</span></label>
-                                    <input type="text" name="bonuses[{{ $bonusCount }}][name]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.name', $bonus->name) }}" placeholder="Contoh: Helm" />
+                                    <label class="form-label">Nama Bonus <span style="color: #888;">(sudah ada)</span></label>
+                                    <input type="text" class="form-input" value="{{ $bonus->name }}" placeholder="Contoh: Helm" readonly style="background: #f8f9fa; color: #6c757d;" />
                                 </div>
                                 <div>
-                                    <label class="form-label">Deskripsi <span style="color: #888;">(opsional)</span></label>
-                                    <input type="text" name="bonuses[{{ $bonusCount }}][description]" class="form-input" value="{{ old('bonuses.'.$bonusCount.'.description', $bonus->description) }}" placeholder="Contoh: 1 Helm" />
+                                    <label class="form-label">Deskripsi <span style="color: #888;">(sudah ada)</span></label>
+                                    <input type="text" class="form-input" value="{{ $bonus->description }}" placeholder="Contoh: 1 Helm" readonly style="background: #f8f9fa; color: #6c757d;" />
                                 </div>
-                                <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
                             </div>
                         </div>
-                        @php $bonusCount++; @endphp
                         @endforeach
                     @else
+                        {{-- Tampilkan 1 form kosong HANYA untuk user baru atau yang belum punya bonus --}}
                         <div class="bonus-item">
                             <div class="flex flex-col gap-4">
                                 <div>
@@ -354,7 +357,13 @@
                         </div>
                     @endif
                 </div>
-                <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
+                @if($hasExistingBonuses)
+                    <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 2px solid #ffc107; color: #856404; padding: 1rem; border-radius: 12px; margin-top: 1rem; font-weight: 500;">
+                        <strong>Info:</strong> Bonus sudah ada dari rental existing. Untuk menambah atau mengedit bonus, gunakan menu <strong>Edit Motor</strong>.
+                    </div>
+                @else
+                    <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
+                @endif
             </div>
             <!-- Tab Checklist Fisik -->
             <div id="checklist-fisik" class="tab-content">
@@ -364,21 +373,9 @@
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="ban"> Ban</label>
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="baret"> Baret/Bodi Lecet</label>
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="rem"> Rem</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="oli"> Oli</label>
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="lampu"> Lampu</label>
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="spion"> Spion</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="klakson"> Klakson</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="standar"> Standar Samping/Tengah</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="kunci"> Kunci Kontak</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="body"> Body Motor</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="speedometer"> Speedometer</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="rantai"> Rantai/Drive Belt</label>
                         <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="knalpot"> Knalpot</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="radiator"> Radiator/Coolant</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="busi"> Busi</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="accu"> Accu/Aki</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="tutup_tangki"> Tutup Tangki</label>
-                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="ban_serep"> Ban Serep (jika ada)</label>
                     </div>
                     <div style="margin-top:1.5rem;">
                         <label class="form-label">Upload Video Pemeriksaan Fisik Motor <span style="color:#dc3545;">*</span></label>
@@ -418,7 +415,6 @@
                                     <label class="form-label">Status STNK</label>
                                     <div class="form-input" style="background: #f8f9fa; color: #6c757d; display: flex; align-items: center;">
                                         <span id="stnk_status_0">❌ Belum Tersedia</span>
-                                        <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
                                     </div>
                                 </div>
                             </div>
@@ -512,7 +508,12 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let bonusCount = {{ isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses ? count($existingRental->bonuses) : 1 }};
+    // bonusCount untuk existing rental tidak perlu dihitung karena tidak ada input form bonus
+    @php
+        $jsHasExistingBonuses = isset($hasExistingRental) && $hasExistingRental && $existingRental && $existingRental->bonuses && count($existingRental->bonuses) > 0;
+        $jsBonusCount = $jsHasExistingBonuses ? 0 : 1; // 0 karena tidak ada form input untuk existing bonus
+    @endphp
+    let bonusCount = {{ $jsBonusCount }};
     let motorCount = 1;
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -747,7 +748,6 @@
                             <label class="form-label">Status STNK</label>
                             <div class="form-input" style="background: #f8f9fa; color: #6c757d; display: flex; align-items: center;">
                                 <span id="stnk_status_${idx}">❌ Belum Tersedia</span>
-                                <small style="margin-left: 8px; font-size: 12px;">(Otomatis tersedia setelah upload gambar)</small>
                             </div>
                         </div>
                     </div>

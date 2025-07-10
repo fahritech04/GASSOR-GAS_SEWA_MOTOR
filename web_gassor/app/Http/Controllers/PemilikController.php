@@ -237,8 +237,8 @@ class PemilikController extends Controller
                 ]);
             }
 
-            // Simpan bonus
-            if ($request->has('bonuses')) {
+            // Simpan bonus HANYA jika tidak menggunakan existing rental
+            if ($request->has('bonuses') && ! $useExistingRental) {
                 foreach ($request->bonuses as $bonus) {
                     if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
                         $bonusImage = null;
@@ -307,7 +307,7 @@ class PemilikController extends Controller
                         \App\Models\MotorcyclePhysicalCheck::create([
                             'motorcycle_id' => $motorcycle->id,
                             'motorbike_rental_id' => $rental->id,
-                            'checklist' => json_encode($checklist),
+                            'checklist' => $checklist, // simpan langsung array
                             'video_path' => $videoPath,
                         ]);
                     }
@@ -319,7 +319,7 @@ class PemilikController extends Controller
                 \App\Models\MotorcyclePhysicalCheck::create([
                     'motorcycle_id' => $firstMotorcycle->id,
                     'motorbike_rental_id' => $rental->id,
-                    'checklist' => json_encode($checklistFisik),
+                    'checklist' => $checklistFisik,
                     'video_path' => $videoPath,
                 ]);
             }
@@ -429,7 +429,9 @@ class PemilikController extends Controller
             }
         }
 
-        $motorcycleValidated = $request->validate([
+        $existingPhysicalCheck = $motorcycle->physicalCheck;
+
+        $validationRules = [
             'motorcycle_name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'vehicle_number_plate' => 'required|string|max:255',
@@ -438,11 +440,17 @@ class PemilikController extends Controller
             'available_stock' => 'required|integer|in:0,1',
             'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
-            // --- Tambahan validasi checklist fisik & video ---
-            'checklist_fisik' => 'required|array|min:1',
-            'checklist_fisik.*' => 'string',
-            'video_fisik' => 'required|file|mimetypes:video/mp4,video/3gp,video/quicktime|max:102400', // 100MB
-        ]);
+            'checklist_fisik' => 'required|array|size:6',
+            'checklist_fisik.*' => 'string|in:ban,baret,rem,lampu,spion,knalpot',
+        ];
+
+        if (! $existingPhysicalCheck) {
+            $validationRules['video_fisik'] = 'required|file|mimetypes:video/mp4,video/3gp,video/quicktime|max:202400';
+        } else {
+            $validationRules['video_fisik'] = 'nullable|file|mimetypes:video/mp4,video/3gp,video/quicktime|max:202400';
+        }
+
+        $motorcycleValidated = $request->validate($validationRules);
 
         // Update Motorcycle (Motor) - menghapus bidang status
         $motorcycle->update([
@@ -492,7 +500,7 @@ class PemilikController extends Controller
                 $newMotorcycle = Motorcycle::create([
                     'owner_id' => auth()->id(),
                     'motorbike_rental_id' => $motorbikeRental->id,
-                    'category_id' => $motor['category_id'], // <-- fix: tambahkan category_id
+                    'category_id' => $motor['category_id'],
                     'name' => $motor['name'],
                     'vehicle_number_plate' => $motor['vehicle_number_plate'],
                     'stnk' => $motor['stnk'],
@@ -515,18 +523,31 @@ class PemilikController extends Controller
             }
         }
 
-        // --- Tambahan: Simpan/update checklist fisik & video ---
+        // Tambahan: Simpan/update checklist fisik & video
         $videoFile = $request->file('video_fisik');
         $checklist = $request->input('checklist_fisik');
-        if ($videoFile && $checklist) {
-            $videoPath = $videoFile->store('motorcycle_physical_checks', 'public');
+
+        if ($checklist) {
             $check = $motorcycle->physicalCheck;
+
             if ($check) {
-                $check->update([
-                    'checklist' => $checklist,
-                    'video_path' => $videoPath,
-                ]);
+                // Update existing physical check
+                $updateData = ['checklist' => $checklist];
+
+                // Only update video if a new one is provided
+                if ($videoFile) {
+                    $videoPath = $videoFile->store('motorcycle_physical_checks', 'public');
+                    $updateData['video_path'] = $videoPath;
+                }
+
+                $check->update($updateData);
             } else {
+                // Create new physical check
+                $videoPath = null;
+                if ($videoFile) {
+                    $videoPath = $videoFile->store('motorcycle_physical_checks', 'public');
+                }
+
                 \App\Models\MotorcyclePhysicalCheck::create([
                     'motorcycle_id' => $motorcycle->id,
                     'motorbike_rental_id' => $motorcycle->motorbike_rental_id,

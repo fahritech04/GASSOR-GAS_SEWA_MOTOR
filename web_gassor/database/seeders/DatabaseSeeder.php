@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             MotorcycleSeeder::class,
             MotorcycleImageSeeder::class,
             BonusSeeder::class,
-            TransactionSeeder::class,
+            // TransactionSeeder::class,
             MotorcycleReviewSeeder::class,
         ]);
     }
