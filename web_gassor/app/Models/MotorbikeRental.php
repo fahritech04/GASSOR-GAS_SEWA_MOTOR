@@ -63,7 +63,7 @@ class MotorbikeRental extends Model
         return $this->hasOneThrough(Category::class, Motorcycle::class, 'motorbike_rental_id', 'id', 'id', 'category_id');
     }
 
-    // kategori dominan atau "Campuran" jika ada beberapa kategori
+    // kategori dominan atau "Campuran"
     public function getPredominantCategory()
     {
         $categories = $this->motorcycles()
@@ -81,7 +81,7 @@ class MotorbikeRental extends Model
             return $categories->first();
         }
 
-        // Multiple categories - return the most common one
+        // Beberapa kategori
         $categoryCounts = $this->motorcycles()
             ->with('category')
             ->get()
@@ -103,5 +103,10 @@ class MotorbikeRental extends Model
         return $this->motorcycles()
             ->distinct('category_id')
             ->count('category_id') > 1;
+    }
+
+    public function physicalChecks()
+    {
+        return $this->hasMany(MotorcyclePhysicalCheck::class);
     }
 }

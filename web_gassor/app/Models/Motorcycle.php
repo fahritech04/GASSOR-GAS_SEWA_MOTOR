@@ -81,17 +81,11 @@ class Motorcycle extends Model
         return false;
     }
 
-    /**
-     * Scope untuk motor yang tersedia
-     */
     public function scopeAvailable($query)
     {
         return $query->where('available_stock', '>', 0);
     }
 
-    /**
-     * Scope untuk motor dari pemilik yang disetujui
-     */
     public function scopeApprovedOwner($query)
     {
         return $query->whereHas('owner', function ($q) {
@@ -139,9 +133,6 @@ class Motorcycle extends Model
         return $this->reviews()->count();
     }
 
-    /**
-     * Mendapatkan distribusi rating
-     */
     public function getRatingDistributionAttribute()
     {
         $distribution = [];
@@ -149,5 +140,10 @@ class Motorcycle extends Model
             $distribution[$i] = $this->reviews()->where('rating', $i)->count();
         }
         return $distribution;
+    }
+
+    public function physicalCheck()
+    {
+        return $this->hasOne(MotorcyclePhysicalCheck::class);
     }
 }

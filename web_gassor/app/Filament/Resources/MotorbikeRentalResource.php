@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MotorbikeRentalResource\Pages;
+use App\Filament\Resources\MotorbikeRentalResource\RelationManagers\MotorcyclesRelationManager;
 use App\Models\MotorbikeRental;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -134,6 +135,26 @@ class MotorbikeRentalResource extends Resource
                                             ->type('time')
                                             ->default('20:00')
                                             ->required(),
+                                        Forms\Components\Repeater::make('physicalCheck')
+                                            ->label('Checklist Fisik Motor')
+                                            ->relationship('physicalCheck')
+                                            ->schema([
+                                                Forms\Components\TagsInput::make('checklist')
+                                                    ->label('Checklist Fisik')
+                                                    ->placeholder('Checklist fisik motor')
+                                                    ->required()
+                                                    ->helperText('Checklist fisik yang diisi oleh pemilik motor.')
+                                                    ->columnSpanFull(),
+                                                Forms\Components\FileUpload::make('video_path')
+                                                    ->label('Video Pemeriksaan Fisik')
+                                                    ->directory('motorcycle_physical_checks')
+                                                    ->acceptedFileTypes(['video/mp4','video/3gp','video/mov'])
+                                                    ->maxSize(102400)
+                                                    ->helperText('Video pemeriksaan fisik motor (mp4, mov, 3gp, max 100MB).')
+                                                    ->columnSpanFull(),
+                                            ])
+                                            ->maxItems(1)
+                                            ->columnSpanFull(),
                                     ]),
                             ]),
                     ])->columnSpan(2),
@@ -152,6 +173,10 @@ class MotorbikeRentalResource extends Resource
                     ->label('Kontak'),
                 Tables\Columns\ImageColumn::make('thumbnail')
                     ->label('Thumbnail'),
+                Tables\Columns\TextColumn::make('motorcycles')
+                    ->label('Motor Checklist Fisik')
+                    ->formatStateUsing(fn($record) => $record->motorcycles->whereNotNull('physicalCheck')->count() . ' / ' . $record->motorcycles->count())
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -171,7 +196,7 @@ class MotorbikeRentalResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MotorcyclesRelationManager::class,
         ];
     }
 

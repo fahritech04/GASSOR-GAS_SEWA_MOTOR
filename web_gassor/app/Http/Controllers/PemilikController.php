@@ -39,7 +39,6 @@ class PemilikController extends Controller
                 return $transaction->rental_status === 'finished';
             })
             ->sum(function ($transaction) {
-                // Gunakan total_amount yang sudah dihitung saat booking
                 return $transaction->total_amount;
             });
 
@@ -76,7 +75,7 @@ class PemilikController extends Controller
             if (in_array($transaction->payment_status, ['pending']) && $transaction->created_at->diffInDays(now()) <= 7) {
                 $oldStatus = $transaction->payment_status;
                 $syncService->syncPaymentStatus($transaction);
-                $transaction->refresh(); // Refresh from database
+                $transaction->refresh();
 
                 if ($oldStatus !== $transaction->payment_status) {
                     $syncCount++;
@@ -123,7 +122,7 @@ class PemilikController extends Controller
 
     public function returnMotor(Transaction $transaction)
     {
-        // Validasi ownership pastikan motor milik user yang login
+        // Pastikan motor milik user yang login
         if ($transaction->motorcycle->owner_id !== auth()->id()) {
             \Log::warning('Unauthorized return attempt', [
                 'user_id' => auth()->id(),
@@ -211,11 +210,9 @@ class PemilikController extends Controller
 
             if ($useExistingRental && $request->has('existing_rental_id')) {
                 $rental = MotorbikeRental::findOrFail($request->existing_rental_id);
-
                 $userMotorcycles = Motorcycle::where('owner_id', auth()->id())
                     ->where('motorbike_rental_id', $rental->id)
                     ->exists();
-
                 if (! $userMotorcycles) {
                     throw new \Exception('Anda tidak memiliki akses ke rental ini.');
                 }
@@ -228,10 +225,7 @@ class PemilikController extends Controller
                     'description' => 'required|string',
                     'address' => 'required|string',
                 ]);
-
                 $thumbnailPath = $request->file('thumbnail')->store('motorbike_rental', 'public');
-
-                // Simpan motorbike rental
                 $rental = MotorbikeRental::create([
                     'name' => $request->name,
                     'slug' => $request->slug,
@@ -243,89 +237,59 @@ class PemilikController extends Controller
                 ]);
             }
 
-            // Simpan bonus - hanya untuk rental baru, atau update bonus untuk rental yang sudah ada
+            // Simpan bonus
             if ($request->has('bonuses')) {
-                if ($useExistingRental) {
-                    // Untuk rental yang sudah ada, update bonus yang ada atau tambah bonus baru
-                    $existingBonuses = $rental->bonuses()->get();
-                    $bonusIndex = 0;
-
-                    foreach ($request->bonuses as $bonus) {
-                        // Hanya proses jika ada salah satu field terisi
-                        if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
-                            $bonusImage = null;
-
-                            if (isset($bonus['image']) && $bonus['image']) {
-                                $bonusImage = $bonus['image']->store('bonuses', 'public');
-                            } elseif (isset($existingBonuses[$bonusIndex]) && $existingBonuses[$bonusIndex]->image) {
-                                // Gunakan gambar yang sudah ada jika tidak ada gambar baru
-                                $bonusImage = $existingBonuses[$bonusIndex]->image;
-                            }
-
-                            if (isset($existingBonuses[$bonusIndex])) {
-                                // Update bonus yang sudah ada
-                                $existingBonuses[$bonusIndex]->update([
-                                    'image' => $bonusImage,
-                                    'name' => $bonus['name'] ?? '',
-                                    'description' => $bonus['description'] ?? '',
-                                ]);
-                            } else {
-                                // Tambah bonus baru jika tidak ada bonus di index ini
-                                Bonus::create([
-                                    'motorbike_rental_id' => $rental->id,
-                                    'image' => $bonusImage,
-                                    'name' => $bonus['name'] ?? '',
-                                    'description' => $bonus['description'] ?? '',
-                                ]);
-                            }
-                            $bonusIndex++;
+                foreach ($request->bonuses as $bonus) {
+                    if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
+                        $bonusImage = null;
+                        if (isset($bonus['image']) && $bonus['image']) {
+                            $bonusImage = $bonus['image']->store('bonuses', 'public');
                         }
-                    }
-                } else {
-                    // Untuk rental baru, buat bonus baru
-                    foreach ($request->bonuses as $bonus) {
-                        // Hanya simpan jika ada salah satu field terisi
-                        if ((isset($bonus['image']) && $bonus['image']) || ($bonus['name'] ?? '') !== '' || ($bonus['description'] ?? '') !== '') {
-                            $bonusImage = null;
-                            if (isset($bonus['image']) && $bonus['image']) {
-                                $bonusImage = $bonus['image']->store('bonuses', 'public');
-                            }
-                            Bonus::create([
-                                'motorbike_rental_id' => $rental->id,
-                                'image' => $bonusImage,
-                                'name' => $bonus['name'] ?? '',
-                                'description' => $bonus['description'] ?? '',
-                            ]);
-                        }
+                        Bonus::create([
+                            'motorbike_rental_id' => $rental->id,
+                            'image' => $bonusImage,
+                            'name' => $bonus['name'] ?? '',
+                            'description' => $bonus['description'] ?? '',
+                        ]);
                     }
                 }
             }
 
-            // Simpan motorcycles
-            if ($request->has('motorcycles')) {
-                foreach ($request->motorcycles as $motor) {
+            // Validasi checklist fisik & video (global)
+            $checklistFisik = $request->input('checklist_fisik');
+            $videoFisik = $request->file('video_fisik');
+            if (!is_array($checklistFisik) || !$videoFisik) {
+                return back()->withInput()->with('error', 'Checklist fisik dan video wajib diisi.');
+            }
+
+            // Simpan motor
+            $firstMotorcycle = null;
+            if ($request->has('motorcycles') && is_array($request->motorcycles) && count($request->motorcycles) > 0) {
+                foreach ($request->motorcycles as $idx => $motor) {
                     $stnkImages = [];
                     if (isset($motor['stnk_images'])) {
                         foreach ($motor['stnk_images'] as $img) {
                             $stnkImages[] = $img->store('stnk', 'public');
                         }
                     }
-                    // Simpan data motor
                     $motorcycle = Motorcycle::create([
                         'owner_id' => auth()->id(),
                         'motorbike_rental_id' => $rental->id,
                         'category_id' => $motor['category_id'],
                         'name' => $motor['name'],
                         'vehicle_number_plate' => $motor['vehicle_number_plate'],
-                        'stnk_images' => $stnkImages, // stnk akan otomatis diset di mutator
+                        'stnk_images' => $stnkImages,
                         'price_per_day' => $motor['price_per_day'],
-                        'stock' => 1, // selalu 1
-                        'available_stock' => 1, // selalu 1
+                        'stock' => 1,
+                        'available_stock' => 1,
                         'has_gps' => $motor['has_gps'] ?? false,
                         'start_rent_hour' => $motor['start_rent_hour'] ?? '08:00',
                         'end_rent_hour' => $motor['end_rent_hour'] ?? '20:00',
                     ]);
-                    // Simpan gambar motor ke motorcycle_images
+                    if ($firstMotorcycle === null) {
+                        $firstMotorcycle = $motorcycle;
+                    }
+                    // Simpan gambar motor
                     if (isset($motor['images'])) {
                         foreach ($motor['images'] as $img) {
                             $imgPath = $img->store('motorcycles', 'public');
@@ -335,7 +299,29 @@ class PemilikController extends Controller
                             ]);
                         }
                     }
+                    // Simpan checklist/video per-motor jika multi-motor dan ada input khusus
+                    $videoFile = $request->file("motorcycles.$idx.video_fisik");
+                    $checklist = $request->input("motorcycles.$idx.checklist_fisik");
+                    if ($videoFile && is_array($checklist)) {
+                        $videoPath = $videoFile->store('motorcycle_physical_checks', 'public');
+                        \App\Models\MotorcyclePhysicalCheck::create([
+                            'motorcycle_id' => $motorcycle->id,
+                            'motorbike_rental_id' => $rental->id,
+                            'checklist' => json_encode($checklist),
+                            'video_path' => $videoPath,
+                        ]);
+                    }
                 }
+            }
+            // Simpan checklist/video dari tab global ke motor pertama jika motor pertama belum punya physicalCheck
+            if ($firstMotorcycle && !$firstMotorcycle->physicalCheck) {
+                $videoPath = $videoFisik->store('motorcycle_physical_checks', 'public');
+                \App\Models\MotorcyclePhysicalCheck::create([
+                    'motorcycle_id' => $firstMotorcycle->id,
+                    'motorbike_rental_id' => $rental->id,
+                    'checklist' => json_encode($checklistFisik),
+                    'video_path' => $videoPath,
+                ]);
             }
 
             $message = $useExistingRental
@@ -345,7 +331,6 @@ class PemilikController extends Controller
             return redirect()->route('pemilik.daftar-motor')->with('success', $message);
         } catch (\Throwable $e) {
             $fullError = $e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine().' | TRACE: '.$e->getTraceAsString();
-
             return back()->withInput()->with('error', $fullError);
         }
     }
@@ -357,7 +342,21 @@ class PemilikController extends Controller
         }
         $motorbikeRental = $motorcycle->motorbikeRental()->with('bonuses')->first();
 
-        return view('pages.pemilik.daftar-motor.editMotor', compact('motorcycle', 'motorbikeRental'));
+        // Pastikan checklistLama selalu array, handle null, string kosong, string JSON, array
+        $checklistLama = [];
+        if ($motorcycle->physicalCheck && isset($motorcycle->physicalCheck->checklist)) {
+            $raw = $motorcycle->physicalCheck->checklist;
+            if (is_array($raw)) {
+                $checklistLama = $raw;
+            } elseif (is_string($raw) && strlen($raw) > 0) {
+                $decoded = json_decode($raw, true);
+                $checklistLama = is_array($decoded) ? $decoded : [];
+            } else {
+                $checklistLama = [];
+            }
+        }
+
+        return view('pages.pemilik.daftar-motor.editMotor', compact('motorcycle', 'motorbikeRental', 'checklistLama'));
     }
 
     public function updateMotor(Request $request, Motorcycle $motorcycle)
@@ -438,6 +437,10 @@ class PemilikController extends Controller
             'available_stock' => 'required|integer|in:0,1',
             'stnk_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:100000',
+            // --- Tambahan validasi checklist fisik & video ---
+            'checklist_fisik' => 'required|array|min:1',
+            'checklist_fisik.*' => 'string',
+            'video_fisik' => 'required|file|mimetypes:video/mp4,video/3gp,video/quicktime|max:102400', // 100MB
         ]);
 
         // Update Motorcycle (Motor) - menghapus bidang status
@@ -508,6 +511,27 @@ class PemilikController extends Controller
                         ]);
                     }
                 }
+            }
+        }
+
+        // --- Tambahan: Simpan/update checklist fisik & video ---
+        $videoFile = $request->file('video_fisik');
+        $checklist = $request->input('checklist_fisik');
+        if ($videoFile && $checklist) {
+            $videoPath = $videoFile->store('motorcycle_physical_checks', 'public');
+            $check = $motorcycle->physicalCheck;
+            if ($check) {
+                $check->update([
+                    'checklist' => $checklist,
+                    'video_path' => $videoPath,
+                ]);
+            } else {
+                \App\Models\MotorcyclePhysicalCheck::create([
+                    'motorcycle_id' => $motorcycle->id,
+                    'motorbike_rental_id' => $motorcycle->motorbike_rental_id,
+                    'checklist' => $checklist,
+                    'video_path' => $videoPath,
+                ]);
             }
         }
 

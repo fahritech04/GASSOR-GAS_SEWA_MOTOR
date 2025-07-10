@@ -200,12 +200,14 @@
                 <div class="tab-buttons">
                     <button type="button" class="tab-button active" onclick="showTab('motor')">Motor</button>
                     <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
+                    <button type="button" class="tab-button" onclick="showTab('checklist-fisik')">Checklist Fisik</button>
                     <button type="button" class="tab-button" onclick="showTab('informasi-umum')" style="opacity: 0.7;">Informasi Umum (Auto)</button>
                 </div>
             @else
                 <div class="tab-buttons">
                     <button type="button" class="tab-button active" onclick="showTab('informasi-umum')">Informasi Umum</button>
                     <button type="button" class="tab-button" onclick="showTab('bonus-sewa')">Bonus Sewa</button>
+                    <button type="button" class="tab-button" onclick="showTab('checklist-fisik')">Checklist Fisik</button>
                     <button type="button" class="tab-button" onclick="showTab('motor')">Motor</button>
                 </div>
             @endif
@@ -354,6 +356,42 @@
                 </div>
                 <button type="button" class="add-btn" onclick="addBonus()">Tambah Bonus</button>
             </div>
+            <!-- Tab Checklist Fisik -->
+            <div id="checklist-fisik" class="tab-content">
+                <div class="info-card">
+                    <h3 style="color: #000000;">Checklist Pemeriksaan Fisik Motor</h3>
+                    <div class="flex flex-col gap-2" id="checklist-fisik-list">
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="ban"> Ban</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="baret"> Baret/Bodi Lecet</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="rem"> Rem</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="oli"> Oli</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="lampu"> Lampu</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="spion"> Spion</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="klakson"> Klakson</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="standar"> Standar Samping/Tengah</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="kunci"> Kunci Kontak</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="body"> Body Motor</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="speedometer"> Speedometer</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="rantai"> Rantai/Drive Belt</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="knalpot"> Knalpot</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="radiator"> Radiator/Coolant</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="busi"> Busi</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="accu"> Accu/Aki</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="tutup_tangki"> Tutup Tangki</label>
+                        <label style="color:#2d2d2d;font-weight:500;"><input type="checkbox" class="checklist-fisik-item" name="checklist_fisik[]" value="ban_serep"> Ban Serep (jika ada)</label>
+                    </div>
+                    <div style="margin-top:1.5rem;">
+                        <label class="form-label">Upload Video Pemeriksaan Fisik Motor <span style="color:#dc3545;">*</span></label>
+                        <div class="upload-area" onclick="document.getElementById('video_fisik').click()">
+                            <span>Pilih dari Galeri / Kamera</span>
+                            <input type="file" id="video_fisik" name="video_fisik" accept="video/mp4,video/3gp,video/mov" capture="environment" style="display:none;" required onchange="previewVideo(event)" />
+                        </div>
+                        <div id="video_fisik_preview" style="display:none;margin-top:10px;"></div>
+                        <small style="color:#374151;">Format: mp4, mov, 3gp. Maksimal 100MB. Wajib upload video dari HP (kamera/galeri).</small>
+                    </div>
+                    <div id="checklist-fisik-warning" style="color:#dc3545;display:none;margin-top:8px;font-weight:500;">Checklist & video harus lengkap sebelum menambah motor!</div>
+                </div>
+            </div>
             <!-- Tab Motor -->
             <div id="motor" class="tab-content @if(isset($hasExistingRental) && $hasExistingRental) active @endif">
                 <div id="motor-container">
@@ -464,7 +502,7 @@
             </div>
             <div class="flex gap-3 mt-8 mb-2">
                 <button type="button" class="gassor-btn-secondary" onclick="window.history.back()">Batal</button>
-                <button type="submit" class="gassor-btn-primary">Simpan</button>
+                <button type="submit" class="gassor-btn-primary" id="btn-simpan-motor">Simpan</button>
             </div>
         </form>
     </div>
@@ -667,10 +705,10 @@
                         <input type=\"text\" name=\"bonuses[${bonusCount}][name]\" class=\"form-input\" placeholder=\"Contoh: Helm\" />
                     </div>
                     <div>
-                        <label class=\"form-label\">Deskripsi <span style=\"color: #888;\">(opsional)</span></label>
-                        <input type=\"text\" name=\"bonuses[${bonusCount}][description]\" class=\"form-input\" placeholder=\"Contoh: 1 Helm\" />
+                        <label class=\"form-label\">Deskripsi <span style="color: #888;">(opsional)</span></label>
+                        <input type="text" name="bonuses[${bonusCount}][description]" class="form-input" placeholder="Contoh: 1 Helm" />
                     </div>
-                    <button type=\"button\" class=\"remove-btn self-end\" onclick=\"removeBonus(this)\">Hapus</button>
+                    <button type="button" class="remove-btn self-end" onclick="removeBonus(this)">Hapus</button>
                 </div>
             </div>
         `;
@@ -815,6 +853,54 @@
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-');
         document.getElementById('rental-slug').value = slug;
+    }
+
+    // Checklist Fisik Motor - Validasi sebelum submit
+    function isChecklistFisikLengkap() {
+        const items = document.querySelectorAll('.checklist-fisik-item');
+        for (let i = 0; i < items.length; i++) {
+            if (!items[i].checked) return false;
+        }
+        // Video wajib
+        const video = document.getElementById('video_fisik');
+        if (!video || !video.files || video.files.length === 0) return false;
+        return true;
+    }
+    function updateChecklistFisikState() {
+        const btn = document.getElementById('btn-simpan-motor');
+        if (!isChecklistFisikLengkap()) {
+            btn.disabled = true;
+            btn.style.opacity = 0.6;
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = 1;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // ...existing code...
+        updateChecklistFisikState();
+        document.querySelectorAll('.checklist-fisik-item').forEach(cb => {
+            cb.addEventListener('change', updateChecklistFisikState);
+        });
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!isChecklistFisikLengkap()) {
+                e.preventDefault();
+                document.getElementById('checklist-fisik-warning').style.display = 'block';
+                showTab('checklist-fisik');
+                setTimeout(() => {
+                    document.getElementById('checklist-fisik-warning').style.display = 'none';
+                }, 3000);
+            }
+        });
+    });
+    function previewVideo(event) {
+        const input = event.target;
+        const preview = document.getElementById('video_fisik_preview');
+        if (input.files && input.files[0]) {
+            const url = URL.createObjectURL(input.files[0]);
+            preview.innerHTML = `<video width='320' height='240' controls style='border-radius:12px;border:2px solid #e6a43b;'><source src='${url}' type='video/mp4'>Video tidak didukung.</video>`;
+            preview.style.display = 'block';
+        }
     }
 </script>
 <script>
