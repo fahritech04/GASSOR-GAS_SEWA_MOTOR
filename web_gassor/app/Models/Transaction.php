@@ -65,6 +65,6 @@ class Transaction extends Model
     {
         return $this->rental_status === 'finished' &&
                $this->payment_status === 'success' &&
-               !$this->is_reviewed;
+               ! $this->is_reviewed;
     }
 }

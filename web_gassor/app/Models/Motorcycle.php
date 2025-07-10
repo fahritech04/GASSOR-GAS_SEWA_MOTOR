@@ -49,7 +49,7 @@ class Motorcycle extends Model
         $this->attributes['stnk_images'] = is_array($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : $value;
 
         // Otomatis set stnk berdasarkan ketersediaan gambar
-        $this->attributes['stnk'] = !empty($images) && count(array_filter($images)) > 0;
+        $this->attributes['stnk'] = ! empty($images) && count(array_filter($images)) > 0;
     }
 
     public function isAvailable()
@@ -139,6 +139,7 @@ class Motorcycle extends Model
         for ($i = 1; $i <= 5; $i++) {
             $distribution[$i] = $this->reviews()->where('rating', $i)->count();
         }
+
         return $distribution;
     }
 

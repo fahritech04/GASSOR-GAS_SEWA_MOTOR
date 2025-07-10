@@ -89,7 +89,7 @@ class MotorbikeRental extends Model
             ->map(function ($group) {
                 return [
                     'category' => $group->first()->category,
-                    'count' => $group->count()
+                    'count' => $group->count(),
                 ];
             })
             ->sortByDesc('count');

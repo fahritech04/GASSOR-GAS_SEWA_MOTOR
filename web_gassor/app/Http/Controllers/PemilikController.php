@@ -258,7 +258,7 @@ class PemilikController extends Controller
             // Validasi checklist fisik & video (global)
             $checklistFisik = $request->input('checklist_fisik');
             $videoFisik = $request->file('video_fisik');
-            if (!is_array($checklistFisik) || !$videoFisik) {
+            if (! is_array($checklistFisik) || ! $videoFisik) {
                 return back()->withInput()->with('error', 'Checklist fisik dan video wajib diisi.');
             }
 
@@ -314,7 +314,7 @@ class PemilikController extends Controller
                 }
             }
             // Simpan checklist/video dari tab global ke motor pertama jika motor pertama belum punya physicalCheck
-            if ($firstMotorcycle && !$firstMotorcycle->physicalCheck) {
+            if ($firstMotorcycle && ! $firstMotorcycle->physicalCheck) {
                 $videoPath = $videoFisik->store('motorcycle_physical_checks', 'public');
                 \App\Models\MotorcyclePhysicalCheck::create([
                     'motorcycle_id' => $firstMotorcycle->id,
@@ -331,6 +331,7 @@ class PemilikController extends Controller
             return redirect()->route('pemilik.daftar-motor')->with('success', $message);
         } catch (\Throwable $e) {
             $fullError = $e->getMessage().' | FILE: '.$e->getFile().' | LINE: '.$e->getLine().' | TRACE: '.$e->getTraceAsString();
+
             return back()->withInput()->with('error', $fullError);
         }
     }

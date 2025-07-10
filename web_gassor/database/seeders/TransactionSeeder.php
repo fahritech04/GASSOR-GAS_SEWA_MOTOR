@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+use App\Models\Motorcycle;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\Motorcycle;
-use App\Models\MotorbikeRental;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TransactionSeeder extends Seeder
 {
@@ -24,7 +22,7 @@ class TransactionSeeder extends Seeder
         if ($users->count() > 0 && $motorcycles->count() > 0) {
             $transactionData = [
                 [
-                    'code' => 'TRX' . str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
+                    'code' => 'TRX'.str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
                     'motorcycle_id' => $motorcycles->first()->id,
                     'motorbike_rental_id' => $motorcycles->first()->motorbike_rental_id,
                     'name' => $users->first()->name,
@@ -43,7 +41,7 @@ class TransactionSeeder extends Seeder
                     'updated_at' => Carbon::now()->subDays(7),
                 ],
                 [
-                    'code' => 'TRX' . str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
+                    'code' => 'TRX'.str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
                     'motorcycle_id' => $motorcycles->skip(1)->first()->id ?? $motorcycles->first()->id,
                     'motorbike_rental_id' => $motorcycles->skip(1)->first()->motorbike_rental_id ?? $motorcycles->first()->motorbike_rental_id,
                     'name' => $users->skip(1)->first()->name ?? $users->first()->name,
@@ -62,7 +60,7 @@ class TransactionSeeder extends Seeder
                     'updated_at' => Carbon::now()->subDays(13),
                 ],
                 [
-                    'code' => 'TRX' . str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
+                    'code' => 'TRX'.str_pad(rand(1, 999999), 6, '0', STR_PAD_LEFT),
                     'motorcycle_id' => $motorcycles->skip(2)->first()->id ?? $motorcycles->first()->id,
                     'motorbike_rental_id' => $motorcycles->skip(2)->first()->motorbike_rental_id ?? $motorcycles->first()->motorbike_rental_id,
                     'name' => $users->last()->name,

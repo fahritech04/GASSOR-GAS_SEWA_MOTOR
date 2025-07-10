@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\MotorcycleReview;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,6 +19,7 @@ class MotorcycleReviewController extends Controller
             if ($request->route()->getActionMethod() !== 'show' && auth()->user()->role !== 'penyewa') {
                 return redirect()->back()->with('error', 'Hanya penyewa yang dapat memberikan review.');
             }
+
             return $next($request);
         })->except(['show']);
     }
@@ -27,7 +27,7 @@ class MotorcycleReviewController extends Controller
     public function create(Transaction $transaction)
     {
         // Validasi bahwa user bisa membuat review untuk transaksi ini
-        if (!$transaction->can_be_reviewed) {
+        if (! $transaction->can_be_reviewed) {
             return redirect()->route('history-booking')->with('error', 'Transaksi ini tidak dapat direview.');
         }
 
@@ -53,12 +53,12 @@ class MotorcycleReviewController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('history-booking')
-                           ->withErrors($validator)
-                           ->with('error', 'Data review tidak valid. Silakan periksa kembali.');
+                ->withErrors($validator)
+                ->with('error', 'Data review tidak valid. Silakan periksa kembali.');
         }
 
         // Validasi bahwa user bisa membuat review untuk transaksi ini
-        if (!$transaction->can_be_reviewed) {
+        if (! $transaction->can_be_reviewed) {
             return redirect()->route('history-booking')->with('error', 'Transaksi ini tidak dapat direview.');
         }
 
@@ -83,6 +83,7 @@ class MotorcycleReviewController extends Controller
             return redirect()->route('history-booking')->with('success', 'Review berhasil ditambahkan. Terima kasih atas feedback Anda!');
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->route('history-booking')->with('error', 'Terjadi kesalahan saat menyimpan review. Silakan coba lagi.');
         }
     }
@@ -94,11 +95,11 @@ class MotorcycleReviewController extends Controller
     {
         $motorcycle = \App\Models\Motorcycle::with([
             'reviews.user',
-            'reviews' => function($query) {
+            'reviews' => function ($query) {
                 $query->latest();
             },
             'images',
-            'motorbikeRental'
+            'motorbikeRental',
         ])->findOrFail($motorcycleId);
 
         return view('pages.motorcycle.reviews', compact('motorcycle'));

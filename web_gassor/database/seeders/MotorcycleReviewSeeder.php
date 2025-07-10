@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\MotorcycleReview;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class MotorcycleReviewSeeder extends Seeder
 {
@@ -16,8 +15,8 @@ class MotorcycleReviewSeeder extends Seeder
     public function run(): void
     {
         $transactions = Transaction::where('rental_status', 'finished')
-                                  ->where('payment_status', 'success')
-                                  ->get();
+            ->where('payment_status', 'success')
+            ->get();
 
         foreach ($transactions->take(2) as $transaction) {
             // Find user by email

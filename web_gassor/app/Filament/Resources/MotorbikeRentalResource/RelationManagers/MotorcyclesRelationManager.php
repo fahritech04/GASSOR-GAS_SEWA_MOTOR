@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\MotorbikeRentalResource\RelationManagers;
 
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
 
 class MotorcyclesRelationManager extends RelationManager
 {
     protected static string $relationship = 'motorcycles';
+
     protected static ?string $title = 'Daftar Motor';
 
     public function form(Forms\Form $form): Forms\Form
@@ -25,7 +26,7 @@ class MotorcyclesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('category.name')->label('Kategori'),
                 Tables\Columns\TextColumn::make('physicalCheck.checklist')
                     ->label('Checklist Fisik')
-                    ->formatStateUsing(fn($state) => $state ? implode(', ', json_decode($state, true)) : '-')
+                    ->formatStateUsing(fn ($state) => $state ? implode(', ', json_decode($state, true)) : '-')
                     ->limit(40),
                 Tables\Columns\IconColumn::make('physicalCheck.video_path')
                     ->label('Video Fisik')
@@ -36,9 +37,11 @@ class MotorcyclesRelationManager extends RelationManager
                     ->label('Preview Video')
                     ->formatStateUsing(function ($state) {
                         if ($state) {
-                            $url = asset('storage/' . $state);
-                            return '<video width="200" controls style="max-height:120px;max-width:100%"><source src="' . $url . '" type="video/mp4">Video tidak didukung</video>';
+                            $url = asset('storage/'.$state);
+
+                            return '<video width="200" controls style="max-height:120px;max-width:100%"><source src="'.$url.'" type="video/mp4">Video tidak didukung</video>';
                         }
+
                         return '-';
                     })
                     ->html(),

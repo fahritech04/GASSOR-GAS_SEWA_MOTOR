@@ -49,7 +49,8 @@ class PemilikLaporanController extends Controller
         $chartLabels = [];
         $chartData = [];
         if ($filter === 'harian') {
-            $chartLabels[] = $date->isoFormat('D MMM YYYY');                $chartData[] = $total_income_no_ppn;
+            $chartLabels[] = $date->isoFormat('D MMM YYYY');
+            $chartData[] = $total_income_no_ppn;
         } elseif ($filter === 'mingguan') {
             for ($d = $date->copy()->startOfWeek(); $d <= $date->copy()->endOfWeek(); $d->addDay()) {
                 $label = $d->isoFormat('ddd, D');

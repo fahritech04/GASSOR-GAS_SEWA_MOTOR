@@ -15,12 +15,12 @@ class AdminRevenueStats extends BaseWidget
         $vatOnly = $totalRevenue - $revenueWithoutVAT;
 
         return [
-            Stat::make('Total Pendapatan (Tanpa PPN 11%)', 'Rp ' . number_format($revenueWithoutVAT, 0, ',', '.'))
+            Stat::make('Total Pendapatan (Tanpa PPN 11%)', 'Rp '.number_format($revenueWithoutVAT, 0, ',', '.'))
                 ->description('Total pendapatan tanpa PPN 11%')
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('primary'),
 
-            Stat::make('Pendapatan PPN 11% (Keuntungan Admin)', 'Rp ' . number_format($vatOnly, 0, ',', '.'))
+            Stat::make('Pendapatan PPN 11% (Keuntungan Admin)', 'Rp '.number_format($vatOnly, 0, ',', '.'))
                 ->description('Total PPN 11% dari transaksi sukses')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success'),

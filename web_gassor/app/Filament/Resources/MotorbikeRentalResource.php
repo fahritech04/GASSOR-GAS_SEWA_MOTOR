@@ -148,7 +148,7 @@ class MotorbikeRentalResource extends Resource
                                                 Forms\Components\FileUpload::make('video_path')
                                                     ->label('Video Pemeriksaan Fisik')
                                                     ->directory('motorcycle_physical_checks')
-                                                    ->acceptedFileTypes(['video/mp4','video/3gp','video/mov'])
+                                                    ->acceptedFileTypes(['video/mp4', 'video/3gp', 'video/mov'])
                                                     ->maxSize(102400)
                                                     ->helperText('Video pemeriksaan fisik motor (mp4, mov, 3gp, max 100MB).')
                                                     ->columnSpanFull(),
@@ -175,7 +175,7 @@ class MotorbikeRentalResource extends Resource
                     ->label('Thumbnail'),
                 Tables\Columns\TextColumn::make('motorcycles')
                     ->label('Motor Checklist Fisik')
-                    ->formatStateUsing(fn($record) => $record->motorcycles->whereNotNull('physicalCheck')->count() . ' / ' . $record->motorcycles->count())
+                    ->formatStateUsing(fn ($record) => $record->motorcycles->whereNotNull('physicalCheck')->count().' / '.$record->motorcycles->count())
                     ->sortable(),
             ])
             ->filters([

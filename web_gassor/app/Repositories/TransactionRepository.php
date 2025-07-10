@@ -85,6 +85,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $subtotal = $pricePerMonth * $duration;
         $tax = $subtotal * 0.11;
+
         return $subtotal + $tax;
     }
 
