@@ -113,28 +113,33 @@
                             <h3 class="font-semibold text-lg">Review Motor ({{ $totalReviews }} total)</h3>
                         </div>
                         @foreach($allReviews as $review)
-                        <div class="flex flex-col gap-2 p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <p class="font-semibold">{{ $review->user->name }}</p>
-                                    <div class="flex items-center gap-1">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <span class="text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}">⭐</span>
-                                        @endfor
-                                    </div>
-                                </div>
-                                <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                        <div class="bonus-card flex items-center rounded-[22px] border border-[#F1F2F6] p-[10px] gap-3 hover:border-[#E6A43B] transition-all duration-300">
+                            <div class="flex w-[120px] h-[90px] shrink-0 rounded-[18px] bg-[#D9D9D9] overflow-hidden items-center justify-center">
+                                @if(isset($review->user->avatar) && $review->user->avatar)
+                                    <img src="{{ asset('storage/' . $review->user->avatar) }}" class="w-full h-full object-cover" alt="avatar">
+                                @else
+                                    <span class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-300 text-gray-600 text-2xl font-bold">
+                                        {{ strtoupper(substr($review->user->name, 0, 1)) }}
+                                    </span>
+                                @endif
                             </div>
-                            <p class="text-sm text-gray-600">{{ $review->motorcycle->name }}</p>
-                            <p class="text-sm">{{ $review->comment }}</p>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-semibold">{{ $review->user->name }}</p>
+                                        <div class="flex items-center gap-1">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <span class="text-sm {{ $i <= $review->rating ? 'text-yellow-400' : 'text-gray-300' }}">⭐</span>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
+                                </div>
+                                <p class="text-sm text-gray-600">{{ $review->motorcycle->name }}</p>
+                                <p class="text-sm">{{ $review->comment }}</p>
+                            </div>
                         </div>
                         @endforeach
-
-                        @if($totalReviews > 3)
-                        <div class="mt-4">
-                            <p class="text-center text-sm text-gray-500">Dan {{ $totalReviews - 3 }} review lainnya...</p>
-                        </div>
-                        @endif
                     </div>
                 @else
                     <div class="text-center py-8">

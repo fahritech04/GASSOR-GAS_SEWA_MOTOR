@@ -89,7 +89,7 @@
     <div id="BottomNav" class="relative flex w-full h-[138px] shrink-0">
         <div class="bottom-5 w-full max-w-[640px] px-5 z-10">
             <div class="flex gap-3">
-                <a href="{{ route('history-booking') }}" class="flex-1 py-[14px] px-5 bg-gray-200 text-gray-700 text-center font-bold rounded-full">
+                <a href="{{ route('history-booking') }}" class="flex-1 py-[14px] px-5 bg-gassor-black text-white text-center font-bold rounded-full">
                     Batal
                 </a>
                 <button type="button" onclick="confirmSubmitReview()" form="review-form" class="flex-1 py-[14px] px-5 bg-gassor-orange text-white text-center font-bold rounded-full">
@@ -163,7 +163,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: 'Berhasil!',
                 text: '{{ session('success') }}',
                 icon: 'success',
-                confirmButtonColor: '#ff6b35'
+                confirmButtonColor: '#E6A43B',
+                customClass: {
+                    popup: 'rounded-lg shadow-lg text-black',
+                    title: 'text-gassor-black font-bold',
+                    content: 'text-gassor-grey',
+                    confirmButton: 'rounded-full px-6 py-2 font-bold'
+                }
             });
         } else {
             alert('Berhasil! {{ session('success') }}');
@@ -177,7 +183,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: 'Error!',
                 text: '{{ session('error') }}',
                 icon: 'error',
-                confirmButtonColor: '#d33'
+                confirmButtonColor: '#d33',
+                customClass: {
+                    popup: 'rounded-lg shadow-lg text-black',
+                    title: 'text-gassor-black font-bold',
+                    content: 'text-gassor-grey',
+                    confirmButton: 'rounded-full px-6 py-2 font-bold'
+                }
             });
         } else {
             alert('Error! {{ session('error') }}');
@@ -199,7 +211,13 @@ function confirmSubmitReview() {
                 title: 'Rating Diperlukan',
                 text: 'Silakan pilih rating terlebih dahulu!',
                 icon: 'warning',
-                confirmButtonColor: '#ff6b35'
+                confirmButtonColor: '#E6A43B',
+                customClass: {
+                    popup: 'rounded-lg shadow-lg text-black',
+                    title: 'text-gassor-black font-bold',
+                    content: 'text-gassor-grey',
+                    confirmButton: 'rounded-full px-6 py-2 font-bold'
+                }
             });
         } else {
             alert('Rating diperlukan! Silakan pilih rating terlebih dahulu!');
@@ -213,10 +231,18 @@ function confirmSubmitReview() {
             text: 'Apakah Anda yakin ingin mengirim review ini?',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#ff6b35',
-            cancelButtonColor: '#6b7280',
+            confirmButtonColor: '#E6A43B',
+            cancelButtonColor: '#95A5A6',
             confirmButtonText: 'Ya, Kirim!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-lg shadow-lg text-black',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold',
+                cancelButton: 'rounded-full px-6 py-2 font-bold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('review-form').submit();

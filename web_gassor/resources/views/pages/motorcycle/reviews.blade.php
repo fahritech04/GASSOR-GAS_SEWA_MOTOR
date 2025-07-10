@@ -239,7 +239,15 @@
             confirmButtonColor: '#E6A43B',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-lg shadow-lg text-black',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold',
+                cancelButton: 'rounded-full px-6 py-2 font-bold'
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('delete-form-' + reviewId).submit();
@@ -254,8 +262,14 @@
                     title: 'Berhasil!',
                     text: '{{ session('success') }}',
                     icon: 'success',
-                    confirmButtonColor: '#059669',
-                    confirmButtonText: 'OK'
+                    confirmButtonColor: '#E6A43B',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'rounded-lg shadow-lg text-black',
+                        title: 'text-gassor-black font-bold',
+                        content: 'text-gassor-grey',
+                        confirmButton: 'rounded-full px-6 py-2 font-bold'
+                    }
                 });
             } else {
                 alert('Berhasil! {{ session('success') }}');
@@ -268,8 +282,14 @@
                     title: 'Error!',
                     text: '{{ session('error') }}',
                     icon: 'error',
-                    confirmButtonColor: '#dc2626',
-                    confirmButtonText: 'OK'
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        popup: 'rounded-lg shadow-lg text-black',
+                        title: 'text-gassor-black font-bold',
+                        content: 'text-gassor-grey',
+                        confirmButton: 'rounded-full px-6 py-2 font-bold'
+                    }
                 });
             } else {
                 alert('Error! {{ session('error') }}');
