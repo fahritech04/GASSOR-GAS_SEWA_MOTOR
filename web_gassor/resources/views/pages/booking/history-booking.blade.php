@@ -294,7 +294,13 @@ document.addEventListener('DOMContentLoaded', function() {
             text: '{{ session('success') }}',
             icon: 'success',
             confirmButtonColor: '#e6a43b',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'rounded-lg shadow-lg text-black',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
         });
     @endif
 
@@ -304,7 +310,13 @@ document.addEventListener('DOMContentLoaded', function() {
             text: '{{ session('error') }}',
             icon: 'error',
             confirmButtonColor: '#d33',
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            customClass: {
+                popup: 'rounded-lg shadow-lg text-black',
+                title: 'text-gassor-black font-bold',
+                content: 'text-gassor-grey',
+                confirmButton: 'rounded-full px-6 py-2 font-bold'
+            }
         });
     @endif
 </script>

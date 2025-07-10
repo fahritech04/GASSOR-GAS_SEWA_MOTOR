@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     popup: 'rounded-lg shadow-lg text-black',
                     title: 'text-gassor-black font-bold',
                     content: 'text-gassor-grey',
-                    confirmButton: 'rounded-full px-6 py-2 font-bold'
+                    confirmButton: 'rounded-full'
                 }
             });
         } else {
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     popup: 'rounded-lg shadow-lg text-black',
                     title: 'text-gassor-black font-bold',
                     content: 'text-gassor-grey',
-                    confirmButton: 'rounded-full px-6 py-2 font-bold'
+                    confirmButton: 'rounded-full'
                 }
             });
         } else {

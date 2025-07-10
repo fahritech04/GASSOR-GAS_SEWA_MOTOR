@@ -124,7 +124,7 @@
                                 @endif
                             </div>
                             <div class="flex flex-col gap-1 flex-1">
-                                <div class="flex items-center justify-between">
+                                <div class="flex flex-col gap-1">
                                     <div class="flex items-center gap-2">
                                         <p class="font-semibold">{{ $review->user->name }}</p>
                                         <div class="flex items-center gap-1">

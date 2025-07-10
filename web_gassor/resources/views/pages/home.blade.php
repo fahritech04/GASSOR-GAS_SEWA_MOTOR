@@ -99,7 +99,6 @@
             @empty
             <div class="w-full px-5">
                 <div class="flex flex-col items-center justify-center py-12 text-center">
-                    <img src="{{ asset('assets/images/icons/note-favorite-grey.svg') }}" class="w-16 h-16 mb-4 opacity-50" alt="empty">
                     <p class="text-gassor-grey font-medium">Rental populer belum tersedia</p>
                     <p class="text-sm text-gassor-grey mt-1">Silakan coba lagi nanti</p>
                 </div>
@@ -173,7 +172,6 @@
         </a>
         @empty
         <div class="flex flex-col items-center justify-center py-12 text-center">
-            <img src="{{ asset('assets/images/icons/3dcube.svg') }}" class="w-16 h-16 mb-4 opacity-50" alt="empty">
             <p class="text-gassor-grey font-medium">Motor belum tersedia</p>
             <p class="text-sm text-gassor-grey mt-1">Silakan coba lagi nanti</p>
         </div>

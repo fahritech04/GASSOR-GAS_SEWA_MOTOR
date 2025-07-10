@@ -127,48 +127,16 @@
                                 </div>
 
                                 <div class="flex-1 min-w-0">
-                                    <div class="w-full flex items-start justify-between">
-                                        <div class="flex-1 min-w-0" style="max-width: calc(100% - 140px);">
-                                            <h5 class="font-bold text-gray-900 text-base sm:text-lg truncate" style="line-height: 1.2;">{{ $review->user->name }}</h5>
-                                            <span class="text-xs sm:text-sm text-gray-500 truncate" style="margin-top: 2px;">{{ $review->created_at->diffForHumans() }}</span>
-                                        </div>
-
-                                        <div class="flex flex-shrink-0" style="min-width: 130px;">
-                                            <div class="hidden sm:flex items-center gap-2">
-                                                <div class="flex items-center gap-0.5">
-                                                    @for($i = 1; $i <= $review->rating; $i++)
-                                                        <span class="text-lg opacity-100">⭐</span>
-                                                    @endfor
-                                                </div>
-
-                                                <span class="text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap">
-                                                    @if($review->rating == 5) Sangat Puas
-                                                    @elseif($review->rating == 4) Puas
-                                                    @elseif($review->rating == 3) Cukup
-                                                    @elseif($review->rating == 2) Kurang
-                                                    @else Tidak Puas
-                                                    @endif
-                                                </span>
-                                            </div>
-
-                                            <!-- LAYAR <640px: VERTIKAL -->
-                                            <div class="flex flex-col items-end gap-1 sm:hidden">
-                                                <div class="flex items-center gap-0.5">
-                                                    @for($i = 1; $i <= $review->rating; $i++)
-                                                        <span class="text-sm opacity-100">⭐</span>
-                                                    @endfor
-                                                </div>
-
-                                                <span class="text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap">
-                                                    @if($review->rating == 5) Sangat Puas
-                                                    @elseif($review->rating == 4) Puas
-                                                    @elseif($review->rating == 3) Cukup
-                                                    @elseif($review->rating == 2) Kurang
-                                                    @else Tidak Puas
-                                                    @endif
-                                                </span>
+                                    <div class="w-full flex flex-col gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <h5 class="font-bold text-gray-900 text-base sm:text-lg" style="line-height: 1.2;">{{ $review->user->name }}</h5>
+                                            <div class="flex items-center gap-0.5">
+                                                @for($i = 1; $i <= $review->rating; $i++)
+                                                    <span class="text-sm opacity-100">⭐</span>
+                                                @endfor
                                             </div>
                                         </div>
+                                        <span class="text-xs sm:text-sm text-gray-500">{{ $review->created_at->diffForHumans() }}</span>
                                     </div>
 
                                     @if($review->comment)
@@ -200,11 +168,6 @@
         @else
             <div class="px-5">
                 <div class="text-center py-12 bg-gray-50 rounded-[22px] border border-[#F1F2F6]">
-                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                        </svg>
-                    </div>
                     <h3 class="font-bold text-lg text-gray-700 mb-2">Belum Ada Review</h3>
                     <p class="text-gray-500 text-sm mb-4">Motor ini belum memiliki ulasan dari penyewa</p>
                     <p class="text-xs text-gray-400">Jadilah yang pertama memberikan review setelah menyewa!</p>
