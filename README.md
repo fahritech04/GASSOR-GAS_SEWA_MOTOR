@@ -10,14 +10,16 @@ Aplikasi web ini dibuat berdasarkan keresahan pribadi karena ga punya motor seba
 2. Orang yang punya motor pribadi juga bisa sewain motor nya melalui aplikasi ini.
 
 ### Link Berkas PA
+Dokumen webgassor.site bisa diakses melalui : https://bit.ly/webgassor_dokumentasi
 
-(diisi link Google Drive kelompok PA yang telah disiapkan oleh Tim PA)
+### Url Webgassor
+Untuk mennggunakan webgassor, bisa diakses melalui url https://webgassor.site
 
 ### Susunan Tim
 
-| Nama                    | Username Github | Posisi     |
-| ----------------------- | --------------- | ---------- |
-| Muhammad Raihan Fahrifi | fahritech04     | Mahasiswa  |
-| Noval Abdurramadan      | novalramadan    | Mahasiswa  |
-| Nama Pembimbing         | usernamePbb     | Pembimbing |
-| Nama Reviewer           | usernameRev     | Reviewer   |
+| Nama                                | Username Github | Posisi     |
+| ----------------------------------- | --------------- | ---------- |
+| Muhammad Raihan Fahrifi             | fahritech04     | Mahasiswa  |
+| Noval Abdurramadan                  | novalramadan    | Mahasiswa  |
+| Amir Hasanudin Fauzi, S.T., M.T.    | usernamePbb     | Pembimbing |
+| Mia Rosmiati, S.Si., M.T.           | usernameRev     | Reviewer   |
