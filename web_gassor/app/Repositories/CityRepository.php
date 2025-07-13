@@ -9,7 +9,9 @@ class CityRepository implements CityRepositoryInterface
 {
     public function getAllCities()
     {
-        return City::withCount('motorcycles')->get();
+        return City::withCount(['motorcycles' => function ($query) {
+            $query->where('available_stock', '>', 0)->approvedOwner();
+        }])->get();
     }
 
     public function getCityBySlug($slug)

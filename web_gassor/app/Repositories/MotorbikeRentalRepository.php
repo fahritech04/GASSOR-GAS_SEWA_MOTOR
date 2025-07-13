@@ -148,6 +148,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
             ->whereHas('motorbikeRental.city', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
+            ->where('available_stock', '>', 0)
             ->approvedOwner()
             ->get();
     }
@@ -158,6 +159,7 @@ class MotorbikeRentalRepository implements MotorbikeRentalRepositoryInterface
             ->whereHas('category', function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             })
+            ->where('available_stock', '>', 0)
             ->approvedOwner()
             ->get();
     }

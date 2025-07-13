@@ -28,6 +28,11 @@ class City extends Model
 
     public function getMotorcyclesCountAttribute()
     {
-        return $this->motorcycles()->count();
+        return $this->motorcycles()
+            ->where('available_stock', '>', 0)
+            ->whereHas('owner', function ($query) {
+                $query->where('is_approved', true);
+            })
+            ->count();
     }
 }

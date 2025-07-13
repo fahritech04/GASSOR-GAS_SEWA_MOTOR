@@ -9,7 +9,9 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function getAllCategories()
     {
-        return Category::withCount('motorcycles')->get();
+        return Category::withCount(['motorcycles' => function ($query) {
+            $query->where('available_stock', '>', 0)->approvedOwner();
+        }])->get();
     }
 
     public function getCategoryBySlug($slug)
